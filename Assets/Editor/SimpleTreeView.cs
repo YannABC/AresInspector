@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.IMGUI.Controls;
 
 class SimpleTreeView : TreeView
@@ -36,6 +37,16 @@ class SimpleTreeView : TreeView
 
         // Return root of the tree
         return root;
+    }
+
+    protected override void SelectionChanged(IList<int> selectedIds)
+    {
+        IList<TreeViewItem> items = FindRows(selectedIds);
+        if (items.Count> 0)
+        {
+            UnityEngine.Debug.Log(items[0].displayName);
+            
+        }
     }
 
     //protected override TreeViewItem BuildRoot()
