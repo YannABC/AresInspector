@@ -7,12 +7,15 @@ using System;
 using Unity.VisualScripting;
 using System.IO;
 
-class SimpleTreeViewEditor : EditorWindow/*, ISerializationCallbackReceiver*/
+[Serializable]
+class SimpleTreeViewEditor : EditorWindow, ISerializationCallbackReceiver
 {
     // SerializeField is used to ensure the view state is written to the window 
     // layout file. This means that the state survives restarting Unity as long as the window
     // is not closed. If the attribute is omitted then the state is still serialized/deserialized.
     //[SerializeField] TreeViewState m_TreeViewState;
+
+    [SerializeField] public int bb;
 
 
     SimpleTreeViewEditorSettings _Settings;
@@ -22,15 +25,15 @@ class SimpleTreeViewEditor : EditorWindow/*, ISerializationCallbackReceiver*/
 
     UnityEditor.Editor editor;
 
-    //public void OnBeforeSerialize()
-    //{
-    //    Debug.Log("OnBeforeSerialize");
-    //}
+    public void OnBeforeSerialize()
+    {
+        Debug.Log("OnBeforeSerialize");//关闭unity才会serialize, 关闭window不会
+    }
 
-    //public void OnAfterDeserialize()
-    //{
-    //    Debug.Log("OnAfterDeserialized      ");
-    //}
+    public void OnAfterDeserialize()
+    {
+        Debug.Log("OnAfterDeserialized      ");//打开unity才会deserialize
+    }
 
     void OnEnable()
     {
@@ -42,6 +45,9 @@ class SimpleTreeViewEditor : EditorWindow/*, ISerializationCallbackReceiver*/
         }
         _Settings = AssetDatabase.LoadAssetAtPath<SimpleTreeViewEditorSettings>(settingsFile);
         _Settings.aa++;
+
+        Debug.Log("bb:" + bb);
+        bb++;
 
         // Check whether there is already a serialized view state (state 
         // that survived assembly reloading)
@@ -63,6 +69,11 @@ class SimpleTreeViewEditor : EditorWindow/*, ISerializationCallbackReceiver*/
 
     void OnDisable()
     {
+        //UnityEditor.EditorWindow.save
+        EditorUtility.SetDirty(this);
+        AssetDatabase.SaveAssetIfDirty(this);
+
+        EditorUtility.SetDirty(_Settings);
         AssetDatabase.SaveAssetIfDirty(_Settings);
         DestroyImmediate(this.editor);
     }

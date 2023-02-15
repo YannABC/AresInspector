@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 
+    m_SelectedIDs: 02000000
+    m_LastClickedID: 2
+    m_ExpandedIDs: 01000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -34,4 +34,4 @@ MonoBehaviour:
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 0}
     m_SearchString: 
-  aa: 0
+  aa: 18
