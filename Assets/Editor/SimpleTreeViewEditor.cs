@@ -2,13 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor;
-using UnityEngine.UIElements;
-using System;
-using Unity.VisualScripting;
 using System.IO;
+using Unity.VisualScripting;
 
-[Serializable]
-class SimpleTreeViewEditor : EditorWindow, ISerializationCallbackReceiver
+[System.Serializable]
+class SimpleTreeViewEditor : EditorWindow/*, ISerializationCallbackReceiver*/
 {
     // SerializeField is used to ensure the view state is written to the window 
     // layout file. This means that the state survives restarting Unity as long as the window
@@ -25,25 +23,28 @@ class SimpleTreeViewEditor : EditorWindow, ISerializationCallbackReceiver
 
     UnityEditor.Editor editor;
 
-    public void OnBeforeSerialize()
-    {
-        Debug.Log("OnBeforeSerialize");//�ر�unity�Ż�serialize, �ر�window����
-    }
+    //public void OnBeforeSerialize()
+    //{
+    //    Debug.Log("OnBeforeSerialize");//关闭unity才会serialize, 关闭window不会
+    //}
 
-    public void OnAfterDeserialize()
-    {
-        Debug.Log("OnAfterDeserialized      ");//��unity�Ż�deserialize
-    }
+    //public void OnAfterDeserialize()
+    //{
+    //    Debug.Log("OnAfterDeserialized ");//打开unity才会deserialize
+    //}
 
     void OnEnable()
     {
         string settingsFile = "Assets/Editor/SimpleTreeViewEditorSettings.asset";
         if (!File.Exists(settingsFile))
         {
-            SimpleTreeViewEditorSettings s = ScriptableObject.CreateInstance<SimpleTreeViewEditorSettings>();
-            AssetDatabase.CreateAsset(s, settingsFile);
+            _Settings = ScriptableObject.CreateInstance<SimpleTreeViewEditorSettings>();
+            AssetDatabase.CreateAsset(_Settings, settingsFile);
         }
-        _Settings = AssetDatabase.LoadAssetAtPath<SimpleTreeViewEditorSettings>(settingsFile);
+        else
+        {
+            _Settings = AssetDatabase.LoadAssetAtPath<SimpleTreeViewEditorSettings>(settingsFile);
+        }
         _Settings.aa++;
 
         Debug.Log("bb:" + bb);
@@ -69,9 +70,8 @@ class SimpleTreeViewEditor : EditorWindow, ISerializationCallbackReceiver
 
     void OnDisable()
     {
-        //UnityEditor.EditorWindow.save
-        EditorUtility.SetDirty(this);
-        AssetDatabase.SaveAssetIfDirty(this);
+        //EditorUtility.SetDirty(this);
+        //AssetDatabase.SaveAssetIfDirty(this);
 
         EditorUtility.SetDirty(_Settings);
         AssetDatabase.SaveAssetIfDirty(_Settings);
@@ -80,18 +80,14 @@ class SimpleTreeViewEditor : EditorWindow, ISerializationCallbackReceiver
 
     private void OnDestroy()
     {
-        
+        Debug.Log("OnDestroy");
+        //DestroyImmediate(this, false);
     }
 
     void OnGUI()
     {
-        //m_TreeViewState.Serialize(this);
         m_SimpleTreeView.OnGUI(new Rect(0, 0, 150, position.height));
-        GUILayout.BeginArea(new Rect(150,0,position.width - 150, position.height));
-        //EditorGUILayout.LabelField("aaaa");
-
-
-        //editor.OnInspectorGUI();
+        GUILayout.BeginArea(new Rect(150, 0, position.width - 150, position.height));
 
         SerializedObject obj = editor.serializedObject;
 
@@ -123,8 +119,57 @@ class SimpleTreeViewEditor : EditorWindow, ISerializationCallbackReceiver
     static void ShowWindow()
     {
         // Get existing open window or if none, make a new one:
-        var window = GetWindow<SimpleTreeViewEditor>();
-        window.titleContent = new GUIContent("My Window");
-        window.Show();
+        //var window = GetWindow<SimpleTreeViewEditor>();
+        //window.titleContent = new GUIContent("My Window");
+        //window.Show();
+
+        //SimpleTreeViewEditor editorWindow = ScriptableObject.CreateInstance<SimpleTreeViewEditor>();
+        //editorWindow.titleContent = new GUIContent("My Window");
+
+        //editorWindow.Show();
+
+        //MySo obj = AssetDatabase.LoadAssetAtPath<MySo>("Assets/Editor/SoInst.asset");
+
+        //Assets/Editor/_Temp/SimpleTreeViewEditor.asset
+        //Object t = AssetDatabase.LoadAssetAtPath<Object>("Assets/Editor/_Temp/SimpleTreeViewEditor.asset");
+        //Object t = AssetDatabase.LoadAssetAtPath<Object>("Assets/SimpleTreeViewEditor.asset");
+
+        //Debug.Log("t is " + ((t == null)? "Null":t.ToString()));
+
+        GetOrCreateSo<MySo>("Assets/MySo.asset");
+        ShowEditorWindow<SimpleTreeViewEditor>("Tools");
+    }
+
+    static T GetOrCreateSo<T>(string file) where T : ScriptableObject
+    {
+        if (!File.Exists(file))
+        {
+            var t = ScriptableObject.CreateInstance<T>();
+            t.hideFlags = HideFlags.None;
+            AssetDatabase.CreateAsset(t, file);
+            EditorUtility.SetDirty(t);
+            AssetDatabase.SaveAssetIfDirty(t);
+            return t;
+        }
+        else
+        {
+            var t = AssetDatabase.LoadAssetAtPath<T>(file);
+            return t;
+        }
+    }
+
+    static T ShowEditorWindow<T>(string title) where T : EditorWindow
+    {
+        //试试不放在Assets下
+        string file = $"Assets/Editor/_Temp/{typeof(T).Name}.asset";
+        Directory.CreateDirectory("Assets/Editor/_Temp");
+        var t = GetOrCreateSo<T>(file);
+        t = Object.Instantiate(t);//复制一份，否则关闭时会被destroy
+        if (t != null)
+        {
+            t.titleContent = new GUIContent(title);
+            t.Show();
+        }
+        return t;
     }
 }
