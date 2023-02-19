@@ -3,32 +3,29 @@ using UnityEngine;
 using UnityEditor.IMGUI.Controls;
 using UnityEditor;
 using System.IO;
-using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 namespace Tools
 {
-    class SimpleTreeViewEditor : SavableEditorWindow<SimpleTreeViewEditor>
+    class SimpleTreeViewEditor : SavableWindow<SimpleTreeViewEditor>
     {
-        public int bb;                             //auto serialize
+        //public int bb;                             //auto serialize
         [SerializeField] TreeViewState _TreeState; //serializable
 
-        SimpleTreeView _TreeView;  // not serialize
+        ToolsTreeView _TreeView;  // not serialize
         Editor _ObjEditor;
 
         void OnEnable()
         {
-
-            Debug.Log("bb:" + bb);
-            bb++;
-
             if (_TreeState == null)
                 _TreeState = new TreeViewState();
 
-            _TreeView = new SimpleTreeView(_TreeState);
+            _TreeView = new ToolsTreeView(_TreeState);
 
             //IList<int>  lst = m_SimpleTreeView.GetSelection();
 
-
+            //SettingsService
+            //PreferenceSettingsWindow
             MySo obj = AssetDatabase.LoadAssetAtPath<MySo>("Assets/Editor/SoInst.asset");
             _ObjEditor = Editor.CreateEditor(obj);
 
@@ -68,7 +65,7 @@ namespace Tools
         }
 
         // Add menu named "My Window" to the Window menu
-        [MenuItem("TreeView Examples/Simple Tree Window %t")]
+        //[MenuItem("TreeView Examples/Simple Tree Window %t")]
         static void ShowWindow()
         {
             //var window = GetWindow<SimpleTreeViewEditor>();

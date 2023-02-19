@@ -7,9 +7,9 @@ namespace Tools
 {
     /// <summary>
     /// EditorWindow 默认只在自身没关闭情况下，关闭unity时才会serialize自己, 关闭自身时不会serialize自己
-    /// SavableEditorWindow 在关闭自身时会自动序列化public变量和SerializeField的变量
+    /// SavableWindow 在关闭自身时会自动序列化public变量和SerializeField的变量
     /// </summary>
-    class SavableEditorWindow<T> : EditorWindow where T : EditorWindow
+    class SavableWindow<T> : EditorWindow where T : EditorWindow
     {
         static T _Inst;
         static string _File = $"UserSettings/{typeof(T).Name}.asset";
