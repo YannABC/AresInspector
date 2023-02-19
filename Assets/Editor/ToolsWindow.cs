@@ -10,7 +10,7 @@ namespace Tools
 {
     class ToolsWindow : SavableWindow<ToolsWindow>
     {
-        [SerializeField] float m_SplitterWidth = 150;//分隔符宽度
+        [SerializeField] float m_SplitterPos = 150;//分隔符宽度
 
         [SerializeField] TreeViewState m_TreeState;
         ToolsTreeView m_TreeView;
@@ -33,25 +33,32 @@ namespace Tools
 
         void DrawTreeView()
         {
-            m_TreeView.OnGUI(new Rect(0, 0, m_SplitterWidth, position.height));
+            m_TreeView.OnGUI(new Rect(0, 0, m_SplitterPos, position.height));
         }
 
         void SetupSplitter()
         {
-            m_Splitter = new TwoPaneSplitView(0, m_SplitterWidth, TwoPaneSplitViewOrientation.Horizontal);
+            m_Splitter = new TwoPaneSplitView(0, m_SplitterPos, TwoPaneSplitViewOrientation.Horizontal);
             rootVisualElement.Add(m_Splitter);
 
+            //左侧
             VisualElement left = new VisualElement();
             m_Splitter.Add(left);
 
+            //左侧 - 搜索栏
             ToolbarSearchField search = new ToolbarSearchField();
             left.Add(search);
             search.style.position = Position.Absolute;
             search.style.left = 0;
-            search.style.width = m_SplitterWidth - 8;
+            search.style.width = m_SplitterPos - 8;
             search.style.top = 0;
             search.style.height = 18;
+            search.RegisterValueChangedCallback((ChangeEvent<string> s) =>
+            {
+                m_TreeView.searchString = s.newValue;
+            });
 
+            //左侧 - 树状
             IMGUIContainer tree = new IMGUIContainer(DrawTreeView);
             left.Add(tree);
             tree.style.position = Position.Absolute;
@@ -60,12 +67,13 @@ namespace Tools
             tree.style.top = 20;
             tree.style.bottom = 0;
 
+            //右侧
             m_Splitter.Add(new VisualElement());
 
             left.RegisterCallback<GeometryChangedEvent>((evt) =>
             {
-                m_SplitterWidth = left.style.width.value.value;
-                search.style.width = m_SplitterWidth - 8;
+                m_SplitterPos = left.style.width.value.value;
+                search.style.width = m_SplitterPos - 8;
             });
         }
 
