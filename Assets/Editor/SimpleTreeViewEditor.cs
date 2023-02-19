@@ -65,7 +65,7 @@ namespace Tools
         }
 
         // Add menu named "My Window" to the Window menu
-        //[MenuItem("TreeView Examples/Simple Tree Window %t")]
+        [MenuItem("Tools/Simple Tree Window")]
         static void ShowWindow()
         {
             //var window = GetWindow<SimpleTreeViewEditor>();

@@ -11,12 +11,12 @@ namespace Tools
     /// </summary>
     class SavableWindow<T> : EditorWindow where T : EditorWindow
     {
-        static T _Inst;
         static string _File = $"UserSettings/{typeof(T).Name}.asset";
 
         protected static T OpenOrClose(string title)
         {
-            if (_Inst == null)
+            T inst = GetWindow();
+            if (!inst)
             {
                 string dir = Path.GetDirectoryName(_File);
                 Directory.CreateDirectory(dir);
@@ -33,18 +33,23 @@ namespace Tools
                     t.hideFlags = HideFlags.None;
                     t.titleContent = new GUIContent(title);
                 }
-                
+
                 t.Show();
 
-                _Inst = t;
                 return t;
             }
             else
             {
-                _Inst.Close();
-                _Inst = null;
+                inst.Close();
                 return null;
             }
+        }
+
+        static T GetWindow()
+        {
+            UnityEngine.Object[] array = Resources.FindObjectsOfTypeAll(typeof(T));
+            EditorWindow editorWindow = ((array.Length != 0) ? ((EditorWindow)array[0]) : null);
+            return editorWindow as T;
         }
 
         protected virtual void OnDisable()

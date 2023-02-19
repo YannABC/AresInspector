@@ -4,50 +4,71 @@ using UnityEditor.IMGUI.Controls;
 
 namespace Tools
 {
+    /// <summary>
+    /// 未解决问题
+    /// 1. 开着，重新reload,打不开窗口
+    /// 2. treeviewitem ctrl不能取消
+    /// 3. splitter有问题
+    /// </summary>
     class ToolsTreeView : TreeView
     {
+        Dictionary<int, ToolsTreeItem> m_Items = new Dictionary<int, ToolsTreeItem>();
+
+        IList<TreeViewItem> m_Selected = null;
+
         public ToolsTreeView(TreeViewState treeViewState)
             : base(treeViewState)
         {
+            BuildItems();
             Reload();
+
+            SelectionChanged(GetSelection());
+        }
+
+        void BuildItems()
+        {
+            ToolsTreeItem item = new ToolsTreeItem()
+            {
+                id = 1,
+                depth = 0,
+                displayName = "myso",
+                file = "Assets/Editor/_Temp/myso.asset",
+                type = typeof(MySo)
+            };
+            m_Items.Add(item.id, item);
+
+            ToolsTreeItem item2 = new ToolsTreeItem()
+            {
+                id = 2,
+                depth = 0,
+                displayName = "myso2",
+                file = "Assets/Editor/_Temp/myso2.asset",
+                type = typeof(MySo2)
+            };
+            m_Items.Add(item2.id, item2);
         }
 
         protected override TreeViewItem BuildRoot()
         {
-            // BuildRoot is called every time Reload is called to ensure that TreeViewItems 
-            // are created from data. Here we create a fixed set of items. In a real world example,
-            // a data model should be passed into the TreeView and the items created from the model.
+            TreeViewItem root = new TreeViewItem { id = 0, depth = -1, displayName = "Root" };
+            List<TreeViewItem> allItems = new List<TreeViewItem>();
+            foreach (var kv in m_Items)
+            {
+                allItems.Add(kv.Value);
+            }
 
-            // This section illustrates that IDs should be unique. The root item is required to 
-            // have a depth of -1, and the rest of the items increment from that.
-            var root = new TreeViewItem { id = 0, depth = -1, displayName = "Root" };
-            var allItems = new List<TreeViewItem>
-        {
-            new TreeViewItem {id = 1, depth = 0, displayName = "Animals"},
-            new TreeViewItem {id = 2, depth = 1, displayName = "Mammals"},
-            new TreeViewItem {id = 3, depth = 2, displayName = "Tiger"},
-            new TreeViewItem {id = 4, depth = 2, displayName = "Elephant"},
-            new TreeViewItem {id = 5, depth = 2, displayName = "Okapi"},
-            new TreeViewItem {id = 6, depth = 2, displayName = "Armadillo"},
-            new TreeViewItem {id = 7, depth = 1, displayName = "Reptiles"},
-            new TreeViewItem {id = 8, depth = 2, displayName = "Crocodile"},
-            new TreeViewItem {id = 9, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 10, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 11, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 12, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 13, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 14, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 15, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 16, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 17, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 18, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 19, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 20, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 21, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 22, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 23, depth = 2, displayName = "Lizard"},
-            new TreeViewItem {id = 24, depth = 2, displayName = "Lizard"},
-        };
+            //List<TreeViewItem> allItems = new List<TreeViewItem>
+            //{
+            //    new TreeViewItem {id =  1, depth = 0, displayName = "Animals"},
+            //    new TreeViewItem {id =  2, depth = 1, displayName = "Mammals"},
+            //    new TreeViewItem {id =  3, depth = 2, displayName = "Tiger"},
+            //    new TreeViewItem {id =  4, depth = 2, displayName = "Elephant"},
+            //    new TreeViewItem {id =  5, depth = 2, displayName = "Okapi"},
+            //    new TreeViewItem {id =  6, depth = 2, displayName = "Armadillo"},
+            //    new TreeViewItem {id =  7, depth = 1, displayName = "Reptiles"},
+            //    new TreeViewItem {id =  8, depth = 2, displayName = "Crocodile"},
+            //    new TreeViewItem {id =  9, depth = 2, displayName = "Lizard"},
+            //};
 
             // Utility method that initializes the TreeViewItem.children and .parent for all items.
             SetupParentsAndChildrenFromDepths(root, allItems);
@@ -56,14 +77,40 @@ namespace Tools
             return root;
         }
 
+        internal void DrawContent()
+        {
+            if (m_Selected == null) return;
+            foreach (var item in m_Selected)
+            {
+                (item as ToolsTreeItem).OnDraw();
+            }
+        }
+
+        internal void OnDisable()
+        {
+            ClearSelectedItems();
+        }
+
         protected override void SelectionChanged(IList<int> selectedIds)
         {
-            IList<TreeViewItem> items = FindRows(selectedIds);
-            if (items.Count > 0)
-            {
-                UnityEngine.Debug.Log(items[0].displayName);
+            ClearSelectedItems();
 
+            m_Selected = FindRows(selectedIds);
+            if (m_Selected == null) return;
+            foreach (var item in m_Selected)
+            {
+                (item as ToolsTreeItem).OnOpen();
             }
+        }
+
+        void ClearSelectedItems()
+        {
+            if (m_Selected == null) return;
+            foreach (var item in m_Selected)
+            {
+                (item as ToolsTreeItem).OnClose();
+            }
+            m_Selected = null;
         }
     }
 }

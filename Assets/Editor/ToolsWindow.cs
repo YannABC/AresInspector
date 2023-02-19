@@ -68,13 +68,24 @@ namespace Tools
             tree.style.bottom = 0;
 
             //右侧
-            m_Splitter.Add(new VisualElement());
+            IMGUIContainer right = new IMGUIContainer(DrawRight);
+            m_Splitter.Add(right);
+            right.style.position = Position.Absolute;
+            right.style.left = m_SplitterPos;
+            right.style.right = 0;
+            right.style.top = 0;
+            right.style.bottom = 0;
 
-            left.RegisterCallback<GeometryChangedEvent>((evt) =>
+            left.RegisterCallback((GeometryChangedEvent evt) =>
             {
                 m_SplitterPos = left.style.width.value.value;
                 search.style.width = m_SplitterPos - 8;
             });
+        }
+
+        void DrawRight()
+        {
+            m_TreeView.DrawContent();
         }
 
         void OnGUI()

@@ -11,6 +11,9 @@
 /[Mm]emoryCaptures/
 /UserSettings/
 
+# all _Temp directory
+_Temp/
+
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 
