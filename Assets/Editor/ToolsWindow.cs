@@ -96,6 +96,7 @@ namespace Tools
 
         protected override void OnDisable()
         {
+            m_TreeView.OnDisable();
             base.OnDisable();
         }
 
@@ -103,6 +104,11 @@ namespace Tools
         [MenuItem("Tools/Open or Close Tools %t")]
         static void ShowWindow()
         {
+            //UnityEngine.Object[] array = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
+
+            //MySo ms = ScriptableObject.CreateInstance<MySo>();
+            //AssetDatabase.CreateAsset(ms, "ProjectSettings/myso.asset");
+
             OpenOrClose("Tools");
         }
     }

@@ -11,21 +11,21 @@ namespace Tools
     /// </summary>
     class SavableWindow<T> : EditorWindow where T : EditorWindow
     {
-        static string _File = $"UserSettings/{typeof(T).Name}.asset";
+        static string s_File = $"UserSettings/{typeof(T).Name}.asset";
 
         protected static T OpenOrClose(string title)
         {
             T inst = GetWindow();
             if (!inst)
             {
-                string dir = Path.GetDirectoryName(_File);
+                string dir = Path.GetDirectoryName(s_File);
                 Directory.CreateDirectory(dir);
 
                 T t;
-                if (File.Exists(_File))
+                if (File.Exists(s_File))
                 {
                     //t = AssetDatabase.LoadAssetAtPath<T>(_File);
-                    t = InternalEditorUtility.LoadSerializedFileAndForget(_File)[0] as T;
+                    t = InternalEditorUtility.LoadSerializedFileAndForget(s_File)[0] as T;
                 }
                 else
                 {
@@ -55,7 +55,7 @@ namespace Tools
         protected virtual void OnDisable()
         {
             //AssetDatabase.CreateAsset(t, _File);
-            InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { this }, _File, true);
+            InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { this }, s_File, true);
         }
 
         //static T GetOrCreateSo<T>(string file) where T : ScriptableObject

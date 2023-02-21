@@ -32,7 +32,8 @@ namespace Tools
                 id = 1,
                 depth = 0,
                 displayName = "myso",
-                file = "Assets/Editor/_Temp/myso.asset",
+                file = "UserSettings/myso.asset",
+                //file = "Assets/Editor/_Temp/myso.asset",
                 type = typeof(MySo)
             };
             m_Items.Add(item.id, item);
@@ -43,6 +44,7 @@ namespace Tools
                 depth = 0,
                 displayName = "myso2",
                 file = "Assets/Editor/_Temp/myso2.asset",
+                //file = "Assets/Editor/_Temp/myso2.asset",
                 type = typeof(MySo2)
             };
             m_Items.Add(item2.id, item2);

@@ -48,6 +48,7 @@ public class EditorLearnSettings : ScriptableObject
     /// <returns></returns>
     public static SerializedObject GetSerializedSettings()
     {
+        //return AssetSettingsProvider.CreateProviderFromAssetPath("Project/Input Manager", "ProjectSettings/InputManager.asset", SettingsProvider.GetSearchKeywordsFromPath("ProjectSettings/InputManager.asset"));
         return new SerializedObject(GetOrCreateSettings());
     }
 }
