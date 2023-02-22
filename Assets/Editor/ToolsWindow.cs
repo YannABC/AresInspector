@@ -71,7 +71,7 @@ namespace Tools
             IMGUIContainer right = new IMGUIContainer(DrawRight);
             m_Splitter.Add(right);
             right.style.position = Position.Absolute;
-            right.style.left = m_SplitterPos;
+            right.style.left = m_SplitterPos + 8;
             right.style.right = 0;
             right.style.top = 0;
             right.style.bottom = 0;
@@ -80,6 +80,7 @@ namespace Tools
             {
                 m_SplitterPos = left.style.width.value.value;
                 search.style.width = m_SplitterPos - 8;
+                right.style.left = m_SplitterPos + 8;
             });
         }
 

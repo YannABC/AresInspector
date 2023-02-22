@@ -1,14 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor.IMGUI.Controls;
+using UnityEngine;
 
 namespace Tools
 {
     /// <summary>
     /// 未解决问题
-    /// 1. 开着，重新reload,打不开窗口
-    /// 2. treeviewitem ctrl不能取消
-    /// 3. splitter有问题
+    /// 1. treeviewitem ctrl+click 不能取消
     /// </summary>
     class ToolsTreeView : TreeView
     {
@@ -77,6 +75,24 @@ namespace Tools
 
             // Return root of the tree
             return root;
+        }
+
+        protected override void SingleClickedItem(int id)
+        {
+            //if (!ControlIsDown()) return;
+
+            //IList<int> lst = GetSelection();
+            //if(lst.Contains(id) && lst.Count > 1)
+            //{
+            //    List<int> a = new List<int>(lst);
+            //    a.Remove(id);
+            //    SetSelection(a);
+            //}
+        }
+
+        bool ControlIsDown()
+        {
+            return Event.current.control;
         }
 
         internal void DrawContent()

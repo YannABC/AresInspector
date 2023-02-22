@@ -20,7 +20,7 @@ namespace Tools
 
         Editor m_ObjEditor;
 
-        bool IsRelativeAssets => file.StartsWith("Assets/");
+        bool isRelativeAssets => file.StartsWith("Assets/");
 
         internal void OnOpen()
         {
@@ -31,7 +31,7 @@ namespace Tools
                 Directory.CreateDirectory(dir);
 
                 Object obj = ScriptableObject.CreateInstance(type);
-                if (IsRelativeAssets)
+                if (isRelativeAssets)
                 {
                     AssetDatabase.CreateAsset(obj, file);
                 }
@@ -43,7 +43,7 @@ namespace Tools
             }
 
             {
-                Object obj = IsRelativeAssets ?
+                Object obj = isRelativeAssets ?
                     AssetDatabase.LoadAssetAtPath(file, type) :
                     InternalEditorUtility.LoadSerializedFileAndForget(file)[0];
                 m_ObjEditor = Editor.CreateEditor(obj);
@@ -53,7 +53,7 @@ namespace Tools
         internal void OnClose()
         {
             //Debug.Log("OnClose " + displayName);
-            if (!IsRelativeAssets)
+            if (!isRelativeAssets)
             {
                 InternalEditorUtility.SaveToSerializedFileAndForget(
                     new Object[] { m_ObjEditor.target }, file, allowTextSerialization: true);
