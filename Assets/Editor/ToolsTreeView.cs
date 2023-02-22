@@ -1,18 +1,19 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Tools
 {
     /// <summary>
-    /// 未解决问题
-    /// 1. treeviewitem ctrl+click 不能取消
+    /// 
     /// </summary>
     class ToolsTreeView : TreeView
     {
         Dictionary<int, ToolsTreeItem> m_Items = new Dictionary<int, ToolsTreeItem>();
 
-        IList<TreeViewItem> m_Selected = null;
+        IList<TreeViewItem> m_SelectedItems = null;
+        bool m_SelectChanged = false;
 
         public ToolsTreeView(TreeViewState treeViewState)
             : base(treeViewState)
@@ -77,28 +78,29 @@ namespace Tools
             return root;
         }
 
+        //解决 ctrl+click不能 deselect的问题
         protected override void SingleClickedItem(int id)
         {
-            //if (!ControlIsDown()) return;
+            if(ControlIsDown() && !m_SelectChanged)
+            {
+                List<int> ids = new List<int>(GetSelection());
+                ids.Remove(id);
+                SetSelection(ids,TreeViewSelectionOptions.FireSelectionChanged);
+            }
 
-            //IList<int> lst = GetSelection();
-            //if(lst.Contains(id) && lst.Count > 1)
-            //{
-            //    List<int> a = new List<int>(lst);
-            //    a.Remove(id);
-            //    SetSelection(a);
-            //}
+            m_SelectChanged = false;
         }
 
         bool ControlIsDown()
         {
-            return Event.current.control;
+            //return Event.current.control;
+            return EditorGUI.actionKey;// control on windows,  cmd on mac
         }
 
         internal void DrawContent()
         {
-            if (m_Selected == null) return;
-            foreach (var item in m_Selected)
+            if (m_SelectedItems == null) return;
+            foreach (TreeViewItem item in m_SelectedItems)
             {
                 (item as ToolsTreeItem).OnDraw();
             }
@@ -113,22 +115,25 @@ namespace Tools
         {
             ClearSelectedItems();
 
-            m_Selected = FindRows(selectedIds);
-            if (m_Selected == null) return;
-            foreach (var item in m_Selected)
+            m_SelectedItems = FindRows(selectedIds);
+            foreach (TreeViewItem item in m_SelectedItems)
             {
                 (item as ToolsTreeItem).OnOpen();
             }
+
+            m_SelectChanged = true;
         }
 
         void ClearSelectedItems()
         {
-            if (m_Selected == null) return;
-            foreach (var item in m_Selected)
+            if (m_SelectedItems != null)
             {
-                (item as ToolsTreeItem).OnClose();
+                foreach (TreeViewItem item in m_SelectedItems)
+                {
+                    (item as ToolsTreeItem).OnClose();
+                }
+                m_SelectedItems = null;
             }
-            m_Selected = null;
         }
     }
 }
