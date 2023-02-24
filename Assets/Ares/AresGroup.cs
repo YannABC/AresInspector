@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,16 +6,19 @@ using UnityEngine;
 
 namespace Ares
 {
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     [Conditional("UNITY_EDITOR")]
     public class AresGroup : AresAttribute
     {
-        public List<AresAttribute> attrs = new List<AresAttribute>();
+        public int id;
+        public int parentId;
+        public List<AresGroup> groups = new List<AresGroup>();
+        public List<AresMember> members = new List<AresMember>();
 
-        public AresGroup(
-            string show = "true",  //是否显示，false or method
-            int group = 0          //所在组id
-            )
+        public AresGroup(int id, int parentId)
         {
+            this.id = id;
+            this.parentId = parentId;
         }
     }
 }
