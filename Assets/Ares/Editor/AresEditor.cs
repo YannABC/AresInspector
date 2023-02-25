@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +15,8 @@ namespace Ares
     [CustomEditor(typeof(Object), true)]
     public class AresEditor : Editor
     {
-        bool m_HasAres;
-        //List<AresGroup> m_Groups;
+        bool m_HasAres; //是否有Ares相关attribute
+        HashSet<string> m_VisibleFields;  //所有可见字段(public Serilizefield Nonserilizefield ShowInInspector）
         AresGroup m_RootGroup;
         private void OnEnable()
         {
@@ -26,8 +25,12 @@ namespace Ares
 
             if (!m_HasAres) return;
 
+            //计算所有可见field
+            CalcAllVisibleFields();
+
             //默认有个 Group0
-            m_RootGroup = new AresGroup(id: 0, parentId: 0);
+            m_RootGroup = new AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)
+            { target = target, serializedObject = serializedObject };
 
             //遍历所以基类及自己
             List<System.Type> types = ReflectionUtility.GetSelfAndBaseTypes(target);
@@ -42,9 +45,9 @@ namespace Ares
                     AddGroup(group);
                 }
 
-                //查找所有可以序列化的字段, 添加到对应的group中
+                //查找当前基类里所有可以序列化且unity可见的字段, 添加到对应的group中
                 IEnumerable<FieldInfo> fields = ReflectionUtility.GetAllFieldsFromType(target, type
-                    , f => f.IsPublic || f.GetCustomAttribute<System.SerializableAttribute>() != null);
+                    , (f) => m_VisibleFields.Contains(f.Name));
 
                 foreach (FieldInfo fi in fields)
                 {
@@ -53,7 +56,6 @@ namespace Ares
                     {
                         foreach (AresField af in afs)
                         {
-                            af.target = target;
                             af.type = type;
                             af.fieldInfo = fi;
                             AddAttrToGroup(af);
@@ -63,7 +65,6 @@ namespace Ares
                     {
                         //默认一个
                         AresField af = new AresField();
-                        af.target = target;
                         af.type = type;
                         af.fieldInfo = fi;
                         AddAttrToGroup(af);
@@ -77,8 +78,6 @@ namespace Ares
                 foreach (MethodInfo mi in methods)
                 {
                     AresMethod am = mi.GetCustomAttribute<AresMethod>();
-
-                    am.target = target;
                     am.type = type;
                     am.methodInfo = mi;
 
@@ -87,37 +86,24 @@ namespace Ares
             }
 
             //排序
-            SortGroupRecursive(m_RootGroup);
+            m_RootGroup.SortMembers();
         }
 
-        void SortGroupRecursive(AresGroup group)
+        void CalcAllVisibleFields()
         {
-            group.members.Sort((l, r) =>
+            m_VisibleFields = new HashSet<string>();
+            SerializedProperty iterator = serializedObject.GetIterator();
+            bool enterChildren = true;
+            while (iterator.NextVisible(enterChildren))
             {
-                if (l.prority != r.prority) return l.prority - r.prority;
-                return l.index - r.index;
-
-            });
-            foreach (AresGroup sub in group.groups)
-            {
-                SortGroupRecursive(sub);
+                m_VisibleFields.Add(iterator.name);
+                enterChildren = false;
             }
         }
 
         AresGroup FindGroup(int id)
         {
-            return FindGroupRecursive(id, m_RootGroup);
-        }
-
-        AresGroup FindGroupRecursive(int id, AresGroup group)
-        {
-            if (id == group.id) return group;
-            foreach (AresGroup sub in group.groups)
-            {
-                AresGroup f = FindGroupRecursive(id, sub);
-                if (f != null) return f;
-            }
-            return null;
+            return m_RootGroup.FindGroup(id);
         }
 
         void AddGroup(AresGroup group)
@@ -130,14 +116,17 @@ namespace Ares
             }
 
             int parentId = group.parentId;
-            ag = FindGroup(group.id);
-            if (ag != null)
+            ag = FindGroup(parentId);
+            if (ag == null)
             {
                 Debug.LogError($"parent group {parentId} not found");
                 return;
             }
 
-            ag.groups.Add(group);
+            group.target = target;
+            group.serializedObject = serializedObject;
+
+            ag.subGroups.Add(group);
         }
 
         void AddAttrToGroup(AresMember m)
@@ -148,6 +137,8 @@ namespace Ares
                 Debug.LogError($"AresGroup {m.groupId} in {target.GetType().Name} not found");
                 return;
             }
+            m.target = target;
+            m.serializedObject = serializedObject;
             m.index = ag.members.Count;
             ag.members.Add(m);
         }
@@ -165,86 +156,8 @@ namespace Ares
                 return;
             }
             serializedObject.Update();
-            DrawRecursive(m_RootGroup);
+            m_RootGroup.OnGUI();
             serializedObject.ApplyModifiedProperties();
-        }
-
-        void DrawRecursive(AresGroup group)
-        {
-            EditorGUILayout.BeginVertical();
-            foreach (AresMember m in group.members)
-            {
-                DrawMember(m);
-            }
-            EditorGUILayout.EndVertical();
-        }
-
-        void DrawMember(AresMember m)
-        {
-            if (m is AresField af)
-            {
-                DrawField(af);
-            }
-            else if (m is AresMethod am)
-            {
-                DrawMethod(am);
-            }
-        }
-
-        void DrawField(AresField af)
-        {
-            if (af.property == null)
-            {
-                af.property = serializedObject.FindProperty(af.fieldInfo.Name);
-            }
-            SerializedProperty sp = af.property;
-
-            if (sp == null)
-            {
-                Debug.LogError(af.fieldInfo.Name + " sp == null");
-                return;
-            }
-
-            bool visible = true;
-            if (!visible) return;
-
-            // Validate
-            //ValidatorAttribute[] validatorAttributes = PropertyUtility.GetAttributes<ValidatorAttribute>(property);
-            //foreach (var validatorAttribute in validatorAttributes)
-            //{
-            //    validatorAttribute.GetValidator().ValidateProperty(property);
-            //}
-
-            // Check if enabled and draw
-            EditorGUI.BeginChangeCheck();
-            bool enabled = true;
-
-            using (new EditorGUI.DisabledScope(disabled: !enabled))
-            {
-                string label = af.label == null ? sp.displayName : af.label;
-                EditorGUILayout.PropertyField(sp, new GUIContent(label), includeChildren: true);
-
-                //Rect rect = EditorGUILayout.GetControlRect();
-
-                //int index = EditorGUI.Popup(rect, 1, new string[] { "1", "2", "3" });
-
-
-                //EditorGUILayout.PropertyField(sp, GUIContent.none, includeChildren: true);
-
-                //EditorGUI.IntSlider(EditorGUILayout.GetControlRect(), sp, 2, 10, label);
-
-            }
-
-            // Call OnValueChanged callbacks
-            if (EditorGUI.EndChangeCheck())
-            {
-
-            }
-        }
-
-        void DrawMethod(AresMethod am)
-        {
-
         }
     }
 }

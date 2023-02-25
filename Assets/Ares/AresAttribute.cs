@@ -1,13 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using UnityEngine;
 
 namespace Ares
 {
     [Conditional("UNITY_EDITOR")]
-    public class AresAttribute : System.Attribute
+    public partial class AresAttribute : System.Attribute
     {
-        
     }
+
+#if UNITY_EDITOR
+    public partial class AresAttribute
+    {
+        public UnityEngine.Object target;
+        public UnityEditor.SerializedObject serializedObject;
+
+        public virtual void OnGUI() { }
+    }
+#endif
 }
