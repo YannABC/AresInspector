@@ -34,7 +34,7 @@ namespace Ares
     public partial class AresField
     {
         public FieldInfo fieldInfo;
-        public UnityEditor.SerializedProperty property;
+        public SerializedProperty property;
 
         public override void OnGUI()
         {

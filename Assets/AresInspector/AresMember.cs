@@ -38,7 +38,7 @@ namespace Ares
     public partial class AresMember
     {
         public int index; // for stable sort
-        public System.Type type;//自己，或者 父类
+        public Type type;//自己，或者 父类
 
         MethodInfo m_MethodVisible;
         MethodInfo m_MethodEnable;

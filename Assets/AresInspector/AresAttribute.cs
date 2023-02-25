@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using UnityEditor;
+using UnityObject = UnityEngine.Object;
 
 namespace Ares
 {
@@ -10,8 +12,8 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class AresAttribute
     {
-        public UnityEngine.Object target;
-        public UnityEditor.SerializedObject serializedObject;
+        public UnityObject target;
+        public SerializedObject serializedObject;
 
         public virtual void OnGUI() { }
     }
