@@ -10,9 +10,12 @@ namespace Tools
 {
     class ToolsWindow : SavableWindow<ToolsWindow>
     {
-        [SerializeField] float m_SplitterPos = 150;//分隔符宽度
+        [SerializeField]
+        float m_SplitterPos = 150;//分隔符宽度
 
-        [SerializeField] TreeViewState m_TreeState;
+        [SerializeField]
+        TreeViewState m_TreeState;
+
         ToolsTreeView m_TreeView;
 
         TwoPaneSplitView m_Splitter;

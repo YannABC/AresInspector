@@ -16,7 +16,7 @@ namespace Ares
         public static bool HasAres(object target)
         {
             bool has = target.GetType()
-                .GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+                .GetFields(BindingFlags.Instance /* | BindingFlags.Static*/ | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(f => f.GetCustomAttributes(typeof(AresAttribute), true).Length > 0).Any();
             if (has) return has;
 
@@ -36,7 +36,7 @@ namespace Ares
             }
 
             IEnumerable<FieldInfo> fieldInfos = type
-                .GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .GetFields(BindingFlags.Instance /*| BindingFlags.Static*/ | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .Where(predicate);
 
             foreach (FieldInfo fieldInfo in fieldInfos)

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using UnityEditor;
@@ -36,22 +36,23 @@ namespace Ares
         public FieldInfo fieldInfo;
         public SerializedProperty property;
 
+        bool m_HasAres;
+
+        AresGroup m_Group;//内嵌类
+
         public override void OnGUI()
         {
-            if (property == null)
-            {
-                property = serializedObject.FindProperty(fieldInfo.Name);
-            }
-            SerializedProperty sp = property;
-
-            if (sp == null)
-            {
-                UnityEngine.Debug.LogError(fieldInfo.Name + " sp == null");
-                return;
-            }
-
             bool visible = IsVisible();
             if (!visible) return;
+
+            if (m_HasAres)
+            {
+                int indent = EditorGUI.indentLevel;
+                EditorGUI.indentLevel++;
+                m_Group.OnGUI();
+                EditorGUI.indentLevel = indent;
+                return;
+            }
 
             // Validate
             //ValidatorAttribute[] validatorAttributes = PropertyUtility.GetAttributes<ValidatorAttribute>(property);
@@ -66,8 +67,8 @@ namespace Ares
 
             using (new EditorGUI.DisabledScope(disabled: !enabled))
             {
-                string displayName = label == null ? sp.displayName : label;
-                EditorGUILayout.PropertyField(sp, new GUIContent(displayName), includeChildren: true);
+                string displayName = label == null ? property.displayName : label;
+                EditorGUILayout.PropertyField(property, new GUIContent(displayName), includeChildren: true);
 
                 //Rect rect = EditorGUILayout.GetControlRect();
 
@@ -84,6 +85,28 @@ namespace Ares
             if (EditorGUI.EndChangeCheck())
             {
 
+            }
+        }
+
+        public override void Init()
+        {
+            System.Type type = fieldInfo.FieldType;
+
+            if (!type.IsClass)
+            {
+                m_HasAres = false;
+            }
+            else
+            {
+                object obj = property.GetTargetObjectOfProperty();
+                m_HasAres = ReflectionUtility.HasAres(obj);
+
+                if (!m_HasAres) return;
+
+                m_Group = new AresGroup(0, 0, EAresGroupType.Vertical)
+                { target = obj };
+
+                m_Group.Init(property);
             }
         }
     }

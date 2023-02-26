@@ -12,7 +12,7 @@ namespace Ares
     {
         //{{
         public int groupId;
-        public int prority;
+        public int order;
         public string visible;
         public string enable;
         public Color? color;
@@ -20,14 +20,14 @@ namespace Ares
 
         public AresMember(
             int groupId = 0,                 //所在group
-            int prority = 0,                 //所在group中的排序，越小越排前面
+            int order = 0,                 //所在group中的排序，越小越排前面
             string visible = "true",         //是否显示 true false or {custom_method_name}
             string enable = "true",          //是否可改 true false or {custom_method_name}
             Color? color = null              //颜色
             )
         {
             this.groupId = groupId;
-            this.prority = prority;
+            this.order = order;
             this.visible = visible;
             this.enable = enable;
             this.color = color;
@@ -81,6 +81,11 @@ namespace Ares
                 }
             }
             return ret;
+        }
+
+        public virtual void Init()
+        {
+
         }
 #endif
     }

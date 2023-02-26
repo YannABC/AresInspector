@@ -23,7 +23,6 @@ namespace Tools
             _TreeView = new ToolsTreeView(_TreeState);
 
             //IList<int>  lst = m_SimpleTreeView.GetSelection();
-
             //SettingsService
             //PreferenceSettingsWindow
             MySo obj = AssetDatabase.LoadAssetAtPath<MySo>("Assets/Editor/SoInst.asset");

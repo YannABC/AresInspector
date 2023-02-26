@@ -17,12 +17,6 @@ namespace Ares.ABC
             B = 2,
         }
 
-        [Serializable]
-        public class C
-        {
-            public int a;
-        }
-
         [AresField(visible = "IsVisible")]
         [Range(33, 44, order = 2)]
         [Header("Header with some space around it", order = 1)]
@@ -47,14 +41,14 @@ namespace Ares.ABC
         //[AresField(groupId = 2)]
         public List<int> lst;
 
-        //[HideInInspector]
+        [HideInInspector]
         public int NotShow;
 
         //[AresField(groupId = 2)]
         public C c;
 
-
-
+        //[SerializeField]
+        //public IC obj;
 
         public void Start()
         {
@@ -65,5 +59,18 @@ namespace Ares.ABC
         {
             return j > 10;
         }
+    }
+
+    [Serializable]
+    [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
+    public class C
+    {
+        [AresField(groupId = 1)]
+        public int ca;
+        //public C next;
+        [AresField(groupId = 1)]
+        public int cb;
+
+        public int pyj;
     }
 }

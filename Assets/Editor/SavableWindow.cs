@@ -57,23 +57,5 @@ namespace Tools
             //AssetDatabase.CreateAsset(t, _File);
             InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { this }, s_File, true);
         }
-
-        //static T GetOrCreateSo<T>(string file) where T : ScriptableObject
-        //{
-        //    if (!File.Exists(file))
-        //    {
-        //        var t = ScriptableObject.CreateInstance<T>();
-        //        t.hideFlags = HideFlags.None;
-        //        AssetDatabase.CreateAsset(t, file);
-        //        EditorUtility.SetDirty(t);
-        //        AssetDatabase.SaveAssetIfDirty(t);
-        //        return t;
-        //    }
-        //    else
-        //    {
-        //        var t = AssetDatabase.LoadAssetAtPath<T>(file);
-        //        return t;
-        //    }
-        //}
     }
 }
