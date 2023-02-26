@@ -2,6 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 namespace Ares
 {
@@ -18,7 +19,7 @@ namespace Ares
             bool showLabel = true,                  //show label
             string label = null,                    //label text
             int labelSize = 0,                      //label size
-            bool inline = false                    //inline                
+            bool inline = false                     //inline                
             ) : base()
         {
             this.label = label;
@@ -36,8 +37,6 @@ namespace Ares
         public FieldInfo fieldInfo;
         public SerializedProperty property;
 
-        bool m_HasAres;
-
         AresGroup m_Group;//内嵌类
 
         public override void OnGUI()
@@ -45,12 +44,12 @@ namespace Ares
             bool visible = IsVisible();
             if (!visible) return;
 
-            if (m_HasAres)
+            if (m_Group != null)
             {
-                int indent = EditorGUI.indentLevel;
-                EditorGUI.indentLevel++;
+                //int indent = EditorGUI.indentLevel;
+                //EditorGUI.indentLevel++;
                 m_Group.OnGUI();
-                EditorGUI.indentLevel = indent;
+                //EditorGUI.indentLevel = indent;
                 return;
             }
 
@@ -92,21 +91,20 @@ namespace Ares
         {
             System.Type type = fieldInfo.FieldType;
 
-            if (!type.IsClass)
-            {
-                m_HasAres = false;
-            }
-            else
+            if (type.IsClass)
             {
                 object obj = property.GetTargetObjectOfProperty();
-                m_HasAres = ReflectionUtility.HasAres(obj);
+                if (obj == null)
+                {
+                    // array  can be null
+                    return;
+                }
 
-                if (!m_HasAres) return;
+                m_Group = obj.GetType().GetCustomAttributes<AresGroup>().
+                    Where(ag => ag.id == 0).FirstOrDefault();
+                if (m_Group == null) return;
 
-                m_Group = new AresGroup(0, 0, EAresGroupType.Vertical)
-                { target = obj };
-
-                m_Group.Init(property);
+                m_Group.Init(obj, property);
             }
         }
     }

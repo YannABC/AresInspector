@@ -23,7 +23,7 @@ namespace Ares
         public AresGroup(
             int id,                   //group id
             int parentId,             //parent group id
-            EAresGroupType type       // group type
+            EAresGroupType type       //group type
             )
         {
             this.id = id;
@@ -112,14 +112,16 @@ namespace Ares
             return null;
         }
 
-        public void Init(SerializedObject serializedObject)
+        public void Init(object target, SerializedObject serializedObject)
         {
+            this.target = target;
             m_SerializedObject = serializedObject;
             Init();
         }
 
-        public void Init(SerializedProperty property)
+        public void Init(object target, SerializedProperty property)
         {
+            this.target = target;
             m_SerializedProperty = property;
             Init();
         }
@@ -127,7 +129,7 @@ namespace Ares
         void Init()
         {
             //遍历所有基类及自己
-            List<System.Type> types = ReflectionUtility.GetSelfAndBaseTypes(target);
+            List<System.Type> types = AresHelper.GetSelfAndBaseTypes(target);
             for (int i = types.Count - 1; i >= 0; i--)
             {
                 System.Type type = types[i];
@@ -140,7 +142,7 @@ namespace Ares
                 }
 
                 //查找当前基类里所有可以序列化且unity可见的字段, 添加到对应的group中
-                IEnumerable<FieldInfo> fields = ReflectionUtility.GetAllFieldsFromType(target, type
+                IEnumerable<FieldInfo> fields = AresHelper.GetAllFieldsFromType(target, type
                     , (f) => f.IsUnitySerialized() && f.GetCustomAttribute<HideInInspector>() == null);
 
                 foreach (FieldInfo fi in fields)
@@ -166,7 +168,7 @@ namespace Ares
                 }
 
                 //查找所有带AresMethod标签的函数, 添加到对应的group中
-                IEnumerable<MethodInfo> methods = ReflectionUtility.GetAllMethodsFromType(target, type
+                IEnumerable<MethodInfo> methods = AresHelper.GetAllMethodsFromType(target, type
                     , f => f.GetCustomAttribute<AresMethod>() != null);
 
                 foreach (MethodInfo mi in methods)
@@ -185,6 +187,7 @@ namespace Ares
 
         void AddGroup(AresGroup group)
         {
+            if (group.id == 0) return;
             AresGroup ag = FindGroup(group.id);
             if (ag != null)
             {

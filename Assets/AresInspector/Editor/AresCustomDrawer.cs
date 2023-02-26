@@ -8,14 +8,29 @@
 //    // Draw the property inside the given rect
 //    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 //    {
-//        object target = property.serializedObject.targetObject;
+//        object target = property.GetTargetObjectOfProperty();
+//        System.Type type = target.GetType();
+//        bool hasAres = ReflectionUtility.HasAres(type);
+//        if (hasAres)
+//        {
+//            AresGroup g = new AresGroup(0, 0, EAresGroupType.Vertical) { target = target };
+//            g.Init(property);
+
+//            EditorGUI.BeginProperty(position, label, property);
+//            g.OnGUI();
+//            EditorGUI.EndProperty();
+//        }
+//        else
+//        {
+//            base.OnGUI(position, property, label);
+//        }
 //        //property.
 //        //if (GUILayout.Button("aaaa"))
 //        //{
 //        //    Debug.Log("aaaa");
 //        //}
 //        //Debug.LogWarning("++++++++++++++++");
-//        base.OnGUI(position, property, label);
+//        //base.OnGUI(position, property, label);
 //        // Using BeginProperty / EndProperty on the parent property means that
 //        // prefab override logic works on the entire property.
 //        //EditorGUI.BeginProperty(position, label, property);
@@ -41,5 +56,10 @@
 //        //EditorGUI.indentLevel = indent;
 
 //        //EditorGUI.EndProperty();
+//    }
+
+//    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+//    {
+//        return EditorGUIUtility.singleLineHeight * 2;
 //    }
 //}

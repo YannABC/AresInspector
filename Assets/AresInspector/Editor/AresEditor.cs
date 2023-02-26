@@ -15,55 +15,29 @@ namespace Ares
     [CustomEditor(typeof(Object), true)]
     public class AresEditor : Editor
     {
-        bool m_HasAres; //是否有Ares相关attribute
-        //HashSet<string> m_VisibleFields;  //所有可见字段(public Serilizefield Nonserilizefield ShowInInspector）
         AresGroup m_RootGroup;
         private void OnEnable()
         {
             //Debug.Log("OnEnable " + target.GetType().Name);
-            m_HasAres = ReflectionUtility.HasAres(target);
-            if (!m_HasAres) return;
 
-            //计算所有可见field
-            //CalcAllVisibleFields();
-
-            //默认有个 Group0
-            m_RootGroup = new AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)
-            { target = target };
-
-            m_RootGroup.Init(serializedObject);
-        }
-
-        //void CalcAllVisibleFields()
-        //{
-        //    m_VisibleFields = new HashSet<string>();
-        //    SerializedProperty iterator = serializedObject.GetIterator();
-        //    bool enterChildren = true;
-        //    while (iterator.NextVisible(enterChildren))
-        //    {
-        //        m_VisibleFields.Add(iterator.name);
-        //        Debug.Log(iterator.propertyPath);
-        //        //enterChildren = false;
-        //    }
-        //}
-
-
-
-        private void OnDisable()
-        {
-            //Debug.Log("OnDisable " + target.GetType().Name);
+            m_RootGroup = target.GetType().GetCustomAttributes<AresGroup>().
+                Where(ag => ag.id == 0).FirstOrDefault();
+            if (m_RootGroup == null) return;
+            m_RootGroup.Init(target, serializedObject);
         }
 
         public override void OnInspectorGUI()
         {
-            if (!m_HasAres)
+            if (m_RootGroup != null)
+            {
+                serializedObject.Update();
+                m_RootGroup.OnGUI();
+                serializedObject.ApplyModifiedProperties();
+            }
+            else
             {
                 base.OnInspectorGUI();
-                return;
             }
-            serializedObject.Update();
-            m_RootGroup.OnGUI();
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }
