@@ -4,6 +4,12 @@ using UnityEditor;
 
 namespace Ares
 {
+    //register update
+    public interface IAresObject { }
+    public interface IAresObjectV : IAresObject { }  //Vertical
+    public interface IAresObjectH : IAresObject { }  //Horizontal
+
+
     [Conditional("UNITY_EDITOR")]
     public partial class AresAttribute : System.Attribute
     {
@@ -13,11 +19,8 @@ namespace Ares
     public partial class AresAttribute
     {
         public object target;   // MB or SO or serializable class
-        //public SerializedObject serializedObject;
 
         public virtual void OnGUI() { }
     }
 #endif
-
-    //public interface IAresObject { }
 }

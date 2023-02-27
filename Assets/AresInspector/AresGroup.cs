@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityDebug = UnityEngine.Debug;
 
 namespace Ares
@@ -42,6 +43,25 @@ namespace Ares
     {
         SerializedObject m_SerializedObject;
         SerializedProperty m_SerializedProperty;
+
+        public VisualElement CreateUI()
+        {
+            VisualElement root = new VisualElement();
+            root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
+
+            foreach (AresMember member in members)
+            {
+
+            }
+
+            foreach (AresGroup sub in subGroups)
+            {
+                root.Add(sub.CreateUI());
+            }
+
+            return root;
+        }
+
         public override void OnGUI()
         {
             if (members.Count > 0)
@@ -112,37 +132,37 @@ namespace Ares
             return null;
         }
 
-        public void Init(object target, SerializedObject serializedObject)
-        {
-            this.target = target;
-            m_SerializedObject = serializedObject;
-            Init();
-        }
+        //public void Init(object target, SerializedObject serializedObject)
+        //{
+        //    this.target = target;
+        //    m_SerializedObject = serializedObject;
+        //    Init();
+        //}
 
-        public void Init(object target, SerializedProperty property)
-        {
-            this.target = target;
-            m_SerializedProperty = property;
-            Init();
-        }
+        //public void Init(object target, SerializedProperty property)
+        //{
+        //    this.target = target;
+        //    m_SerializedProperty = property;
+        //    Init();
+        //}
 
-        void Init()
+        public void Init(Type type)
         {
             //遍历所有基类及自己
-            List<System.Type> types = AresHelper.GetSelfAndBaseTypes(target);
+            List<System.Type> types = AresHelper.GetSelfAndBaseTypes(type);
             for (int i = types.Count - 1; i >= 0; i--)
             {
-                System.Type type = types[i];
+                System.Type t = types[i];
 
                 //先添加group
-                IEnumerable<AresGroup> groups = type.GetCustomAttributes<AresGroup>();
+                IEnumerable<AresGroup> groups = t.GetCustomAttributes<AresGroup>();
                 foreach (AresGroup group in groups)
                 {
                     AddGroup(group);
                 }
 
                 //查找当前基类里所有可以序列化且unity可见的字段, 添加到对应的group中
-                IEnumerable<FieldInfo> fields = AresHelper.GetAllFieldsFromType(target, type
+                IEnumerable<FieldInfo> fields = AresHelper.GetAllFieldsFromType(target, t
                     , (f) => f.IsUnitySerialized() && f.GetCustomAttribute<HideInInspector>() == null);
 
                 foreach (FieldInfo fi in fields)
@@ -152,7 +172,7 @@ namespace Ares
                     {
                         foreach (AresField af in afs)
                         {
-                            af.type = type;
+                            af.type = t;
                             af.fieldInfo = fi;
                             AddAttrToGroup(af);
                         }
@@ -161,20 +181,20 @@ namespace Ares
                     {
                         //默认一个
                         AresField af = new AresField();
-                        af.type = type;
+                        af.type = t;
                         af.fieldInfo = fi;
                         AddAttrToGroup(af);
                     }
                 }
 
                 //查找所有带AresMethod标签的函数, 添加到对应的group中
-                IEnumerable<MethodInfo> methods = AresHelper.GetAllMethodsFromType(target, type
+                IEnumerable<MethodInfo> methods = AresHelper.GetAllMethodsFromType(target, t
                     , f => f.GetCustomAttribute<AresMethod>() != null);
 
                 foreach (MethodInfo mi in methods)
                 {
                     AresMethod am = mi.GetCustomAttribute<AresMethod>();
-                    am.type = type;
+                    am.type = t;
                     am.methodInfo = mi;
 
                     AddAttrToGroup(am);
@@ -187,7 +207,11 @@ namespace Ares
 
         void AddGroup(AresGroup group)
         {
-            if (group.id == 0) return;
+            if (group.id <= 0)
+            {
+                UnityDebug.LogError($"group {group.id} error");
+                return;
+            }
             AresGroup ag = FindGroup(group.id);
             if (ag != null)
             {

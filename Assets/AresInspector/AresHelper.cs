@@ -5,9 +5,26 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public static class AresHelper
 {
+    static Dictionary<Type, AresGroup> s_Groups = new Dictionary<Type, AresGroup>();
+
+    public static AresGroup GetGroup(Type type)
+    {
+        if (!s_Groups.TryGetValue(type, out AresGroup group))
+        {
+            bool vertical = type.IsSubclassOf(typeof(IAresObject))
+                || type.IsSubclassOf(typeof(IAresObjectV));
+            group = new AresGroup(0, 0,
+                vertical ? EAresGroupType.Vertical : EAresGroupType.Horizontal);
+            group.Init(type);
+            s_Groups.Add(type, group);
+        }
+        return group;
+    }
+
     public static bool IsUnitySerialized(this FieldInfo fieldInfo)
     {
         if (fieldInfo.IsStatic) return false;
@@ -192,7 +209,7 @@ public static class AresHelper
             yield break;
         }
 
-        List<Type> types = GetSelfAndBaseTypes(target);
+        List<Type> types = GetSelfAndBaseTypes(target.GetType());
 
         for (int i = types.Count - 1; i >= 0; i--)
         {
@@ -215,7 +232,7 @@ public static class AresHelper
             yield break;
         }
 
-        List<Type> types = GetSelfAndBaseTypes(target);
+        List<Type> types = GetSelfAndBaseTypes(target.GetType());
 
         for (int i = types.Count - 1; i >= 0; i--)
         {
@@ -238,7 +255,7 @@ public static class AresHelper
             yield break;
         }
 
-        List<Type> types = GetSelfAndBaseTypes(target);
+        List<Type> types = GetSelfAndBaseTypes(target.GetType());
 
         for (int i = types.Count - 1; i >= 0; i--)
         {
@@ -269,17 +286,11 @@ public static class AresHelper
     }
 
     /// <summary>
-    ///		Get type and all base types of target, sorted as following:
-    ///		<para />[target's type, base type, base's base type, ...]
+    ///		Get type and all base types of type
     /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    public static List<Type> GetSelfAndBaseTypes(object target)
+    public static List<Type> GetSelfAndBaseTypes(Type type)
     {
-        List<Type> types = new List<Type>()
-            {
-                target.GetType()
-            };
+        List<Type> types = new List<Type>() { type };
 
         while (types.Last().BaseType != null)
         {

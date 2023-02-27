@@ -13,18 +13,13 @@ namespace Ares
     /// 战神编辑器
     /// </summary>
     [CanEditMultipleObjects]
-    [CustomEditor(typeof(Object), true)]
+    [CustomEditor(typeof(IAresObject), true)]
     public class AresEditor : Editor
     {
         AresGroup m_RootGroup;
         private void OnEnable()
         {
-            //Debug.Log("OnEnable " + target.GetType().Name);
-
-            m_RootGroup = target.GetType().GetCustomAttributes<AresGroup>().
-                Where(ag => ag.id == 0).FirstOrDefault();
-            if (m_RootGroup == null) return;
-            m_RootGroup.Init(target, serializedObject);
+            m_RootGroup = AresHelper.GetGroup(target.GetType());
         }
 
         //public override void OnInspectorGUI()
@@ -43,23 +38,18 @@ namespace Ares
 
         public override VisualElement CreateInspectorGUI()
         {
-            var container = new VisualElement();
+            return m_RootGroup.CreateUI(target, serializedObject);
+            //var container = new VisualElement();
 
-            //Draw the legacy IMGUI base
-            var imgui = new IMGUIContainer(OnInspectorGUI);
-            container.Add(imgui);
+            ////Draw the legacy IMGUI base
+            ////var imgui = new IMGUIContainer(OnInspectorGUI);
+            ////container.Add(imgui);
 
-            // Create property fields.
-            // Add fields to the container.
-            imgui.Add(
-                     new PropertyField(serializedObject.FindProperty("c2")));
-            return container;
+            //// Create property fields.
+            //// Add fields to the container.
+            ////imgui.Add(new PropertyField(serializedObject.FindProperty("c2")));
+            //return container;
 
-        }
-
-        public override void OnInspectorGUI()
-        {
-            //DrawDefaultInspector();
         }
     }
 }

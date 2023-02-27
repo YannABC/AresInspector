@@ -3,6 +3,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using UnityEngine.UIElements;
 
 namespace Ares
 {
@@ -16,8 +17,7 @@ namespace Ares
         //}}
 
         public AresField(
-            bool showLabel = true,                  //show label
-            string label = null,                    //label text
+            string label = null,                    //label text  (null use property, empty not show)
             int labelSize = 0,                      //label size
             bool inline = false                     //inline                
             ) : base()
@@ -37,21 +37,21 @@ namespace Ares
         public FieldInfo fieldInfo;
         public SerializedProperty property;
 
-        AresGroup m_Group;//内嵌类
+        //AresGroup m_Group;//内嵌类
 
         public override void OnGUI()
         {
             bool visible = IsVisible();
             if (!visible) return;
 
-            if (m_Group != null)
-            {
-                //int indent = EditorGUI.indentLevel;
-                //EditorGUI.indentLevel++;
-                m_Group.OnGUI();
-                //EditorGUI.indentLevel = indent;
-                return;
-            }
+            //if (m_Group != null)
+            //{
+            //    //int indent = EditorGUI.indentLevel;
+            //    //EditorGUI.indentLevel++;
+            //    m_Group.OnGUI();
+            //    //EditorGUI.indentLevel = indent;
+            //    return;
+            //}
 
             // Validate
             //ValidatorAttribute[] validatorAttributes = PropertyUtility.GetAttributes<ValidatorAttribute>(property);
@@ -89,23 +89,28 @@ namespace Ares
 
         public override void Init()
         {
-            System.Type type = fieldInfo.FieldType;
+            //System.Type type = fieldInfo.FieldType;
 
-            if (type.IsClass)
-            {
-                object obj = property.GetTargetObjectOfProperty();
-                if (obj == null)
-                {
-                    // array  can be null
-                    return;
-                }
+            //if (type.IsClass)
+            //{
+            //    object obj = property.GetTargetObjectOfProperty();
+            //    if (obj == null)
+            //    {
+            //        // array  can be null
+            //        return;
+            //    }
 
-                m_Group = obj.GetType().GetCustomAttributes<AresGroup>().
-                    Where(ag => ag.id == 0).FirstOrDefault();
-                if (m_Group == null) return;
+            //    m_Group = obj.GetType().GetCustomAttributes<AresGroup>().
+            //        Where(ag => ag.id == 0).FirstOrDefault();
+            //    if (m_Group == null) return;
 
-                m_Group.Init(obj, property);
-            }
+            //    m_Group.Init(obj, property);
+            //}
+        }
+
+        public override VisualElement CreateUI()
+        {
+            return null;
         }
     }
 #endif

@@ -1,4 +1,5 @@
 ﻿using Ares.ABC;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -12,20 +13,37 @@ public class AresCustomDrawer : PropertyDrawer
         //return base.CreatePropertyGUI(property);
         // Create property container element.
         var container = new VisualElement();
+        container.style.flexDirection = FlexDirection.Row;
 
         // Create property fields.
         var amountField = new PropertyField(property.FindPropertyRelative("ca"));
         var unitField = new PropertyField(property.FindPropertyRelative("cb"));
         var nameField = new PropertyField(property.FindPropertyRelative("pyj"), "Fancy Name");
 
+
+        //amountField.label = "";
+
         // Add fields to the container.
         container.Add(amountField);
         container.Add(unitField);
         container.Add(nameField);
-        container.Add(new PropertyField(property.FindPropertyRelative("ca")));
 
         return container;
     }
+
+    //public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    //{
+    //    var container = new VisualElement();
+    //    container.style.flexDirection = FlexDirection.Row;
+
+    //    // Create property fields.
+    //    var amountField = new PropertyField(property.FindPropertyRelative("ca"));
+
+
+    //    container.Add(amountField);
+
+    //    return container;
+    //}
 
     // Draw the property inside the given rect
     //public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

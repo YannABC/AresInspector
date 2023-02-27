@@ -4,12 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Ares.ABC
+namespace AresABC
 {
     //[AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)]
-    //[AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
-    //[AresGroup(id: 2, parentId: 0, EAresGroupType.Horizontal)]
-    public class CInDefault : MonoBehaviour
+    [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
+    [AresGroup(id: 2, parentId: 0, EAresGroupType.Horizontal)]
+    public class CInDefault : MonoBehaviour, IAresObject
     {
         public enum EA
         {
@@ -33,23 +33,23 @@ namespace Ares.ABC
             Debug.Log("TestMethod 22 clicked");
         }
 
-        //[AresField(groupId = 2)]
-        //public EA a;
+        [AresField(groupId = 2)]
+        public EA a;
+
+        [AresField(groupId = 2)]
+        public EA b;
 
         //[AresField(groupId = 2)]
-        //public EA b;
+        public List<int> lst;
 
-        ////[AresField(groupId = 2)]
-        //public List<int> lst;
-
-        //[HideInInspector]
-        //public int NotShow;
+        [HideInInspector]
+        public int NotShow;
 
         //[AresField(groupId = 2)]
         //public C c;
-        public C c1;
+        //public C c1;
 
-        public C[] c2;
+        //public C[] c2;
 
         //[SerializeField]
         //public IC obj;
@@ -67,8 +67,8 @@ namespace Ares.ABC
 
     [Serializable]
     //[AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)]
-    //[AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
-    public class C
+    [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
+    public class C : IAresObject
     {
         [AresField(groupId = 1)]
         public int ca;
