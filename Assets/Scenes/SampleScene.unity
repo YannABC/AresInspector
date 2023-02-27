@@ -429,12 +429,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   i: 0
   j: 0
-  c:
-    ca: -10
-    cb: 0
-    pyj: 0
   c1:
     ca: 0
+    cb: 0
+    pyj: 0
+  c2:
+  - ca: 0
+    cb: 0
+    pyj: 0
+  - ca: 0
     cb: 0
     pyj: 0
 --- !u!4 &1939108166

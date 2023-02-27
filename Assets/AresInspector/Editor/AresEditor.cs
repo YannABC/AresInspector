@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -26,18 +27,39 @@ namespace Ares
             m_RootGroup.Init(target, serializedObject);
         }
 
+        //public override void OnInspectorGUI()
+        //{
+        //    if (m_RootGroup != null)
+        //    {
+        //        serializedObject.Update();
+        //        m_RootGroup.OnGUI();
+        //        serializedObject.ApplyModifiedProperties();
+        //    }
+        //    else
+        //    {
+        //        base.OnInspectorGUI();
+        //    }
+        //}
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            var container = new VisualElement();
+
+            //Draw the legacy IMGUI base
+            var imgui = new IMGUIContainer(OnInspectorGUI);
+            container.Add(imgui);
+
+            // Create property fields.
+            // Add fields to the container.
+            imgui.Add(
+                     new PropertyField(serializedObject.FindProperty("c2")));
+            return container;
+
+        }
+
         public override void OnInspectorGUI()
         {
-            if (m_RootGroup != null)
-            {
-                serializedObject.Update();
-                m_RootGroup.OnGUI();
-                serializedObject.ApplyModifiedProperties();
-            }
-            else
-            {
-                base.OnInspectorGUI();
-            }
+            //DrawDefaultInspector();
         }
     }
 }
