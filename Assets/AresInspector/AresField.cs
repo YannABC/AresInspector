@@ -40,6 +40,7 @@ namespace Ares
         public override VisualElement CreateGUI(AresContext context)
         {
             PropertyField pf = new PropertyField(context.FindProperty(fieldInfo.Name));
+            pf.style.flexGrow = 1;//尽量撑满，1个就100%，两个就各50%...
             return pf;
         }
     }
