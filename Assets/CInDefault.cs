@@ -8,7 +8,7 @@ namespace AresABC
 {
     [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
     [AresGroup(id: 2, parentId: 0, EAresGroupType.Horizontal)]
-    public class CInDefault : MonoBehaviour, IAresObjectH
+    public class CInDefault : MonoBehaviour/*, IAresObjectH*/
     {
         public enum EA
         {
@@ -26,11 +26,11 @@ namespace AresABC
         //[AresField(groupId = 1)]
         public int j;
 
-        [AresMethod()]
-        void TestMethod()
-        {
-            Debug.Log("TestMethod 22 clicked");
-        }
+        //[AresMethod()]
+        //void TestMethod()
+        //{
+        //    Debug.Log("TestMethod 22 clicked");
+        //}
 
         //[AresField(groupId = 2)]
         //public EA a;
@@ -46,7 +46,7 @@ namespace AresABC
 
         //[AresField(groupId = 2)]
         //public C c;
-        //public C c1;
+        public C c1;
 
         //public C[] c2;
 
@@ -73,14 +73,12 @@ namespace AresABC
     [Serializable]
     //[AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)]
     //[AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
-    public class C : B, IAresObjectH
+    public class C : B/*, IAresObjectH*/
     {
         //[AresField(groupId = 1)]
         public int ca;
         //public C next;
         // [AresField(groupId = 1)]
         public int cb;
-
-        public int pyj;
     }
 }

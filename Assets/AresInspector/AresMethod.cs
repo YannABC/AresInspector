@@ -34,7 +34,7 @@ namespace Ares
     {
         public MethodInfo methodInfo;
 
-        public override VisualElement CreateUI(AresContext context)
+        public override VisualElement CreateGUI(AresContext context)
         {
             Button btn = new Button(() =>
             {

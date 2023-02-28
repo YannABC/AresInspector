@@ -18,7 +18,7 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class AresAttribute
     {
-        public virtual VisualElement CreateUI(AresContext context) { return null; }
+        public virtual VisualElement CreateGUI(AresContext context) { return null; }
     }
 #endif
 }

@@ -18,7 +18,7 @@ namespace Ares
     {
         public override VisualElement CreateInspectorGUI()
         {
-            Debug.LogWarning("CreateInspectorGUI3 " + target.GetType().Name);
+            //Debug.LogWarning("CreateInspectorGUI " + target.GetType().Name);
             AresGroup group = AresHelper.GetGroup(target.GetType());
             if (group == null)
             {
@@ -26,7 +26,7 @@ namespace Ares
             }
             else
             {
-                return group.CreateUI(new AresContext(serializedObject));
+                return group.CreateGUI(new AresContext(serializedObject));
             }
         }
     }

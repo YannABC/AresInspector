@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityDebug = UnityEngine.Debug;
@@ -41,20 +40,20 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class AresGroup
     {
-        public override VisualElement CreateUI(AresContext context)
+        public override VisualElement CreateGUI(AresContext context)
         {
             VisualElement root = new VisualElement();
             root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
 
             foreach (AresMember member in members)
             {
-                VisualElement ve = member.CreateUI(context);
+                VisualElement ve = member.CreateGUI(context);
                 if (ve != null) root.Add(ve);
             }
 
             foreach (AresGroup sub in subGroups)
             {
-                VisualElement ve = sub.CreateUI(context);
+                VisualElement ve = sub.CreateGUI(context);
                 if (ve != null) root.Add(ve);
             }
 
@@ -182,25 +181,7 @@ namespace Ares
                 UnityDebug.LogError($"AresGroup {m.groupId} in {self.Name} not found");
                 return;
             }
-            //m.target = target;
-            //m.serializedObject = serializedObject;
-            //if (m is AresField af)
-            //{
-            //    if (m_SerializedObject != null)
-            //    {
-            //        af.property = m_SerializedObject.FindProperty(af.fieldInfo.Name);
-            //    }
-            //    else if (m_SerializedProperty != null)
-            //    {
-            //        af.property = m_SerializedProperty.FindPropertyRelative(af.fieldInfo.Name);
-            //    }
 
-            //    if (af.property == null)
-            //    {
-            //        UnityDebug.LogError(af.fieldInfo.Name + " property is null");
-            //        return;
-            //    }
-            //}
             m.index = ag.members.Count;
             ag.members.Add(m);
         }
