@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Ares
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     [Conditional("UNITY_EDITOR")]
-    public partial class AresMember : AresAttribute
+    public abstract partial class AresMember : AresAttribute
     {
         //{{
         public int groupId;
@@ -36,25 +37,22 @@ namespace Ares
     }
 
 #if UNITY_EDITOR
-    public partial class AresMember
+    public abstract partial class AresMember
     {
         public int index; // for stable sort
-        public Type type;//自己，或者 父类
+        public Type ancestor;//self or current base class
 
-        MethodInfo m_MethodVisible;
-        MethodInfo m_MethodEnable;
-
-        public bool IsVisible()
+        public bool IsVisible(object target)
         {
-            return Is(ref m_MethodVisible, visible);
+            return Is(visible, target);
         }
 
-        public bool IsEnable()
+        public bool IsEnable(object target)
         {
-            return Is(ref m_MethodEnable, enable);
+            return Is(enable, target);
         }
 
-        bool Is(ref MethodInfo mi, string key)
+        bool Is(string key, object target)
         {
             bool ret = true;
             if (key == "true")
@@ -67,14 +65,11 @@ namespace Ares
             }
             else if (!string.IsNullOrEmpty(key))
             {
+                MethodInfo mi = AresHelper.GetMethodInfo(ancestor, key);
+
                 if (mi == null)
                 {
-                    mi = target.GetType().GetMethod(key,
-                        BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (mi == null)
-                    {
-                        UnityEngine.Debug.LogError(key + " method not found");
-                    }
+                    UnityEngine.Debug.LogError(key + " method not found");
                 }
                 if (mi != null)
                 {
@@ -83,13 +78,6 @@ namespace Ares
             }
             return ret;
         }
-
-        public virtual void Init()
-        {
-
-        }
-
-        public virtual VisualElement CreateUI() { return null; }
 #endif
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 
 namespace Ares
 {
@@ -35,82 +36,60 @@ namespace Ares
     public partial class AresField
     {
         public FieldInfo fieldInfo;
-        public SerializedProperty property;
+        //public SerializedProperty property;
 
-        //AresGroup m_Group;//内嵌类
+        //public override void OnGUI()
+        //{
+        //    bool visible = IsVisible();
+        //    if (!visible) return;
 
-        public override void OnGUI()
+        //    //if (m_Group != null)
+        //    //{
+        //    //    //int indent = EditorGUI.indentLevel;
+        //    //    //EditorGUI.indentLevel++;
+        //    //    m_Group.OnGUI();
+        //    //    //EditorGUI.indentLevel = indent;
+        //    //    return;
+        //    //}
+
+        //    // Validate
+        //    //ValidatorAttribute[] validatorAttributes = PropertyUtility.GetAttributes<ValidatorAttribute>(property);
+        //    //foreach (var validatorAttribute in validatorAttributes)
+        //    //{
+        //    //    validatorAttribute.GetValidator().ValidateProperty(property);
+        //    //}
+
+        //    // Check if enabled and draw
+        //    EditorGUI.BeginChangeCheck();
+        //    bool enabled = true;
+
+        //    using (new EditorGUI.DisabledScope(disabled: !enabled))
+        //    {
+        //        string displayName = label == null ? property.displayName : label;
+        //        EditorGUILayout.PropertyField(property, new GUIContent(displayName), includeChildren: true);
+
+        //        //Rect rect = EditorGUILayout.GetControlRect();
+
+        //        //int index = EditorGUI.Popup(rect, 1, new string[] { "1", "2", "3" });
+
+
+        //        //EditorGUILayout.PropertyField(sp, GUIContent.none, includeChildren: true);
+
+        //        //EditorGUI.IntSlider(EditorGUILayout.GetControlRect(), sp, 2, 10, label);
+
+        //    }
+
+        //    // Call OnValueChanged callbacks
+        //    if (EditorGUI.EndChangeCheck())
+        //    {
+
+        //    }
+        //}
+
+        public override VisualElement CreateUI(AresContext context)
         {
-            bool visible = IsVisible();
-            if (!visible) return;
-
-            //if (m_Group != null)
-            //{
-            //    //int indent = EditorGUI.indentLevel;
-            //    //EditorGUI.indentLevel++;
-            //    m_Group.OnGUI();
-            //    //EditorGUI.indentLevel = indent;
-            //    return;
-            //}
-
-            // Validate
-            //ValidatorAttribute[] validatorAttributes = PropertyUtility.GetAttributes<ValidatorAttribute>(property);
-            //foreach (var validatorAttribute in validatorAttributes)
-            //{
-            //    validatorAttribute.GetValidator().ValidateProperty(property);
-            //}
-
-            // Check if enabled and draw
-            EditorGUI.BeginChangeCheck();
-            bool enabled = true;
-
-            using (new EditorGUI.DisabledScope(disabled: !enabled))
-            {
-                string displayName = label == null ? property.displayName : label;
-                EditorGUILayout.PropertyField(property, new GUIContent(displayName), includeChildren: true);
-
-                //Rect rect = EditorGUILayout.GetControlRect();
-
-                //int index = EditorGUI.Popup(rect, 1, new string[] { "1", "2", "3" });
-
-
-                //EditorGUILayout.PropertyField(sp, GUIContent.none, includeChildren: true);
-
-                //EditorGUI.IntSlider(EditorGUILayout.GetControlRect(), sp, 2, 10, label);
-
-            }
-
-            // Call OnValueChanged callbacks
-            if (EditorGUI.EndChangeCheck())
-            {
-
-            }
-        }
-
-        public override void Init()
-        {
-            //System.Type type = fieldInfo.FieldType;
-
-            //if (type.IsClass)
-            //{
-            //    object obj = property.GetTargetObjectOfProperty();
-            //    if (obj == null)
-            //    {
-            //        // array  can be null
-            //        return;
-            //    }
-
-            //    m_Group = obj.GetType().GetCustomAttributes<AresGroup>().
-            //        Where(ag => ag.id == 0).FirstOrDefault();
-            //    if (m_Group == null) return;
-
-            //    m_Group.Init(obj, property);
-            //}
-        }
-
-        public override VisualElement CreateUI()
-        {
-            return null;
+            PropertyField pf = new PropertyField(context.FindProperty(fieldInfo.Name));
+            return pf;
         }
     }
 #endif

@@ -1,13 +1,13 @@
 using System.Diagnostics;
 using UnityEditor;
+using UnityEngine.UIElements;
 //using UnityObject = UnityEngine.Object;
 
 namespace Ares
 {
     //register update
-    public interface IAresObject { }
-    public interface IAresObjectV : IAresObject { }  //Vertical
-    public interface IAresObjectH : IAresObject { }  //Horizontal
+    public interface IAresObjectV { }  //Vertical
+    public interface IAresObjectH { }  //Horizontal
 
 
     [Conditional("UNITY_EDITOR")]
@@ -18,9 +18,7 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class AresAttribute
     {
-        public object target;   // MB or SO or serializable class
-
-        public virtual void OnGUI() { }
+        public virtual VisualElement CreateUI(AresContext context) { return null; }
     }
 #endif
 }

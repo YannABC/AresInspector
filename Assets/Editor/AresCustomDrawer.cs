@@ -1,105 +1,105 @@
-﻿using Ares.ABC;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿//using Ares.ABC;
+//using Unity.VisualScripting;
+//using UnityEditor;
+//using UnityEditor.UIElements;
+//using UnityEngine;
+//using UnityEngine.UIElements;
 
-[CustomPropertyDrawer(typeof(C), useForChildren: true)]
-public class AresCustomDrawer : PropertyDrawer
-{
-    public override VisualElement CreatePropertyGUI(SerializedProperty property)
-    {
-        //return base.CreatePropertyGUI(property);
-        // Create property container element.
-        var container = new VisualElement();
-        container.style.flexDirection = FlexDirection.Row;
+//[CustomPropertyDrawer(typeof(C), useForChildren: true)]
+//public class AresCustomDrawer : PropertyDrawer
+//{
+//    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+//    {
+//        //return base.CreatePropertyGUI(property);
+//        // Create property container element.
+//        var container = new VisualElement();
+//        container.style.flexDirection = FlexDirection.Row;
 
-        // Create property fields.
-        var amountField = new PropertyField(property.FindPropertyRelative("ca"));
-        var unitField = new PropertyField(property.FindPropertyRelative("cb"));
-        var nameField = new PropertyField(property.FindPropertyRelative("pyj"), "Fancy Name");
-
-
-        //amountField.label = "";
-
-        // Add fields to the container.
-        container.Add(amountField);
-        container.Add(unitField);
-        container.Add(nameField);
-
-        return container;
-    }
-
-    //public override VisualElement CreatePropertyGUI(SerializedProperty property)
-    //{
-    //    var container = new VisualElement();
-    //    container.style.flexDirection = FlexDirection.Row;
-
-    //    // Create property fields.
-    //    var amountField = new PropertyField(property.FindPropertyRelative("ca"));
+//        // Create property fields.
+//        var amountField = new PropertyField(property.FindPropertyRelative("ca"));
+//        var unitField = new PropertyField(property.FindPropertyRelative("cb"));
+//        var nameField = new PropertyField(property.FindPropertyRelative("pyj"), "Fancy Name");
 
 
-    //    container.Add(amountField);
+//        //amountField.label = "";
 
-    //    return container;
-    //}
+//        // Add fields to the container.
+//        container.Add(amountField);
+//        container.Add(unitField);
+//        container.Add(nameField);
 
-    // Draw the property inside the given rect
-    //public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-    //{
-    //    //Debug.LogWarning("++++++++++++++++" + property.type);
+//        return container;
+//    }
 
-    //    Rect rect = position;
-    //    rect.height = EditorGUIUtility.singleLineHeight * 3;
-    //    GUILayout.BeginArea(rect);
+//    //public override VisualElement CreatePropertyGUI(SerializedProperty property)
+//    //{
+//    //    var container = new VisualElement();
+//    //    container.style.flexDirection = FlexDirection.Row;
 
-    //    if (GUILayout.Button("aaaa"))
-    //    {
-    //        Debug.Log("aaaa");
-    //    }
+//    //    // Create property fields.
+//    //    var amountField = new PropertyField(property.FindPropertyRelative("ca"));
 
-    //    if (GUILayout.Button("bbb"))
-    //    {
-    //        Debug.Log("bbb");
-    //    }
 
-    //    if (GUILayout.Button("cccc"))
-    //    {
-    //        Debug.Log("bbb");
-    //    }
-    //    GUILayout.EndArea();
+//    //    container.Add(amountField);
 
-    //    //base.OnGUI(position, property, label);
-    //    // Using BeginProperty / EndProperty on the parent property means that
-    //    // prefab override logic works on the entire property.
-    //    //EditorGUI.BeginProperty(position, label, property);
+//    //    return container;
+//    //}
 
-    //    //// Draw label
-    //    //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+//    // Draw the property inside the given rect
+//    //public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+//    //{
+//    //    //Debug.LogWarning("++++++++++++++++" + property.type);
 
-    //    //// Don't make child fields be indented
-    //    //var indent = EditorGUI.indentLevel;
-    //    //EditorGUI.indentLevel = 0;
+//    //    Rect rect = position;
+//    //    rect.height = EditorGUIUtility.singleLineHeight * 3;
+//    //    GUILayout.BeginArea(rect);
 
-    //    //// Calculate rects
-    //    //var amountRect = new Rect(position.x, position.y, 30, position.height);
-    //    //var unitRect = new Rect(position.x + 35, position.y, 50, position.height);
-    //    //var nameRect = new Rect(position.x + 90, position.y, position.width - 90, position.height);
+//    //    if (GUILayout.Button("aaaa"))
+//    //    {
+//    //        Debug.Log("aaaa");
+//    //    }
 
-    //    //// Draw fields - pass GUIContent.none to each so they are drawn without labels
-    //    //EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("amount"), GUIContent.none);
-    //    //EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("unit"), GUIContent.none);
-    //    //EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("name"), GUIContent.none);
+//    //    if (GUILayout.Button("bbb"))
+//    //    {
+//    //        Debug.Log("bbb");
+//    //    }
 
-    //    //// Set indent back to what it was
-    //    //EditorGUI.indentLevel = indent;
+//    //    if (GUILayout.Button("cccc"))
+//    //    {
+//    //        Debug.Log("bbb");
+//    //    }
+//    //    GUILayout.EndArea();
 
-    //    //EditorGUI.EndProperty();
-    //}
+//    //    //base.OnGUI(position, property, label);
+//    //    // Using BeginProperty / EndProperty on the parent property means that
+//    //    // prefab override logic works on the entire property.
+//    //    //EditorGUI.BeginProperty(position, label, property);
 
-    //public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-    //{
-    //    return EditorGUIUtility.singleLineHeight * 3;
-    //}
-}
+//    //    //// Draw label
+//    //    //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+
+//    //    //// Don't make child fields be indented
+//    //    //var indent = EditorGUI.indentLevel;
+//    //    //EditorGUI.indentLevel = 0;
+
+//    //    //// Calculate rects
+//    //    //var amountRect = new Rect(position.x, position.y, 30, position.height);
+//    //    //var unitRect = new Rect(position.x + 35, position.y, 50, position.height);
+//    //    //var nameRect = new Rect(position.x + 90, position.y, position.width - 90, position.height);
+
+//    //    //// Draw fields - pass GUIContent.none to each so they are drawn without labels
+//    //    //EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("amount"), GUIContent.none);
+//    //    //EditorGUI.PropertyField(unitRect, property.FindPropertyRelative("unit"), GUIContent.none);
+//    //    //EditorGUI.PropertyField(nameRect, property.FindPropertyRelative("name"), GUIContent.none);
+
+//    //    //// Set indent back to what it was
+//    //    //EditorGUI.indentLevel = indent;
+
+//    //    //EditorGUI.EndProperty();
+//    //}
+
+//    //public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+//    //{
+//    //    return EditorGUIUtility.singleLineHeight * 3;
+//    //}
+//}

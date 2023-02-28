@@ -5,24 +5,40 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public static class AresHelper
 {
     static Dictionary<Type, AresGroup> s_Groups = new Dictionary<Type, AresGroup>();
+    static Dictionary<Type, Dictionary<string, MethodInfo>> s_Methods = new Dictionary<Type, Dictionary<string, MethodInfo>>();
 
     public static AresGroup GetGroup(Type type)
     {
         if (!s_Groups.TryGetValue(type, out AresGroup group))
         {
-            bool vertical = type.IsSubclassOf(typeof(IAresObject))
-                || type.IsSubclassOf(typeof(IAresObjectV));
+            bool vertical = typeof(IAresObjectV).IsAssignableFrom(type);
+            bool horizontal = typeof(IAresObjectH).IsAssignableFrom(type);
+            if (!vertical && !horizontal) return null;
             group = new AresGroup(0, 0,
                 vertical ? EAresGroupType.Vertical : EAresGroupType.Horizontal);
             group.Init(type);
             s_Groups.Add(type, group);
         }
         return group;
+    }
+
+    public static MethodInfo GetMethodInfo(Type type, string key)
+    {
+        if (!s_Methods.TryGetValue(type, out Dictionary<string, MethodInfo> dic))
+        {
+            dic = new Dictionary<string, MethodInfo>();
+            s_Methods.Add(type, dic);
+        }
+        if (!dic.TryGetValue(key, out MethodInfo mi))
+        {
+            mi = type.GetMethod(key);
+            dic.Add(key, mi);
+        }
+        return mi;
     }
 
     public static bool IsUnitySerialized(this FieldInfo fieldInfo)
@@ -134,26 +150,8 @@ public static class AresHelper
         return enm.Current;
     }
 
-    public static bool HasAres(Type type)
+    public static IEnumerable<FieldInfo> GetDeclareFields(this Type type, Func<FieldInfo, bool> predicate)
     {
-        bool has = type.GetFields(BindingFlags.Instance /* | BindingFlags.Static*/ | BindingFlags.NonPublic | BindingFlags.Public)
-            .Where(f => f.GetCustomAttributes(typeof(AresAttribute), true).Length > 0).Any();
-        if (has) return has;
-
-        has = type.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-            .Where(f => f.GetCustomAttributes(typeof(AresAttribute), true).Length > 0).Any();
-
-        return has;
-    }
-
-    public static IEnumerable<FieldInfo> GetAllFieldsFromType(object target, Type type, Func<FieldInfo, bool> predicate)
-    {
-        if (target == null)
-        {
-            Debug.LogError("The target object is null. Check for missing scripts.");
-            yield break;
-        }
-
         IEnumerable<FieldInfo> fieldInfos = type
             .GetFields(BindingFlags.Instance /*| BindingFlags.Static*/ | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Where(predicate);
@@ -164,33 +162,8 @@ public static class AresHelper
         }
     }
 
-    public static IEnumerable<PropertyInfo> GetAllPropertiesFromType(object target, Type type, Func<PropertyInfo, bool> predicate)
+    public static IEnumerable<MethodInfo> GetDeclareMethods(this Type type, Func<MethodInfo, bool> predicate)
     {
-        if (target == null)
-        {
-            Debug.LogError("The target object is null. Check for missing scripts.");
-            yield break;
-        }
-
-        IEnumerable<PropertyInfo> propertyInfos = type
-            .GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
-            .Where(predicate);
-
-        foreach (PropertyInfo propertyInfo in propertyInfos)
-        {
-            yield return propertyInfo;
-        }
-    }
-
-    public static IEnumerable<MethodInfo> GetAllMethodsFromType(object target, Type type, Func<MethodInfo, bool> predicate)
-    {
-        if (target == null)
-        {
-            Debug.LogError("The target object is null. Check for missing scripts.");
-            yield break;
-        }
-
-
         IEnumerable<MethodInfo> methodInfos = type
             .GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .Where(predicate);
@@ -199,90 +172,6 @@ public static class AresHelper
         {
             yield return methodInfo;
         }
-    }
-
-    public static IEnumerable<FieldInfo> GetAllFields(object target, Func<FieldInfo, bool> predicate)
-    {
-        if (target == null)
-        {
-            Debug.LogError("The target object is null. Check for missing scripts.");
-            yield break;
-        }
-
-        List<Type> types = GetSelfAndBaseTypes(target.GetType());
-
-        for (int i = types.Count - 1; i >= 0; i--)
-        {
-            IEnumerable<FieldInfo> fieldInfos = types[i]
-                .GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                .Where(predicate);
-
-            foreach (FieldInfo fieldInfo in fieldInfos)
-            {
-                yield return fieldInfo;
-            }
-        }
-    }
-
-    public static IEnumerable<PropertyInfo> GetAllProperties(object target, Func<PropertyInfo, bool> predicate)
-    {
-        if (target == null)
-        {
-            Debug.LogError("The target object is null. Check for missing scripts.");
-            yield break;
-        }
-
-        List<Type> types = GetSelfAndBaseTypes(target.GetType());
-
-        for (int i = types.Count - 1; i >= 0; i--)
-        {
-            IEnumerable<PropertyInfo> propertyInfos = types[i]
-                .GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                .Where(predicate);
-
-            foreach (PropertyInfo propertyInfo in propertyInfos)
-            {
-                yield return propertyInfo;
-            }
-        }
-    }
-
-    public static IEnumerable<MethodInfo> GetAllMethods(object target, Func<MethodInfo, bool> predicate)
-    {
-        if (target == null)
-        {
-            Debug.LogError("The target object is null. Check for missing scripts.");
-            yield break;
-        }
-
-        List<Type> types = GetSelfAndBaseTypes(target.GetType());
-
-        for (int i = types.Count - 1; i >= 0; i--)
-        {
-            IEnumerable<MethodInfo> methodInfos = types[i]
-                .GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                .Where(predicate);
-
-            foreach (MethodInfo methodInfo in methodInfos)
-            {
-                yield return methodInfo;
-            }
-        }
-    }
-
-    public static FieldInfo GetField(object target, string fieldName)
-    {
-        return GetAllFields(target, f => f.Name.Equals(fieldName, StringComparison.Ordinal)).FirstOrDefault();
-    }
-
-    public static PropertyInfo GetProperty(object target, string propertyName)
-    {
-        return GetAllProperties(target, p => p.Name.Equals(propertyName, StringComparison.Ordinal)).FirstOrDefault();
-    }
-
-    public static MethodInfo GetMethod(object target, string methodName)
-    {
-        return GetAllMethods(target, m => m.Name.Equals(methodName, StringComparison.Ordinal)).FirstOrDefault();
     }
 
     /// <summary>

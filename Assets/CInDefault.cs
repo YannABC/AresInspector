@@ -6,10 +6,9 @@ using UnityEngine;
 
 namespace AresABC
 {
-    //[AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)]
     [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
     [AresGroup(id: 2, parentId: 0, EAresGroupType.Horizontal)]
-    public class CInDefault : MonoBehaviour, IAresObject
+    public class CInDefault : MonoBehaviour, IAresObjectH
     {
         public enum EA
         {
@@ -18,32 +17,32 @@ namespace AresABC
             B = 2,
         }
 
-        [AresField(visible = "IsVisible")]
-        [Range(33, 44, order = 2)]
-        [Header("Header with some space around it", order = 1)]
-        [Space(5, order = 2)]
+        //[AresField(visible = "IsVisible")]
+        //[Range(33, 44, order = 2)]
+        //[Header("Header with some space around it", order = 1)]
+        //[Space(5, order = 2)]
         public int i;
 
-        [AresField(groupId = 1)]
+        //[AresField(groupId = 1)]
         public int j;
 
-        [AresMethod(groupId = 1)]
+        [AresMethod()]
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");
         }
 
-        [AresField(groupId = 2)]
-        public EA a;
-
-        [AresField(groupId = 2)]
-        public EA b;
+        //[AresField(groupId = 2)]
+        //public EA a;
 
         //[AresField(groupId = 2)]
-        public List<int> lst;
+        //public EA b;
 
-        [HideInInspector]
-        public int NotShow;
+        ////[AresField(groupId = 2)]
+        //public List<int> lst;
+
+        //[HideInInspector]
+        //public int NotShow;
 
         //[AresField(groupId = 2)]
         //public C c;
@@ -59,21 +58,27 @@ namespace AresABC
 
         }
 
-        public bool IsVisible()
-        {
-            return j > 10;
-        }
+        //public bool IsVisible()
+        //{
+        //    return j > 10;
+        //}
+    }
+
+    [Serializable]
+    public class B
+    {
+
     }
 
     [Serializable]
     //[AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)]
-    [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
-    public class C : IAresObject
+    //[AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
+    public class C : B, IAresObjectH
     {
-        [AresField(groupId = 1)]
+        //[AresField(groupId = 1)]
         public int ca;
         //public C next;
-        [AresField(groupId = 1)]
+        // [AresField(groupId = 1)]
         public int cb;
 
         public int pyj;

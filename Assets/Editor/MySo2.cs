@@ -5,7 +5,7 @@ using UnityEngine;
 
 [CreateAssetMenu()]
 [AresGroup(1, 0, EAresGroupType.Horizontal)]
-public class MySo2 : ScriptableObject
+public class MySo2 : ScriptableObject, IAresObjectV
 {
     [System.Serializable]
     public class A

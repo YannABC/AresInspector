@@ -2,6 +2,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Ares
 {
@@ -9,25 +10,16 @@ namespace Ares
     public partial class AresMethod : AresMember
     {
         //{{
-        public EAresMethodType mt;
         public EAresButtonSize buttonSize;
         //}}
 
         public AresMethod(
-            EAresMethodType mt = EAresMethodType.Button,     // 类型
             EAresButtonSize size = EAresButtonSize.Small     // 大小
 
             ) : base()
         {
-            this.mt = mt;
             this.buttonSize = size;
         }
-    }
-
-    public enum EAresMethodType
-    {
-        Button,    //按钮
-        Custom,    //自定义
     }
 
     public enum EAresButtonSize
@@ -42,13 +34,14 @@ namespace Ares
     {
         public MethodInfo methodInfo;
 
-        public override void OnGUI()
+        public override VisualElement CreateUI(AresContext context)
         {
-            if (GUILayout.Button(methodInfo.Name))
+            Button btn = new Button(() =>
             {
-                UnityEngine.Debug.Log(methodInfo.Name + " clicked");
-                methodInfo.Invoke(target, null);
-            }
+                methodInfo.Invoke(context.target, null);
+            });
+            btn.text = methodInfo.Name;
+            return btn;
         }
     }
 #endif

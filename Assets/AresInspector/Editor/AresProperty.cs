@@ -4,15 +4,24 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
-//[CustomPropertyDrawer(typeof(IAresObject), true)]
-//public class AresProperty : PropertyDrawer
-//{
-//    public override VisualElement CreatePropertyGUI(SerializedProperty property)
-//    {
-//        Type type = fieldInfo.FieldType;
-//        AresGroup group = AresHelper.GetGroup(type);
-//        group.Init();
-//        return group.CreateUI();
-//    }
-//}
+[CustomPropertyDrawer(typeof(IAresObjectV), true)]
+public class AresPropertyV : PropertyDrawer
+{
+    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    {
+        Debug.LogWarning("CreatePropertyGUI V " + fieldInfo.FieldType.Name);
+        return AresHelper.GetGroup(fieldInfo.FieldType).CreateUI(new AresContext(property));
+    }
+}
+
+[CustomPropertyDrawer(typeof(IAresObjectH), true)]
+public class AresPropertyH : PropertyDrawer
+{
+    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    {
+        Debug.LogWarning("CreatePropertyGUI H " + fieldInfo.FieldType.Name);
+        return AresHelper.GetGroup(fieldInfo.FieldType).CreateUI(new AresContext(property));
+    }
+}
