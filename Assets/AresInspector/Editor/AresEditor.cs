@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,7 +14,7 @@ namespace Ares
         public override VisualElement CreateInspectorGUI()
         {
             //Debug.LogWarning("CreateInspectorGUI " + target.GetType().Name);
-            AresGroup group = AresHelper.GetGroup(target.GetType());
+            AresGroup group = AresGroup.Get(target.GetType());
             if (group == null)
             {
                 return base.CreateInspectorGUI();

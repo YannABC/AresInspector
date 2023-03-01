@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEditor;
 //using UnityObject = UnityEngine.Object;
 
@@ -22,7 +21,7 @@ namespace Ares
         public AresContext(SerializedProperty serializedProperty)
         {
             m_SerializedProperty = serializedProperty;
-            m_Target = AresHelper.GetTargetObjectOfProperty(m_SerializedProperty);
+            m_Target = m_SerializedProperty.GetTargetObjectOfProperty();
         }
 
         public SerializedProperty FindProperty(string name)

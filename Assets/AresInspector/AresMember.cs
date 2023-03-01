@@ -3,8 +3,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Ares
 {
@@ -65,7 +63,7 @@ namespace Ares
             }
             else if (!string.IsNullOrEmpty(key))
             {
-                MethodInfo mi = AresHelper.GetMethodInfo(ancestor, key);
+                MethodInfo mi = ancestor.GetMethodInfo(key);
 
                 if (mi == null)
                 {

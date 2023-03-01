@@ -429,6 +429,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   c2:
   - ca: 0
+    cb: 52
+  - ca: 0
+    cb: 0
+  - ca: 0
+    cb: 0
+  - ca: 0
     cb: 0
   - ca: 0
     cb: 0

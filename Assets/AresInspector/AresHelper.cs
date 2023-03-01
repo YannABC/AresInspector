@@ -1,5 +1,4 @@
-﻿using Ares;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,25 +7,9 @@ using UnityEngine;
 
 public static class AresHelper
 {
-    static Dictionary<Type, AresGroup> s_Groups = new Dictionary<Type, AresGroup>();
     static Dictionary<Type, Dictionary<string, MethodInfo>> s_Methods = new Dictionary<Type, Dictionary<string, MethodInfo>>();
 
-    public static AresGroup GetGroup(Type type)
-    {
-        if (!s_Groups.TryGetValue(type, out AresGroup group))
-        {
-            bool vertical = typeof(IAresObjectV).IsAssignableFrom(type);
-            bool horizontal = typeof(IAresObjectH).IsAssignableFrom(type);
-            if (!vertical && !horizontal) return null;
-            group = new AresGroup(0, 0,
-                vertical ? EAresGroupType.Vertical : EAresGroupType.Horizontal);
-            group.Init(type);
-            s_Groups.Add(type, group);
-        }
-        return group;
-    }
-
-    public static MethodInfo GetMethodInfo(Type type, string key)
+    public static MethodInfo GetMethodInfo(this Type type, string key)
     {
         if (!s_Methods.TryGetValue(type, out Dictionary<string, MethodInfo> dic))
         {
@@ -94,15 +77,15 @@ public static class AresHelper
     /// <returns></returns>
     public static object GetTargetObjectOfProperty(this SerializedProperty prop)
     {
-        var path = prop.propertyPath.Replace(".Array.data[", "[");
+        string path = prop.propertyPath.Replace(".Array.data[", "[");
         object obj = prop.serializedObject.targetObject;
-        var elements = path.Split('.');
-        foreach (var element in elements)
+        string[] elements = path.Split('.');
+        foreach (string element in elements)
         {
             if (element.Contains("["))
             {
-                var elementName = element.Substring(0, element.IndexOf("["));
-                var index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
+                string elementName = element.Substring(0, element.IndexOf("["));
+                int index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
                 obj = GetValue_Imp(obj, elementName, index);
             }
             else
@@ -117,15 +100,15 @@ public static class AresHelper
     {
         if (source == null)
             return null;
-        var type = source.GetType();
+        Type type = source.GetType();
 
         while (type != null)
         {
-            var f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            FieldInfo f = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (f != null)
                 return f.GetValue(source);
 
-            var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            PropertyInfo p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (p != null)
                 return p.GetValue(source, null);
 
@@ -175,9 +158,9 @@ public static class AresHelper
     }
 
     /// <summary>
-    ///		Get type and all base types of type
+    ///		Get self and all base types
     /// </summary>
-    public static List<Type> GetSelfAndBaseTypes(Type type)
+    public static List<Type> GetAncestors(this Type type)
     {
         List<Type> types = new List<Type>() { type };
 

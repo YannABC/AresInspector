@@ -1,35 +1,33 @@
-﻿using Ares;
-using System;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEditorInternal;
-using UnityEngine;
+﻿using UnityEditor;
 using UnityEngine.UIElements;
 
-public class AresProperty : PropertyDrawer
+namespace Ares
 {
-    public override VisualElement CreatePropertyGUI(SerializedProperty property)
+    public class AresProperty : PropertyDrawer
     {
-        System.Type type = fieldInfo.FieldType;
-        if (type.IsArray)
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            type = type.GetElementType();
-        }
-        AresGroup group = AresHelper.GetGroup(type);
-        if (group == null)
-        {
-            return null;
-        }
-        else
-        {
-            return group.CreateGUI(new AresContext(property));
+            System.Type type = fieldInfo.FieldType;
+            if (type.IsArray)
+            {
+                type = type.GetElementType();
+            }
+            AresGroup group = AresGroup.Get(type);
+            if (group == null)
+            {
+                return null;
+            }
+            else
+            {
+                return group.CreateGUI(new AresContext(property));
+            }
         }
     }
+
+    [CustomPropertyDrawer(typeof(IAresObjectV), true)]
+    public class AresPropertyV : AresProperty { }
+
+    [CustomPropertyDrawer(typeof(IAresObjectH), true)]
+    public class AresPropertyH : AresProperty { }
+
 }
-
-[CustomPropertyDrawer(typeof(IAresObjectV), true)]
-public class AresPropertyV : AresProperty { }
-
-[CustomPropertyDrawer(typeof(IAresObjectH), true)]
-public class AresPropertyH : AresProperty { }

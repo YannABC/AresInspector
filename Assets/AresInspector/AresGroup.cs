@@ -40,6 +40,22 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class AresGroup
     {
+        static Dictionary<Type, AresGroup> s_Groups = new Dictionary<Type, AresGroup>();
+        public static AresGroup Get(Type type)
+        {
+            if (!s_Groups.TryGetValue(type, out AresGroup group))
+            {
+                bool vertical = typeof(IAresObjectV).IsAssignableFrom(type);
+                bool horizontal = typeof(IAresObjectH).IsAssignableFrom(type);
+                if (!vertical && !horizontal) return null;
+                group = new AresGroup(0, 0,
+                    vertical ? EAresGroupType.Vertical : EAresGroupType.Horizontal);
+                group.Init(type);
+                s_Groups.Add(type, group);
+            }
+            return group;
+        }
+
         public override VisualElement CreateGUI(AresContext context)
         {
             VisualElement root = new VisualElement();
@@ -92,7 +108,7 @@ namespace Ares
         public void Init(Type self)
         {
             //遍历所有基类及自己
-            List<System.Type> types = AresHelper.GetSelfAndBaseTypes(self);
+            List<System.Type> types = self.GetAncestors();
             for (int i = types.Count - 1; i >= 0; i--)
             {
                 System.Type ancestor = types[i];
