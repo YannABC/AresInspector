@@ -8,7 +8,7 @@ namespace AresABC
 {
     [AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
     [AresGroup(id: 2, parentId: 0, EAresGroupType.Horizontal)]
-    public class CInDefault : MonoBehaviour/*, IAresObjectH*/
+    public class CInDefault : MonoBehaviour, IAresObjectV
     {
         public enum EA
         {
@@ -21,13 +21,25 @@ namespace AresABC
         //[Range(33, 44, order = 2)]
         //[Header("Header with some space around it", order = 1)]
         //[Space(5, order = 2)]
-        public int i;
+        //public int i;
 
-        //[AresField(groupId = 1)]
-        public int j;
+        ////[AresField(groupId = 1)]
+        //public int j;
 
         //[AresMethod()]
         //void TestMethod()
+        //{
+        //    Debug.Log("TestMethod 22 clicked");
+        //}
+
+        //[AresMethod()]
+        //void TestMethod2()
+        //{
+        //    Debug.Log("TestMethod 22 clicked");
+        //}
+
+        //[AresMethod()]
+        //void TestMethod3()
         //{
         //    Debug.Log("TestMethod 22 clicked");
         //}
@@ -46,9 +58,9 @@ namespace AresABC
 
         //[AresField(groupId = 2)]
         //public C c;
-        public C c1;
+        //public C c1;
 
-        //public C[] c2;
+        public C[] c2;
 
         //[SerializeField]
         //public IC obj;
@@ -73,7 +85,7 @@ namespace AresABC
     [Serializable]
     //[AresGroup(id: 0, parentId: 0, EAresGroupType.Vertical)]
     //[AresGroup(id: 1, parentId: 0, EAresGroupType.Horizontal)]
-    public class C : B/*, IAresObjectH*/
+    public class C : B, IAresObjectH
     {
         //[AresField(groupId = 1)]
         public int ca;

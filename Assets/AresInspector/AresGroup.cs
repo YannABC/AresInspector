@@ -44,6 +44,7 @@ namespace Ares
         {
             VisualElement root = new VisualElement();
             root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
+            root.style.flexGrow = 1;
 
             foreach (AresMember member in members)
             {

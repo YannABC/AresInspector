@@ -41,6 +41,7 @@ namespace Ares
                 methodInfo.Invoke(context.target, null);
             });
             btn.text = methodInfo.Name;
+            btn.style.flexGrow = 1;
             return btn;
         }
     }
