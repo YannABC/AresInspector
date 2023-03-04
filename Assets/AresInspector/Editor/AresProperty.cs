@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine.UIElements;
 
 namespace Ares
@@ -12,6 +13,10 @@ namespace Ares
             {
                 type = type.GetElementType();
             }
+            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                type = type.GetGenericArguments()[0];
+            }
             AresGroup group = AresGroup.Get(type);
             if (group == null)
             {
@@ -19,7 +24,7 @@ namespace Ares
             }
             else
             {
-                return group.CreateGUI(new AresContext(property));
+                return group.CreateGUI(new AresContext(property, fieldInfo));
             }
         }
     }

@@ -18,19 +18,21 @@ namespace AresABC
         }
 
         //[AresField(visible = "IsVisible")]
-        //[Range(33, 44, order = 2)]
-        //[Header("Header with some space around it", order = 1)]
-        //[Space(5, order = 2)]
-        //public int i;
+        [AresSpace(50)]
+        [AresRange(33, 44)]
+        [Header("Header with some space around it", order = 1)]
+        [AresDrawer]
+        [AresSpace(50)]
+        public int i;
 
         ////[AresField(groupId = 1)]
         //public int j;
 
         //[AresMethod()]
-        //void TestMethod()
-        //{
-        //    Debug.Log("TestMethod 22 clicked");
-        //}
+        void TestMethod()
+        {
+            Debug.Log("TestMethod 22 clicked");
+        }
 
         //[AresMethod()]
         //void TestMethod2()
@@ -60,7 +62,7 @@ namespace AresABC
         //public C c;
         //public C c1;
 
-        public C[] c2;
+        //public List<C> c2;
 
         //[SerializeField]
         //public IC obj;

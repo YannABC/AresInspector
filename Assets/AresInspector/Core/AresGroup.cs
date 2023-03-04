@@ -14,9 +14,9 @@ namespace Ares
     [Conditional("UNITY_EDITOR")]
     public partial class AresGroup : AresAttribute
     {
-        public int id;
-        public int parentId;
-        public EAresGroupType type;
+        public readonly int id;
+        public readonly int parentId;
+        public readonly EAresGroupType type;
         public List<AresGroup> subGroups = new List<AresGroup>();
         public List<AresMember> members = new List<AresMember>();
 
@@ -58,6 +58,8 @@ namespace Ares
 
         public override VisualElement CreateGUI(AresContext context)
         {
+            if (members.Count == 0 && subGroups.Count == 0) return null;//nothing to draw
+
             VisualElement root = new VisualElement();
             root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
             root.style.flexGrow = 1;
@@ -200,6 +202,8 @@ namespace Ares
             }
 
             m.index = ag.members.Count;
+            m.group = ag;
+            m.Init();
             ag.members.Add(m);
         }
     }

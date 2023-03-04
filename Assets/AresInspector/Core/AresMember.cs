@@ -39,6 +39,9 @@ namespace Ares
     {
         public int index; // for stable sort
         public Type ancestor;//self or current base class
+        public AresGroup group;// the group that contains the member
+
+        public virtual void Init() { }
 
         public bool IsVisible(object target)
         {
