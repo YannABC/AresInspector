@@ -7,32 +7,31 @@ using System.Linq;
 
 namespace Ares
 {
-    [Conditional("UNITY_EDITOR")]
-    public partial class AresField : AresMember
-    {
-        //{{
-        public readonly string label;
-        public readonly int labelSize;
-        public readonly bool inline;
-        //}}
+    //public partial class AresField : AresMember
+    //{
+    //    //{{
+    //    public readonly string label;
+    //    public readonly int labelSize;
+    //    public readonly bool inline;
+    //    //}}
 
-        public AresField(
-            string label = null,                    //label text  (null use property, empty not show)
-            int labelSize = 0,                      //label size
-            bool inline = false                     //inline                
-            ) : base()
-        {
-            this.label = label;
-            this.labelSize = labelSize;
-            this.inline = inline;
+    //    public AresField(
+    //        string label = null,                    //label text  (null use property, empty not show)
+    //        int labelSize = 0,                      //label size
+    //        bool inline = false                     //inline                
+    //        ) : base()
+    //    {
+    //        this.label = label;
+    //        this.labelSize = labelSize;
+    //        this.inline = inline;
 
-            //AresLabel?
-            //AresDropDown?
-        }
-    }
+    //        //AresLabel?
+    //        //AresDropDown?
+    //    }
+    //}
 
 #if UNITY_EDITOR
-    public partial class AresField
+    public partial class AresField : AresMember
     {
         public FieldInfo fieldInfo;
         List<AresDrawer> m_Drawers;
@@ -44,7 +43,7 @@ namespace Ares
             m_Drawers = new List<AresDrawer>(drawers);
             if (drawnCount == 0)
             {
-                m_Drawers.Add(new AresDrawer());
+                m_Drawers.Add(new AresPropertyField());
             }
             foreach (AresDrawer d in m_Drawers)
             {

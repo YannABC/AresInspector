@@ -21,14 +21,14 @@ namespace AresABC
         [AresSpace(50)]
         [AresRange(33, 44)]
         [Header("Header with some space around it", order = 1)]
-        [AresDrawer]
+        [AresPropertyField]
         [AresSpace(50)]
         public int i;
 
         ////[AresField(groupId = 1)]
         //public int j;
 
-        //[AresMethod()]
+        [AresButton()]
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");

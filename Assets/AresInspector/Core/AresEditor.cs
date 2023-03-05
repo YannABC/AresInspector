@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Ares
 {
+#if UNITY_EDITOR
     /// <summary>
     /// 战神编辑器
     /// </summary>
@@ -25,4 +26,5 @@ namespace Ares
             }
         }
     }
+#endif
 }

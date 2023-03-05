@@ -4,6 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Ares
 {
+#if UNITY_EDITOR
     public class AresProperty : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
@@ -34,5 +35,5 @@ namespace Ares
 
     [CustomPropertyDrawer(typeof(IAresObjectH), true)]
     public class AresPropertyH : AresProperty { }
-
+#endif
 }

@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace Ares
 {
     //base class for field decrator or display
-    public partial class AresDrawer : System.Attribute
+    public abstract partial class AresDrawer : System.Attribute
     {
         public bool isDecrator;
         public AresDrawer(bool isDecrator = false)
@@ -16,14 +16,12 @@ namespace Ares
     }
 
 #if UNITY_EDITOR
-    public partial class AresDrawer
+    public abstract partial class AresDrawer
     {
         public AresMember member;
         public virtual VisualElement CreateGUI(AresContext context)
         {
-            PropertyField pf = new PropertyField(context.property);
-            pf.style.flexGrow = 1;//尽量撑满，1个就100%，两个就各50%...
-            return pf;
+            return null;
         }
     }
 #endif

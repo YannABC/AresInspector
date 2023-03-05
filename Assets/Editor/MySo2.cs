@@ -13,12 +13,12 @@ public class MySo2 : ScriptableObject, IAresObjectV
         public int id2;
     }
 
-    [AresField(groupId = 1)]
+    //[AresField(groupId = 1)]
     public int i2;
-    [AresField(groupId = 1)]
+    //[AresField(groupId = 1)]
     public int j2;
 
-    [AresMethod(groupId = 1)]
+    //[AresMethod(groupId = 1)]
     void TestMethod()
     {
         Debug.Log("click");

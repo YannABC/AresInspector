@@ -12,13 +12,11 @@ namespace Ares
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     [Conditional("UNITY_EDITOR")]
-    public partial class AresGroup : AresAttribute
+    public partial class AresGroup : System.Attribute
     {
         public readonly int id;
         public readonly int parentId;
         public readonly EAresGroupType type;
-        public List<AresGroup> subGroups = new List<AresGroup>();
-        public List<AresMember> members = new List<AresMember>();
 
         public AresGroup(
             int id,                   //group id
@@ -40,6 +38,8 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class AresGroup
     {
+        public List<AresGroup> subGroups = new List<AresGroup>();
+        public List<AresMember> members = new List<AresMember>();
         static Dictionary<Type, AresGroup> s_Groups = new Dictionary<Type, AresGroup>();
         public static AresGroup Get(Type type)
         {
@@ -56,7 +56,7 @@ namespace Ares
             return group;
         }
 
-        public override VisualElement CreateGUI(AresContext context)
+        public VisualElement CreateGUI(AresContext context)
         {
             if (members.Count == 0 && subGroups.Count == 0) return null;//nothing to draw
 
@@ -127,14 +127,17 @@ namespace Ares
 
                 foreach (FieldInfo fi in fields)
                 {
-                    IEnumerable<AresField> afs = fi.GetCustomAttributes<AresField>();
-                    if (afs.Any())
+                    IEnumerable<AresConfigLayout> als = fi.GetCustomAttributes<AresConfigLayout>();
+                    if (als.Any())
                     {
-                        foreach (AresField af in afs)
+                        foreach (AresConfigLayout al in als)
                         {
+                            AresField af = new AresField();
                             af.ancestor = ancestor;
                             af.fieldInfo = fi;
-                            AddAttrToGroup(af, self);
+                            af.groupId = al.groupId;
+                            af.order = al.order;
+                            AddMemberToGroup(af, self);
                         }
                     }
                     else
@@ -143,20 +146,40 @@ namespace Ares
                         AresField af = new AresField();
                         af.ancestor = ancestor;
                         af.fieldInfo = fi;
-                        AddAttrToGroup(af, self);
+                        af.groupId = 0;
+                        af.order = 0;
+                        AddMemberToGroup(af, self);
                     }
                 }
 
-                //查找所有带AresMethod标签的函数, 添加到对应的group中
-                IEnumerable<MethodInfo> methods = ancestor.GetDeclareMethods(f => f.GetCustomAttribute<AresMethod>() != null);
+                //查找所有带AresDrawer标签的函数, 添加到对应的group中
+                IEnumerable<MethodInfo> methods = ancestor.GetDeclareMethods(f => f.GetCustomAttributes<AresDrawer>().Any());
 
                 foreach (MethodInfo mi in methods)
                 {
-                    AresMethod am = mi.GetCustomAttribute<AresMethod>();
-                    am.ancestor = ancestor;
-                    am.methodInfo = mi;
-
-                    AddAttrToGroup(am, self);
+                    IEnumerable<AresConfigLayout> als = mi.GetCustomAttributes<AresConfigLayout>();
+                    if (als.Any())
+                    {
+                        foreach (AresConfigLayout al in als)
+                        {
+                            AresMethod af = new AresMethod();
+                            af.ancestor = ancestor;
+                            af.methodInfo = mi;
+                            af.groupId = al.groupId;
+                            af.order = al.order;
+                            AddMemberToGroup(af, self);
+                        }
+                    }
+                    else
+                    {
+                        //默认一个
+                        AresMethod af = new AresMethod();
+                        af.ancestor = ancestor;
+                        af.methodInfo = mi;
+                        af.groupId = 0;
+                        af.order = 0;
+                        AddMemberToGroup(af, self);
+                    }
                 }
             }
 
@@ -192,7 +215,7 @@ namespace Ares
             ag.subGroups.Add(group);
         }
 
-        void AddAttrToGroup(AresMember m, Type self)
+        void AddMemberToGroup(AresMember m, Type self)
         {
             AresGroup ag = FindGroup(m.groupId);
             if (ag == null)
