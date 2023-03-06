@@ -1,40 +1,13 @@
 using System;
-using System.Collections;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Ares
 {
-    //public abstract partial class AresMember
-    //{
-    //    //{{
-    //    public int groupId;
-    //    public int order;
-    //    public string visible;
-    //    public string enable;
-    //    public Color? color;
-    //    //}}
-
-    //    public AresMember(
-    //        int groupId = 0,                 //所在group
-    //        int order = 0,                 //所在group中的排序，越小越排前面
-    //        string visible = "true",         //是否显示 true false or {custom_method_name}
-    //        string enable = "true",          //是否可改 true false or {custom_method_name}
-    //        Color? color = null              //颜色
-    //        )
-    //    {
-    //        this.groupId = groupId;
-    //        this.order = order;
-    //        this.visible = visible;
-    //        this.enable = enable;
-    //        this.color = color;
-    //    }
-    //}
-
 #if UNITY_EDITOR
-    public abstract partial class AresMember
+    public class AresMember
     {
         public int index; // for stable sort
         public int order;
@@ -42,45 +15,79 @@ namespace Ares
         public Type ancestor;//self or current base class
         public AresGroup group;// the group that contains the member
 
-        public virtual void Init() { }
-        public virtual VisualElement CreateGUI(AresContext context) { return null; }
+        public FieldInfo fieldInfo;
+        public MethodInfo methodInfo;
 
-        //public bool IsVisible(object target)
-        //{
-        //    return Is(visible, target);
-        //}
+        protected List<AresDrawer> m_Drawers;
 
-        //public bool IsEnable(object target)
-        //{
-        //    return Is(enable, target);
-        //}
+        public void Init()
+        {
+            IEnumerable<AresDrawer> drawers = null;
+            if (IsFieldMember())
+            {
+                drawers = fieldInfo.GetCustomAttributes<AresDrawer>();
+            }
+            else
+            {
+                drawers = methodInfo.GetCustomAttributes<AresDrawer>();
+            }
 
-        //bool Is(string key, object target)
-        //{
-        //    bool ret = true;
-        //    if (key == "true")
-        //    {
-        //        ret = true;
-        //    }
-        //    else if (key == "false")
-        //    {
-        //        ret = false;
-        //    }
-        //    else if (!string.IsNullOrEmpty(key))
-        //    {
-        //        MethodInfo mi = ancestor.GetMethodInfo(key);
+            int drawnCount = drawers.Count(ad => !ad.isDecrator);
+            m_Drawers = new List<AresDrawer>(drawers);
+            if (drawnCount == 0)
+            {
+                if (IsFieldMember())
+                {
+                    m_Drawers.Add(new ADPropertyField());
+                }
+                else
+                {
+                    m_Drawers.Add(new ADButton());
+                }
+            }
+            foreach (AresDrawer d in m_Drawers)
+            {
+                d.member = this;
+            }
+        }
 
-        //        if (mi == null)
-        //        {
-        //            UnityEngine.Debug.LogError(key + " method not found");
-        //        }
-        //        if (mi != null)
-        //        {
-        //            ret = (bool)mi.Invoke(target, null);
-        //        }
-        //    }
-        //    return ret;
-        //}
+        public VisualElement CreateGUI(AresContext context)
+        {
+            AresContext childContext = null;
+            if (IsFieldMember())
+            {
+                childContext = new AresContext(context.FindProperty(fieldInfo.Name), fieldInfo);
+            }
+            else
+            {
+                childContext = new AresContext(context.target, methodInfo);
+            }
+            if (m_Drawers.Count > 1)
+            {
+                VisualElement root = new VisualElement();
+                root.style.flexDirection = group.type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
+                root.style.flexGrow = 1;
+                foreach (AresDrawer drawer in m_Drawers)
+                {
+                    VisualElement child = drawer.CreateGUI(childContext);
+                    if (child != null)
+                    {
+                        root.Add(child);
+                    }
+                }
+                return root;
+            }
+            else
+            {
+                return m_Drawers[0].CreateGUI(childContext);
+            }
+        }
+
+        public bool IsFieldMember() { return fieldInfo != null; }
+
+        //protected virtual void OnDrawnCoun0() { }
+        //protected virtual IEnumerable<AresDrawer> GetDrawers() { return null; }
+        //protected virtual AresContext GetChildContext(AresContext context) { return null; }
 #endif
     }
 }

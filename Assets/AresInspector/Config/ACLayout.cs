@@ -6,14 +6,14 @@ using UnityEngine.UIElements;
 namespace Ares
 {
     [Conditional("UNITY_EDITOR")]
-    public partial class AresConfigLayout : System.Attribute
+    public partial class ACLayout : System.Attribute
     {
         //{{
         public int groupId;
         public int order;
         //}}
 
-        public AresConfigLayout(
+        public ACLayout(
             int groupId = 0,             //所在group
             int order = 0                //所在group中的排序，越小越排前面
             )

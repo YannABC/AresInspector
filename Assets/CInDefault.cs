@@ -18,17 +18,17 @@ namespace AresABC
         }
 
         //[AresField(visible = "IsVisible")]
-        [AresSpace(50)]
-        [AresRange(33, 44)]
+        [ADSpace(50)]
+        [ADRange(33, 44)]
         [Header("Header with some space around it", order = 1)]
-        [AresPropertyField]
-        [AresSpace(50)]
+        [ADPropertyField]
+        [ADSpace(50)]
         public int i;
 
         ////[AresField(groupId = 1)]
         //public int j;
 
-        [AresButton()]
+        [ADButton()]
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");

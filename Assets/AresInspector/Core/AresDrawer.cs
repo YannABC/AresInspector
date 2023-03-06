@@ -1,11 +1,8 @@
-﻿using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-//using UnityObject = UnityEngine.Object;
+﻿using UnityEngine.UIElements;
 
 namespace Ares
 {
-    //base class for field decrator or display
+    //base class for all drawers
     public abstract partial class AresDrawer : System.Attribute
     {
         public bool isDecrator;

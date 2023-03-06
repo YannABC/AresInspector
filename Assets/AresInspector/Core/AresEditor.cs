@@ -7,6 +7,8 @@ namespace Ares
 #if UNITY_EDITOR
     /// <summary>
     /// 战神编辑器
+    /// https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+    /// https://yogalayout.com/
     /// </summary>
     [CanEditMultipleObjects]
     [CustomEditor(typeof(Object), true)]
@@ -14,7 +16,6 @@ namespace Ares
     {
         public override VisualElement CreateInspectorGUI()
         {
-            //Debug.LogWarning("CreateInspectorGUI " + target.GetType().Name);
             AresGroup group = AresGroup.Get(target.GetType());
             if (group == null)
             {

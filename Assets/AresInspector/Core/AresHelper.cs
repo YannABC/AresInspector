@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public static class AresHelper
 {
     static Dictionary<Type, Dictionary<string, MethodInfo>> s_Methods = new Dictionary<Type, Dictionary<string, MethodInfo>>();
@@ -172,3 +173,4 @@ public static class AresHelper
         return types;
     }
 }
+#endif

@@ -6,14 +6,12 @@ namespace Ares
 {
     [System.AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
     [Conditional("UNITY_EDITOR")]
-    public partial class AresConfigLabel : System.Attribute
+    public partial class ACLabelSize : System.Attribute
     {
-        public readonly string label;        //label text  (null use property.displayName, empty not show)
         public readonly int size;
 
-        public AresConfigLabel(string label = null, int size = 0)
+        public ACLabelSize(int size = 0)
         {
-            this.label = label;
             this.size = size;
         }
     }

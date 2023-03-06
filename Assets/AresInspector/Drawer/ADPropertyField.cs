@@ -1,22 +1,20 @@
-﻿using UnityEditor;
+﻿using System;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
-//using UnityObject = UnityEngine.Object;
 
 namespace Ares
 {
-    // Attribute used to make a float or int variable in a script be restricted to a specific range.
-    public partial class AresPropertyField : AresDrawer
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+    public partial class ADPropertyField : AresDrawer
     {
-        public AresPropertyField() : base(false)
+        public ADPropertyField() : base(false)
         {
 
         }
     }
 
 #if UNITY_EDITOR
-    public partial class AresPropertyField
+    public partial class ADPropertyField
     {
         public override VisualElement CreateGUI(AresContext context)
         {

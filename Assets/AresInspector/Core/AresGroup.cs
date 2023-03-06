@@ -127,12 +127,12 @@ namespace Ares
 
                 foreach (FieldInfo fi in fields)
                 {
-                    IEnumerable<AresConfigLayout> als = fi.GetCustomAttributes<AresConfigLayout>();
+                    IEnumerable<ACLayout> als = fi.GetCustomAttributes<ACLayout>();
                     if (als.Any())
                     {
-                        foreach (AresConfigLayout al in als)
+                        foreach (ACLayout al in als)
                         {
-                            AresField af = new AresField();
+                            AresMember af = new AresMember();
                             af.ancestor = ancestor;
                             af.fieldInfo = fi;
                             af.groupId = al.groupId;
@@ -143,7 +143,7 @@ namespace Ares
                     else
                     {
                         //默认一个
-                        AresField af = new AresField();
+                        AresMember af = new AresMember();
                         af.ancestor = ancestor;
                         af.fieldInfo = fi;
                         af.groupId = 0;
@@ -157,12 +157,12 @@ namespace Ares
 
                 foreach (MethodInfo mi in methods)
                 {
-                    IEnumerable<AresConfigLayout> als = mi.GetCustomAttributes<AresConfigLayout>();
+                    IEnumerable<ACLayout> als = mi.GetCustomAttributes<ACLayout>();
                     if (als.Any())
                     {
-                        foreach (AresConfigLayout al in als)
+                        foreach (ACLayout al in als)
                         {
-                            AresMethod af = new AresMethod();
+                            AresMember af = new AresMember();
                             af.ancestor = ancestor;
                             af.methodInfo = mi;
                             af.groupId = al.groupId;
@@ -173,7 +173,7 @@ namespace Ares
                     else
                     {
                         //默认一个
-                        AresMethod af = new AresMethod();
+                        AresMember af = new AresMember();
                         af.ancestor = ancestor;
                         af.methodInfo = mi;
                         af.groupId = 0;

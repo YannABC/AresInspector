@@ -1,17 +1,15 @@
 using System;
-using UnityEditor;
 using UnityEngine.UIElements;
-//using UnityObject = UnityEngine.Object;
 
 namespace Ares
 {
-    // Attribute used to make a horizontal space
-    [System.AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
-    public partial class AresSpace : AresDrawer
+    // Attribute used to make a horizontal or vertical space
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    public partial class ADSpace : AresDrawer
     {
         public readonly float size;
 
-        public AresSpace(float size = 8) : base(true)
+        public ADSpace(float size = 8) : base(true)
         {
             // By default uses 8 pixels which corresponds to EditorGUILayout.Space()
             // which reserves 6 pixels, plus the usual 2 pixels caused by the neighboring margin.
@@ -22,7 +20,7 @@ namespace Ares
     }
 
 #if UNITY_EDITOR
-    public partial class AresSpace
+    public partial class ADSpace
     {
         public override VisualElement CreateGUI(AresContext context)
         {

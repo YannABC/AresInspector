@@ -1,17 +1,17 @@
+using System;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
-//using UnityObject = UnityEngine.Object;
 
 namespace Ares
 {
     // Attribute used to make a float or int variable in a script be restricted to a specific range.
-    public partial class AresRange : AresDrawer
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
+    public partial class ADRange : AresDrawer
     {
         public readonly float min;
         public readonly float max;
 
-        public AresRange(float min, float max) : base(false)
+        public ADRange(float min, float max) : base(false)
         {
             this.min = min;
             this.max = max;
@@ -19,7 +19,7 @@ namespace Ares
     }
 
 #if UNITY_EDITOR
-    public partial class AresRange
+    public partial class ADRange
     {
         public override VisualElement CreateGUI(AresContext context)
         {
