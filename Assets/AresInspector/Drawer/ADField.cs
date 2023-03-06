@@ -5,16 +5,16 @@ using UnityEngine.UIElements;
 namespace Ares
 {
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
-    public partial class ADPropertyField : AresDrawer
+    public partial class ADField : AresDrawer
     {
-        public ADPropertyField() : base(false)
+        public ADField() : base(false)
         {
 
         }
     }
 
 #if UNITY_EDITOR
-    public partial class ADPropertyField
+    public partial class ADField
     {
         public override VisualElement CreateGUI(AresContext context)
         {

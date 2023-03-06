@@ -31,20 +31,29 @@ public static class AresControls
             {
                 Type type = target.GetType();
                 m_MethodInfo = type.GetMethod(name);
-                if (m_MethodInfo.ReturnType != typeof(bool) || m_MethodInfo.GetParameters().Length > 0)
+                if (m_MethodInfo != null)
                 {
-                    m_MethodInfo = null;
+                    if (m_MethodInfo.ReturnType != typeof(bool) || m_MethodInfo.GetParameters().Length > 0)
+                    {
+                        m_MethodInfo = null;
+                    }
                 }
+
                 if (m_MethodInfo == null)
                 {
                     m_FieldInfo = type.GetField(name);
-                    if (m_FieldInfo.FieldType != typeof(bool))
+                    if (m_FieldInfo != null)
                     {
-                        m_FieldInfo = null;
+                        if (m_FieldInfo.FieldType != typeof(bool))
+                        {
+                            m_FieldInfo = null;
+                        }
                     }
+
                     if (m_FieldInfo == null)
                     {
-                        m_MethodInfo = typeof(AresControls).GetMethod(name);
+                        m_MethodInfo = typeof(AresControls).GetMethod(name,
+                            BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
                     }
                 }
             }

@@ -1,8 +1,9 @@
-﻿using UnityEngine.UIElements;
+﻿using System;
+using UnityEngine.UIElements;
 
 namespace Ares
 {
-    // Attribute used to make a float or int variable in a script be restricted to a specific range.
+    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public partial class ADButton : AresDrawer
     {
         public ADButton() : base(false)

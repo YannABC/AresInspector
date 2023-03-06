@@ -17,18 +17,21 @@ namespace AresABC
             B = 2,
         }
 
-        //[AresField(visible = "IsVisible")]
-        [ADSpace(50)]
+        [AresEnableIf("EditorOnly")]
+        public bool b;
+
         [ADRange(33, 44)]
         [Header("Header with some space around it", order = 1)]
-        [ADPropertyField]
+        //[ADField]
         [ADSpace(50)]
+        [AresShowIf("b")]
         public int i;
 
         ////[AresField(groupId = 1)]
-        //public int j;
+        public int j;
 
         [ADButton()]
+        [AresEnableIf("b")]
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");
@@ -72,10 +75,10 @@ namespace AresABC
 
         }
 
-        //public bool IsVisible()
-        //{
-        //    return j > 10;
-        //}
+        public bool IsVisible()
+        {
+            return j > 10;
+        }
     }
 
     [Serializable]
