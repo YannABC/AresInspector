@@ -2,10 +2,10 @@
 {
     public class AresEnableIf : System.Attribute
     {
-        public readonly string name;
-        public AresEnableIf(string name)
+        public readonly string condition;
+        public AresEnableIf(string condition)
         {
-            this.name = name;
+            this.condition = condition;
         }
     }
 }

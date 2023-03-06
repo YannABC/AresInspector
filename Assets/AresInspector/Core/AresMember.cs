@@ -36,11 +36,14 @@ namespace Ares
             {
                 d.member = this;
             }
+
+            GetShowIf();
+            GetEnableIf();
         }
 
         public VisualElement CreateGUI(AresContext context)
         {
-            AresContext childContext = GetChildContext(context);
+            AresContext childContext = context;
 
             VisualElement root = null;
             if (m_Drawers.Count > 1)
@@ -64,12 +67,12 @@ namespace Ares
 
             if (m_ShowIf != null)
             {
-                AresControls.RegisterShowIf(root, context.target, m_ShowIf.name);
+                AresControls.RegisterShowIf(root, context.target, m_ShowIf.condition);
             }
 
             if (m_EnableIf != null)
             {
-                AresControls.RegisterEnableIf(root, context.target, m_EnableIf.name);
+                AresControls.RegisterEnableIf(root, context.target, m_EnableIf.condition);
             }
 
             return root;
@@ -101,17 +104,17 @@ namespace Ares
             }
         }
 
-        AresContext GetChildContext(AresContext context)
-        {
-            if (IsFieldMember())
-            {
-                return new AresContext(context.FindProperty(fieldInfo.Name), fieldInfo);
-            }
-            else
-            {
-                return new AresContext(context.target, methodInfo);
-            }
-        }
+        //AresContext GetChildContext(AresContext context)
+        //{
+        //    if (IsFieldMember())
+        //    {
+        //        return new AresContext(context.FindProperty(fieldInfo.Name), fieldInfo);
+        //    }
+        //    else
+        //    {
+        //        return new AresContext(context.target, methodInfo);
+        //    }
+        //}
 
         void GetShowIf()
         {

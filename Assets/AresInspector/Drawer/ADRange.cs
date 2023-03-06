@@ -23,21 +23,21 @@ namespace Ares
     {
         public override VisualElement CreateGUI(AresContext context)
         {
-            SerializedProperty property = context.property;
+            SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
 
-            if (property.propertyType == SerializedPropertyType.Float)
+            if (prop.propertyType == SerializedPropertyType.Float)
             {
-                var slider = new Slider(property.displayName, min, max);
+                var slider = new Slider(prop.displayName, min, max);
                 slider.AddToClassList(Slider.alignedFieldUssClassName);
-                slider.bindingPath = property.propertyPath;
+                slider.bindingPath = prop.propertyPath;
                 slider.showInputField = true;
                 return slider;
             }
-            else if (property.propertyType == SerializedPropertyType.Integer)
+            else if (prop.propertyType == SerializedPropertyType.Integer)
             {
-                var intSlider = new SliderInt(property.displayName, (int)min, (int)max);
+                var intSlider = new SliderInt(prop.displayName, (int)min, (int)max);
                 intSlider.AddToClassList(SliderInt.alignedFieldUssClassName);
-                intSlider.bindingPath = property.propertyPath;
+                intSlider.bindingPath = prop.propertyPath;
                 intSlider.showInputField = true;
                 return intSlider;
             }

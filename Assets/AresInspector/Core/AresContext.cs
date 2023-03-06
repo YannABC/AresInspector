@@ -7,6 +7,7 @@ namespace Ares
     public class AresContext
     {
         public object target { get; private set; }// MB or SO or serializable class
+        public object fieldValue { get; private set; }// MB or SO or serializable class
 
         public SerializedProperty property { get; private set; }
         public FieldInfo fieldInfo { get; private set; }
@@ -18,6 +19,7 @@ namespace Ares
         {
             m_SerializedObject = serializedObject;
             target = serializedObject.targetObject;
+            fieldValue = null;
         }
 
         public AresContext(SerializedProperty serializedProperty, FieldInfo fieldInfo)

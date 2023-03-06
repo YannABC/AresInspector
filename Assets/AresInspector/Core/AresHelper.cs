@@ -78,6 +78,7 @@ public static class AresHelper
     /// <returns></returns>
     public static object GetTargetObjectOfProperty(this SerializedProperty prop)
     {
+        //Debug.LogWarning(prop.displayName + " roperty type = " + prop.propertyType + " property path = " + prop.propertyPath);
         string path = prop.propertyPath.Replace(".Array.data[", "[");
         object obj = prop.serializedObject.targetObject;
         string[] elements = path.Split('.');
@@ -87,17 +88,17 @@ public static class AresHelper
             {
                 string elementName = element.Substring(0, element.IndexOf("["));
                 int index = System.Convert.ToInt32(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
-                obj = GetValue_Imp(obj, elementName, index);
+                obj = GetValueImp(obj, elementName, index);
             }
             else
             {
-                obj = GetValue_Imp(obj, element);
+                obj = GetValueImp(obj, element);
             }
         }
         return obj;
     }
 
-    private static object GetValue_Imp(object source, string name)
+    private static object GetValueImp(object source, string name)
     {
         if (source == null)
             return null;
@@ -118,9 +119,9 @@ public static class AresHelper
         return null;
     }
 
-    private static object GetValue_Imp(object source, string name, int index)
+    private static object GetValueImp(object source, string name, int index)
     {
-        var enumerable = GetValue_Imp(source, name) as System.Collections.IEnumerable;
+        var enumerable = GetValueImp(source, name) as System.Collections.IEnumerable;
         if (enumerable == null) return null;
         var enm = enumerable.GetEnumerator();
         //while (index-- >= 0)

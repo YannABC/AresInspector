@@ -27,7 +27,7 @@ namespace AresABC
         [AresShowIf("b")]
         public int i;
 
-        ////[AresField(groupId = 1)]
+        [ADHelpBox(ADHelpBox.MessageType.Info, "bbbbbbb", "b")]
         public int j;
 
         [ADButton()]

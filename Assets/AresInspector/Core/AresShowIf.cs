@@ -5,10 +5,10 @@ namespace Ares
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class AresShowIf : System.Attribute
     {
-        public readonly string name;
-        public AresShowIf(string name)
+        public readonly string condition;
+        public AresShowIf(string condition)
         {
-            this.name = name;
+            this.condition = condition;
         }
     }
 }

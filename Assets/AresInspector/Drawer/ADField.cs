@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
@@ -18,7 +19,9 @@ namespace Ares
     {
         public override VisualElement CreateGUI(AresContext context)
         {
-            PropertyField pf = new PropertyField(context.property);
+            SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
+
+            PropertyField pf = new PropertyField(prop);
             pf.style.flexGrow = 1;//尽量撑满，1个就100%，两个就各50%...
             return pf;
         }
