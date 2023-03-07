@@ -18,11 +18,12 @@ namespace AresABC
         }
 
         [AresEnableIf("EditorOnly")]
+        [ACLabel(null, 120)]
         public bool b;
 
+        [ACLabel("aa", 0)]
         [ADRange(33, 44)]
         [Header("Header with some space around it", order = 1)]
-        //[ADField]
         [ADSpace(50)]
         [AresShowIf("b")]
         public int i;

@@ -7,39 +7,27 @@ namespace Ares
     public class AresContext
     {
         public object target { get; private set; }// MB or SO or serializable class
-        public object fieldValue { get; private set; }// MB or SO or serializable class
-
-        public SerializedProperty property { get; private set; }
-        public FieldInfo fieldInfo { get; private set; }
-        public MethodInfo methodInfo { get; private set; }
 
         SerializedObject m_SerializedObject;
+        SerializedProperty m_SerializedProperty;
 
         public AresContext(SerializedObject serializedObject)
         {
             m_SerializedObject = serializedObject;
             target = serializedObject.targetObject;
-            fieldValue = null;
         }
 
-        public AresContext(SerializedProperty serializedProperty, FieldInfo fieldInfo)
+        public AresContext(SerializedProperty serializedProperty)
         {
-            property = serializedProperty;
-            this.fieldInfo = fieldInfo;
-            target = property.GetTargetObjectOfProperty();
-        }
-
-        public AresContext(object target, MethodInfo methodInfo)
-        {
-            this.target = target;
-            this.methodInfo = methodInfo;
+            m_SerializedProperty = serializedProperty;
+            target = m_SerializedProperty.GetTargetObjectOfProperty();
         }
 
         public SerializedProperty FindProperty(string name)
         {
-            if (property != null)
+            if (m_SerializedProperty != null)
             {
-                return property.FindPropertyRelative(name);
+                return m_SerializedProperty.FindPropertyRelative(name);
             }
             else
             {

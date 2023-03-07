@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 namespace Ares
@@ -21,22 +22,24 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADRange
     {
-        public override VisualElement CreateGUI(AresContext context)
+        protected override VisualElement CreateFieldGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
 
             if (prop.propertyType == SerializedPropertyType.Float)
             {
-                var slider = new Slider(prop.displayName, min, max);
-                slider.AddToClassList(Slider.alignedFieldUssClassName);
+                var slider = new UnityEngine.UIElements.Slider("", min, max);
+                slider.AddToClassList(UnityEngine.UIElements.Slider.alignedFieldUssClassName);
+                slider.style.flexGrow = 1;
                 slider.bindingPath = prop.propertyPath;
                 slider.showInputField = true;
                 return slider;
             }
             else if (prop.propertyType == SerializedPropertyType.Integer)
             {
-                var intSlider = new SliderInt(prop.displayName, (int)min, (int)max);
+                var intSlider = new SliderInt("", (int)min, (int)max);
                 intSlider.AddToClassList(SliderInt.alignedFieldUssClassName);
+                intSlider.style.flexGrow = 1;
                 intSlider.bindingPath = prop.propertyPath;
                 intSlider.showInputField = true;
                 return intSlider;

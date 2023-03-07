@@ -15,12 +15,15 @@ namespace Ares
         public Type ancestor;//self or current base class
         public AresGroup group;// the group that contains the member
 
+        public ACLabel label => m_Label;
+
         public FieldInfo fieldInfo;
         public MethodInfo methodInfo;
 
         protected List<AresDrawer> m_Drawers;
         AresShowIf m_ShowIf;
         AresEnableIf m_EnableIf;
+        ACLabel m_Label;
 
         public void Init()
         {
@@ -39,6 +42,7 @@ namespace Ares
 
             GetShowIf();
             GetEnableIf();
+            GetLabel();
         }
 
         public VisualElement CreateGUI(AresContext context)
@@ -104,18 +108,6 @@ namespace Ares
             }
         }
 
-        //AresContext GetChildContext(AresContext context)
-        //{
-        //    if (IsFieldMember())
-        //    {
-        //        return new AresContext(context.FindProperty(fieldInfo.Name), fieldInfo);
-        //    }
-        //    else
-        //    {
-        //        return new AresContext(context.target, methodInfo);
-        //    }
-        //}
-
         void GetShowIf()
         {
             if (IsFieldMember())
@@ -127,6 +119,7 @@ namespace Ares
                 m_ShowIf = methodInfo.GetCustomAttribute<AresShowIf>();
             }
         }
+
         void GetEnableIf()
         {
             if (IsFieldMember())
@@ -136,6 +129,14 @@ namespace Ares
             else
             {
                 m_EnableIf = methodInfo.GetCustomAttribute<AresEnableIf>();
+            }
+        }
+
+        void GetLabel()
+        {
+            if (IsFieldMember())
+            {
+                m_Label = fieldInfo.GetCustomAttribute<ACLabel>();
             }
         }
 #endif

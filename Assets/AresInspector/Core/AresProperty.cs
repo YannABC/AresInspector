@@ -25,7 +25,7 @@ namespace Ares
             }
             else
             {
-                return group.CreateGUI(new AresContext(property, fieldInfo));
+                return group.CreateGUI(new AresContext(property));
             }
         }
     }

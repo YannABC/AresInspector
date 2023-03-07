@@ -15,7 +15,7 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADButton
     {
-        public override VisualElement CreateGUI(AresContext context)
+        protected override VisualElement CreateMethodGUI(AresContext context)
         {
             Button btn = new Button(() =>
             {

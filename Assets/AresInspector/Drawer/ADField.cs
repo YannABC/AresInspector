@@ -17,11 +17,10 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADField
     {
-        public override VisualElement CreateGUI(AresContext context)
+        protected override VisualElement CreateFieldGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
-
-            PropertyField pf = new PropertyField(prop);
+            PropertyField pf = new PropertyField(prop, "");
             pf.style.flexGrow = 1;//尽量撑满，1个就100%，两个就各50%...
             return pf;
         }
