@@ -47,6 +47,9 @@ namespace Ares
 
         protected void SetLabelSize(VisualElement ve, int size)
         {
+            //unity BaseFile  m_LabelBaseMinWidth = 120 写死了
+            //设置了也会被自动设成120
+            //只能监听改变的事件，每次重新设置一次
             ve.RegisterCallback((GeometryChangedEvent e) =>
             {
                 var lbl = ve.Q<Label>();
