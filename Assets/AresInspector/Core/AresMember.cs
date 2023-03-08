@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Ares
@@ -13,7 +15,7 @@ namespace Ares
         public int order;
         public int groupId;
         public Type ancestor;//self or current base class
-        public AresGroup group;// the group that contains the member
+        public AresGroup group;// the group  that contains the member
 
         public ACLabel label => m_Label;
 
@@ -24,6 +26,9 @@ namespace Ares
         AresShowIf m_ShowIf;
         AresEnableIf m_EnableIf;
         ACLabel m_Label;
+
+        public MethodInfo onValueChanged => m_OnValueChanged;
+        MethodInfo m_OnValueChanged;
 
         public void Init()
         {
@@ -43,6 +48,7 @@ namespace Ares
             GetShowIf();
             GetEnableIf();
             GetLabel();
+            GetOnValueChanged();
         }
 
         public VisualElement CreateGUI(AresContext context)
@@ -137,6 +143,23 @@ namespace Ares
             if (IsFieldMember())
             {
                 m_Label = fieldInfo.GetCustomAttribute<ACLabel>();
+            }
+        }
+
+        void GetOnValueChanged()
+        {
+            if (IsFieldMember())
+            {
+                AresOnValueChanged aovc = fieldInfo.GetCustomAttribute<AresOnValueChanged>();
+                if (aovc != null)
+                {
+                    m_OnValueChanged = ancestor.GetMethod(aovc.method,
+                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                    if (m_OnValueChanged == null)
+                    {
+                        UnityEngine.Debug.LogError(aovc.method + " method not found");
+                    }
+                }
             }
         }
 #endif

@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using static PlasticGui.LaunchDiffParameters;
 
 namespace Ares
 {
@@ -17,11 +18,14 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADField
     {
-        protected override VisualElement CreateFieldGUI(AresContext context)
+        protected override VisualElement CreateFieldGUI(AresContext context, string labelName, int size)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
-            PropertyField pf = new PropertyField(prop, "");
-            pf.style.flexGrow = 1;//尽量撑满，1个就100%，两个就各50%...
+            PropertyField pf = new PropertyField(prop, labelName);
+            pf.style.flexGrow = 1;
+
+            SetLabelSize(pf, size);
+            SetOnValueChanged(pf, context.target);
             return pf;
         }
     }

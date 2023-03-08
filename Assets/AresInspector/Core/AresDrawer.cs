@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Ares
@@ -25,28 +26,8 @@ namespace Ares
                 string labelName = GetLabel(prop);
                 int size = GetLabelSize();
 
-                if (labelName == "")
-                {
-                    return CreateFieldGUI(context);
-                }
-                else
-                {
-                    VisualElement root = new VisualElement();
-                    root.style.flexDirection = FlexDirection.Row;
-                    root.style.flexGrow = 1;
-
-                    Label label = new Label(labelName);
-                    if (size > 0) label.style.width = size;
-                    root.Add(label);
-
-                    VisualElement child = CreateFieldGUI(context);
-                    if (child != null)
-                    {
-                        root.Add(child);
-                    }
-
-                    return root;
-                }
+                //不能自己画Label，自己画的不能drag
+                return CreateFieldGUI(context, labelName, size);
             }
             else
             {
@@ -54,7 +35,7 @@ namespace Ares
             }
         }
 
-        protected virtual VisualElement CreateFieldGUI(AresContext context)
+        protected virtual VisualElement CreateFieldGUI(AresContext context, string labelName, int size)
         {
             return null;
         }
@@ -64,6 +45,41 @@ namespace Ares
             return null;
         }
 
+        protected void SetLabelSize(VisualElement ve, int size)
+        {
+            ve.RegisterCallback((GeometryChangedEvent e) =>
+            {
+                var lbl = ve.Q<Label>();
+                if (lbl != null)
+                {
+                    if (size > 0)
+                    {
+                        lbl.style.minWidth = size;
+                        lbl.style.width = size;
+                    }
+                    else
+                    {
+                        lbl.style.minWidth = StyleKeyword.Auto;
+                        lbl.style.width = StyleKeyword.Auto;
+                    }
+                }
+            });
+        }
+
+        protected void SetOnValueChanged(VisualElement ve, object target)
+        {
+            if (ve == null) return;
+            if (member.onValueChanged == null) return;
+            ve.RegisterCallback((SerializedPropertyChangeEvent evt) =>
+            {
+                member.onValueChanged.Invoke(target, null);
+
+                //if (evt.target == this)
+                //{
+                //    callback(evt);
+                //}
+            });
+        }
 
         protected string GetLabel(SerializedProperty prop)
         {
@@ -90,7 +106,7 @@ namespace Ares
             }
             else
             {
-                size = 120;
+                size = 120;//unity default
             }
             return size;
         }

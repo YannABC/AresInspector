@@ -22,27 +22,28 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADRange
     {
-        protected override VisualElement CreateFieldGUI(AresContext context)
+        protected override VisualElement CreateFieldGUI(AresContext context, string labelName, int size)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
 
             if (prop.propertyType == SerializedPropertyType.Float)
             {
-                var slider = new UnityEngine.UIElements.Slider("", min, max);
-                slider.AddToClassList(UnityEngine.UIElements.Slider.alignedFieldUssClassName);
+                var slider = new UnityEngine.UIElements.Slider(labelName, min, max);
                 slider.style.flexGrow = 1;
                 slider.bindingPath = prop.propertyPath;
                 slider.showInputField = true;
+                SetOnValueChanged(slider, context.target);
                 return slider;
             }
             else if (prop.propertyType == SerializedPropertyType.Integer)
             {
-                var intSlider = new SliderInt("", (int)min, (int)max);
-                intSlider.AddToClassList(SliderInt.alignedFieldUssClassName);
-                intSlider.style.flexGrow = 1;
-                intSlider.bindingPath = prop.propertyPath;
-                intSlider.showInputField = true;
-                return intSlider;
+                var slider = new SliderInt(labelName, (int)min, (int)max);
+                slider.style.flexGrow = 1;
+                slider.bindingPath = prop.propertyPath;
+                slider.showInputField = true;
+                SetOnValueChanged(slider, context.target);
+                //slider.RegisterValueChangedCallback
+                return slider;
             }
 
             return new Label(L10n.Tr("Use Range with float or int."));

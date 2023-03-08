@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 #if UNITY_EDITOR
 public static class AresControls
 {
-    class Control
+    class Controler
     {
         public VisualElement ve;
         public object target;
@@ -30,7 +30,8 @@ public static class AresControls
             else
             {
                 Type type = target.GetType();
-                m_MethodInfo = type.GetMethod(name);
+                m_MethodInfo = type.GetMethod(name,
+                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
                 if (m_MethodInfo != null)
                 {
                     if (m_MethodInfo.ReturnType != typeof(bool) || m_MethodInfo.GetParameters().Length > 0)
@@ -91,11 +92,19 @@ public static class AresControls
             }
         }
     }
+    class Initer
+    {
+        public VisualElement ve;
+        public System.Action cbk;
+        public int count = 10;
+    }
 
-    static List<Control> s_Controls = new List<Control>();
+
+    static List<Controler> s_Controls = new List<Controler>();
+    static List<Initer> s_Initers = new List<Initer>();
     public static void RegisterShowIf(VisualElement ve, object target, string name)
     {
-        Control c = new Control();
+        Controler c = new Controler();
         c.ve = ve;
         c.target = target;
         c.name = name;
@@ -106,7 +115,7 @@ public static class AresControls
     }
     public static void RegisterEnableIf(VisualElement ve, object target, string name)
     {
-        Control c = new Control();
+        Controler c = new Controler();
         c.ve = ve;
         c.target = target;
         c.name = name;
@@ -114,6 +123,14 @@ public static class AresControls
         {
             s_Controls.Add(c);
         }
+    }
+
+    public static void RegisterOnInit(VisualElement ve, System.Action cbk)
+    {
+        Initer initer = new Initer();
+        initer.cbk = cbk;
+        initer.ve = ve;
+        s_Initers.Add(initer);
     }
 
     static bool EditorOnly() { return !Application.isPlaying; }
@@ -128,7 +145,7 @@ public static class AresControls
     {
         for (int i = s_Controls.Count - 1; i >= 0; i--)
         {
-            Control c = s_Controls[i];
+            Controler c = s_Controls[i];
             if (c.ve.panel == null)
             {
                 if (i != s_Controls.Count - 1)
@@ -140,6 +157,32 @@ public static class AresControls
             else
             {
                 c.Tick();
+            }
+        }
+
+        for (int i = s_Initers.Count - 1; i >= 0; i--)
+        {
+            Initer c = s_Initers[i];
+            if (c.ve.panel == null || c.ve.childCount > 0)
+            {
+                if (c.ve.panel != null)
+                {
+                    c.count--;
+                    c.cbk();
+                }
+                if (c.count <= 0)
+                {
+                    if (i != s_Initers.Count - 1)
+                    {
+                        s_Initers[i] = s_Initers[s_Initers.Count - 1];
+                    }
+                    s_Initers.RemoveAt(i);
+                }
+
+            }
+            else
+            {
+
             }
         }
     }

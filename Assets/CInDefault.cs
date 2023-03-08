@@ -26,9 +26,12 @@ namespace AresABC
         [Header("Header with some space around it", order = 1)]
         [ADSpace(50)]
         [AresShowIf("b")]
+        [AresOnValueChanged("OnIChanged")]
         public int i;
 
         [ADHelpBox(ADHelpBox.MessageType.Info, "bbbbbbb", "b")]
+        [ACLabel("jjjj", 40)]
+        [AresOnValueChanged("OnJChanged")]
         public int j;
 
         [ADButton()]
@@ -36,6 +39,16 @@ namespace AresABC
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");
+        }
+
+        void OnIChanged()
+        {
+            Debug.Log("i changed to " + j);
+        }
+
+        void OnJChanged()
+        {
+            Debug.Log("j changed to " + j);
         }
 
         //[AresMethod()]
