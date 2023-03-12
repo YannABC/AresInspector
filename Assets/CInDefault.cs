@@ -76,10 +76,12 @@ namespace AresABC
         //public int NotShow;
 
         //[AresField(groupId = 2)]
-        //public C c;
+        [ACInline]
+        public C c;
         //public C c1;
 
-        //public List<C> c2;
+        [ACInline]
+        public List<C> c2;
 
         //[SerializeField]
         //public IC obj;

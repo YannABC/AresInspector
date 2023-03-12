@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -25,7 +26,19 @@ namespace Ares
             }
             else
             {
-                return group.CreateGUI(new AresContext(property));
+                VisualElement ve = group.CreateGUI(new AresContext(property));
+                if (ve == null) return ve;
+                if (fieldInfo.GetCustomAttribute<ACInline>() == null)
+                {
+                    Foldout foldout = new Foldout();
+                    foldout.text = property.displayName;
+                    foldout.Add(ve);
+                    return foldout;
+                }
+                else
+                {
+                    return ve;
+                }
             }
         }
     }
