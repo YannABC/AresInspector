@@ -18,13 +18,13 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADField
     {
-        protected override VisualElement CreateFieldGUI(AresContext context, string labelName, int size)
+        protected override VisualElement CreateFieldGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
-            PropertyField pf = new PropertyField(prop, labelName);
+            string labelText = member.GetLabelText(prop);
+            PropertyField pf = new PropertyField(prop, labelText);
             pf.style.flexGrow = 1;
 
-            SetLabelSize(pf, size);
             SetDelayed(prop, pf);
             SetOnValueChanged(pf, context.target);
             return pf;
@@ -32,11 +32,13 @@ namespace Ares
 
         protected void SetOnValueChanged(PropertyField pf, object target)
         {
-            if (member.onValueChanged == null) return;
-            pf.RegisterCallback((SerializedPropertyChangeEvent evt) =>
+            if (member.onValueChanged != null)
             {
-                member.onValueChanged.Invoke(target, null);
-            });
+                pf.RegisterCallback((SerializedPropertyChangeEvent evt) =>
+                {
+                    member.onValueChanged.Invoke(target, null);
+                });
+            }
         }
 
         void SetDelayed(SerializedProperty property, PropertyField pf)

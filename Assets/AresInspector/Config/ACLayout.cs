@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace Ares
 {
     [Conditional("UNITY_EDITOR")]
-    public partial class ACLayout : System.Attribute
+    public class ACLayout : System.Attribute
     {
         //{{
         public int groupId;

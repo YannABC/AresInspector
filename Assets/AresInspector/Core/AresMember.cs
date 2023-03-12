@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
@@ -17,18 +18,25 @@ namespace Ares
         public Type ancestor;//self or current base class
         public AresGroup group;// the group  that contains the member
 
-        public ACLabel label => m_Label;
-
         public FieldInfo fieldInfo;
         public MethodInfo methodInfo;
 
         protected List<AresDrawer> m_Drawers;
         AresShowIf m_ShowIf;
         AresEnableIf m_EnableIf;
-        ACLabel m_Label;
+        ACLabelText m_LabelText;
+        ACLabelWidth m_LabelWidth;
+        ACLabelColor m_LabelColor;
+        ACFontSize m_FontSize;
+        ACBackgroundColor m_BackgrondColor;
 
         public MethodInfo onValueChanged => m_OnValueChanged;
         MethodInfo m_OnValueChanged;
+
+        public ACLabelWidth GetACLabelWidth() { return m_LabelWidth; }
+        public ACFontSize GetACFontSize() { return m_FontSize; }
+        public ACLabelColor GetACLabelColor() { return m_LabelColor; }
+        public ACBackgroundColor GetACBackgroundColor() { return m_BackgrondColor; }
 
         public void Init()
         {
@@ -45,10 +53,35 @@ namespace Ares
                 d.member = this;
             }
 
-            GetShowIf();
-            GetEnableIf();
-            GetLabel();
-            GetOnValueChanged();
+            if (IsFieldMember())
+            {
+                m_ShowIf = fieldInfo.GetCustomAttribute<AresShowIf>();
+                m_EnableIf = fieldInfo.GetCustomAttribute<AresEnableIf>();
+                m_LabelText = fieldInfo.GetCustomAttribute<ACLabelText>();
+                m_LabelWidth = fieldInfo.GetCustomAttribute<ACLabelWidth>();
+                m_FontSize = fieldInfo.GetCustomAttribute<ACFontSize>();
+                m_LabelColor = fieldInfo.GetCustomAttribute<ACLabelColor>();
+                m_BackgrondColor = fieldInfo.GetCustomAttribute<ACBackgroundColor>();
+
+                AresOnValueChanged aovc = fieldInfo.GetCustomAttribute<AresOnValueChanged>();
+                if (aovc != null)
+                {
+                    m_OnValueChanged = ancestor.GetMethod(aovc.method,
+                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                    if (m_OnValueChanged == null)
+                    {
+                        UnityEngine.Debug.LogError(aovc.method + " method not found");
+                    }
+                }
+            }
+            else
+            {
+                m_ShowIf = methodInfo.GetCustomAttribute<AresShowIf>();
+                m_EnableIf = methodInfo.GetCustomAttribute<AresEnableIf>();
+                m_FontSize = methodInfo.GetCustomAttribute<ACFontSize>();
+                m_LabelColor = methodInfo.GetCustomAttribute<ACLabelColor>();
+                m_BackgrondColor = methodInfo.GetCustomAttribute<ACBackgroundColor>();
+            }
         }
 
         public VisualElement CreateGUI(AresContext context)
@@ -114,70 +147,75 @@ namespace Ares
             }
         }
 
-        void GetShowIf()
-        {
-            if (IsFieldMember())
-            {
-                m_ShowIf = fieldInfo.GetCustomAttribute<AresShowIf>();
-            }
-            else
-            {
-                m_ShowIf = methodInfo.GetCustomAttribute<AresShowIf>();
-            }
-        }
 
-        void GetEnableIf()
-        {
-            if (IsFieldMember())
-            {
-                m_EnableIf = fieldInfo.GetCustomAttribute<AresEnableIf>();
-            }
-            else
-            {
-                m_EnableIf = methodInfo.GetCustomAttribute<AresEnableIf>();
-            }
-        }
 
-        void GetLabel()
-        {
-            if (IsFieldMember())
-            {
-                m_Label = fieldInfo.GetCustomAttribute<ACLabel>();
-            }
-        }
 
-        void GetOnValueChanged()
-        {
-            if (IsFieldMember())
-            {
-                AresOnValueChanged aovc = fieldInfo.GetCustomAttribute<AresOnValueChanged>();
-                if (aovc != null)
-                {
-                    m_OnValueChanged = ancestor.GetMethod(aovc.method,
-                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                    if (m_OnValueChanged == null)
-                    {
-                        UnityEngine.Debug.LogError(aovc.method + " method not found");
-                    }
-                }
-            }
-        }
 
         public bool HasAttribute(System.Type attr)
         {
+            return GetAttribute(attr) != null;
+        }
+
+        public bool HasAttribute<T>() where T : Attribute
+        {
+            return HasAttribute(typeof(T));
+        }
+
+        public System.Attribute GetAttribute(System.Type attr)
+        {
             if (IsFieldMember())
             {
-                return fieldInfo.GetCustomAttribute(attr) != null;
+                return fieldInfo.GetCustomAttribute(attr);
             }
             else
             {
-                return methodInfo.GetCustomAttribute(attr) != null;
+                return methodInfo.GetCustomAttribute(attr);
             }
         }
 
-        public bool HasAttribute<T>()
+        public T GetAttribute<T>() where T : Attribute
         {
-            return HasAttribute(typeof(T));
+            return GetAttribute(typeof(T)) as T;
+        }
+
+        public string GetLabelText(SerializedProperty prop)
+        {
+            if (IsFieldMember())
+            {
+                string labelName;
+                if (m_LabelText != null)
+                {
+                    labelName = m_LabelText.text ?? prop.displayName;
+                }
+                else
+                {
+                    labelName = prop.displayName;
+                }
+                return labelName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetLabelText()
+        {
+            if (IsFieldMember())
+            {
+                return null;
+            }
+            else
+            {
+                if (m_LabelText != null)
+                {
+                    return string.IsNullOrEmpty(m_LabelText.text) ? methodInfo.Name : m_LabelText.text;
+                }
+                else
+                {
+                    return methodInfo.Name;
+                }
+            }
         }
 #endif
     }

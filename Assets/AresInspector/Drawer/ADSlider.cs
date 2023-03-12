@@ -22,19 +22,20 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADSlider
     {
-        protected override VisualElement CreateFieldGUI(AresContext context, string labelName, int size)
+        protected override VisualElement CreateFieldGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
+            string labelText = member.GetLabelText(prop);
 
             if (prop.propertyType == SerializedPropertyType.Float)
             {
-                Slider slider = new Slider(labelName, min, max);
+                Slider slider = new Slider(labelText, min, max);
                 SetupSlider(slider, prop.propertyPath, context.target);
                 return slider;
             }
             else if (prop.propertyType == SerializedPropertyType.Integer)
             {
-                SliderInt slider = new SliderInt(labelName, (int)min, (int)max);
+                SliderInt slider = new SliderInt(labelText, (int)min, (int)max);
                 SetupSlider(slider, prop.propertyPath, context.target);
                 return slider;
             }
@@ -42,17 +43,19 @@ namespace Ares
             return new Label(L10n.Tr("Use Range with float or int."));
         }
 
-        protected void SetupSlider<T>(BaseSlider<T> slider, string path, object target) where T : IComparable<T>
+        protected void SetupSlider<T>(BaseSlider<T> slider, string bindingPath, object target) where T : IComparable<T>
         {
             slider.style.flexGrow = 1;
-            slider.bindingPath = path;
+            slider.bindingPath = bindingPath;
             slider.showInputField = true;
 
-            if (member.onValueChanged == null) return;
-            slider.RegisterValueChangedCallback((ChangeEvent<T> evt) =>
+            if (member.onValueChanged != null)
             {
-                member.onValueChanged.Invoke(target, null);
-            });
+                slider.RegisterValueChangedCallback((ChangeEvent<T> evt) =>
+                {
+                    member.onValueChanged.Invoke(target, null);
+                });
+            }
         }
     }
 #endif

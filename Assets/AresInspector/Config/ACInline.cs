@@ -6,7 +6,7 @@ namespace Ares
 {
     [System.AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
     [Conditional("UNITY_EDITOR")]
-    public partial class ACInline : System.Attribute
+    public class ACInline : System.Attribute
     {
 
     }

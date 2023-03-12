@@ -20,22 +20,29 @@ namespace Ares
         public AresMember member;
         public virtual VisualElement CreateGUI(AresContext context)
         {
+            VisualElement root;
             if (member.IsFieldMember())
             {
                 SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
-                string labelName = GetLabel(prop);
-                int size = GetLabelSize();
+                //string labelName = member.GetLabelText(prop);
+                //int width = member.GetLabelWidth();
 
                 //不能自己画Label，自己画的不能drag
-                return CreateFieldGUI(context, labelName, size);
+                root = CreateFieldGUI(context);
+                SetLabelWidth(root);
             }
             else
             {
-                return CreateMethodGUI(context);
+                root = CreateMethodGUI(context);
             }
+
+            SetLabelColor(root);
+            SetBackgroundColor(root);
+
+            return root;
         }
 
-        protected virtual VisualElement CreateFieldGUI(AresContext context, string labelName, int size)
+        protected virtual VisualElement CreateFieldGUI(AresContext context)
         {
             return null;
         }
@@ -45,8 +52,35 @@ namespace Ares
             return null;
         }
 
-        protected void SetLabelSize(VisualElement ve, int size)
+        protected void SetBackgroundColor(VisualElement ve)
         {
+            if (ve == null) return;
+            ACBackgroundColor ac = member.GetACBackgroundColor();
+            if (ac == null) return;
+            ve.style.backgroundColor = ac.color;
+        }
+
+        protected void SetLabelColor(VisualElement ve)
+        {
+            if (ve == null) return;
+            ACLabelColor ac = member.GetACLabelColor();
+            if (ac == null) return;
+            ve.RegisterCallback((AttachToPanelEvent e) =>
+            {
+                //Label , Button etc is TextElement
+                TextElement te = ve.Q<TextElement>();
+                if (te != null)
+                {
+                    te.style.color = ac.color;
+                }
+            });
+        }
+
+        protected void SetLabelWidth(VisualElement ve)
+        {
+            if (ve == null) return;
+            ACLabelWidth ac = member.GetACLabelWidth();
+            if (ac == null) return;
             //unity BaseFile  m_LabelBaseMinWidth = 120 写死了
             //设置了也会被自动设成120
             //只能监听改变的事件，每次重新设置一次
@@ -55,10 +89,10 @@ namespace Ares
                 var lbl = ve.Q<Label>();
                 if (lbl != null)
                 {
-                    if (size > 0)
+                    if (ac.width > 0)
                     {
-                        lbl.style.minWidth = size;
-                        lbl.style.width = size;
+                        lbl.style.minWidth = ac.width;
+                        lbl.style.width = ac.width;
                     }
                     else
                     {
@@ -67,36 +101,6 @@ namespace Ares
                     }
                 }
             });
-        }
-
-        protected string GetLabel(SerializedProperty prop)
-        {
-            ACLabel acl = member.label;
-            string labelName;
-            if (acl != null)
-            {
-                labelName = acl.label ?? prop.displayName;
-            }
-            else
-            {
-                labelName = prop.displayName;
-            }
-            return labelName;
-        }
-
-        protected int GetLabelSize()
-        {
-            ACLabel acl = member.label;
-            int size;
-            if (acl != null)
-            {
-                size = acl.size;
-            }
-            else
-            {
-                size = 120;//unity default
-            }
-            return size;
         }
     }
 #endif

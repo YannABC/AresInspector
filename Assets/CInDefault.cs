@@ -18,25 +18,30 @@ namespace AresABC
         }
 
         [AresEnableIf("EditorOnly")]
-        [ACLabel(null, 120)]
+        [ACLabelText("bbb"), ACLabelWidth(50)]
+        [ACLabelColor(1, 1, 0)]
+        [ACBackgroundColor(1, 0, 0)]
         public bool b;
 
-        [ACLabel("aa", 0)]
+        [ACLabelText("aa"), ACLabelWidth(50)]
         [ADSlider(33, 44)]
         [Header("Header with some space around it", order = 1)]
         [ADSpace(50)]
         [AresShowIf("b")]
         [AresOnValueChanged("OnIChanged")]
+        [ACLabelColor(1, 1, 0)]
         public int i;
 
         [ADHelpBox(ADHelpBox.MessageType.Info, "bbbbbbb", "b")]
-        [ACLabel("jjjj", 40)]
+        [ACLabelText("jjjj"), ACLabelWidth(40)]
         [AresOnValueChanged("OnJChanged")]
         [ACDelayed]
         public int j;
 
-        [ADButton()]
+        [ADButton, ACFontSize(30)]
         [AresEnableIf("b")]
+        [ACLabelColor(1, 0, 0)]
+        [ACBackgroundColor(1, 1, 0)]
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");

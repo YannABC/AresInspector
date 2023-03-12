@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using UnityEngine.UIElements;
 
 namespace Ares
@@ -21,9 +22,19 @@ namespace Ares
             {
                 member.methodInfo.Invoke(context.target, null);
             });
-            btn.text = member.methodInfo.Name;
+
             btn.style.flexGrow = 1;
+            btn.text = member.GetLabelText();
+            SetBtnSize(btn);
+
             return btn;
+        }
+
+        void SetBtnSize(Button btn)
+        {
+            ACFontSize ac = member.GetACFontSize();
+            if (ac == null) return;
+            btn.style.fontSize = ac.size;
         }
     }
 #endif
