@@ -162,6 +162,23 @@ namespace Ares
                 }
             }
         }
+
+        public bool HasAttribute(System.Type attr)
+        {
+            if (IsFieldMember())
+            {
+                return fieldInfo.GetCustomAttribute(attr) != null;
+            }
+            else
+            {
+                return methodInfo.GetCustomAttribute(attr) != null;
+            }
+        }
+
+        public bool HasAttribute<T>()
+        {
+            return HasAttribute(typeof(T));
+        }
 #endif
     }
 }

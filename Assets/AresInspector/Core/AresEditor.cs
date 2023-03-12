@@ -7,7 +7,7 @@ namespace Ares
 #if UNITY_EDITOR
     /// <summary>
     /// 战神编辑器
-    /// https://www.foundations.unity.com/components
+    /// https://www.foundations.unity.com/getting-started
     /// https://css-tricks.com/snippets/css/a-guide-to-flexbox/
     /// https://yogalayout.com/
     /// </summary>

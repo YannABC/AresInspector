@@ -32,6 +32,7 @@ namespace AresABC
         [ADHelpBox(ADHelpBox.MessageType.Info, "bbbbbbb", "b")]
         [ACLabel("jjjj", 40)]
         [AresOnValueChanged("OnJChanged")]
+        [ACDelayed]
         public int j;
 
         [ADButton()]
