@@ -428,8 +428,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   b: 1
-  i: 33
-  j: 24
+  i: 40
+  j: 333334
+  c:
+    ca: 0
+    cb: 0
+  c2:
+  - ca: 0
+    cb: 0
 --- !u!4 &1939108166
 Transform:
   m_ObjectHideFlags: 0

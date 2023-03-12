@@ -24,10 +24,6 @@ namespace Ares
             PropertyField pf = new PropertyField(prop, labelName);
             pf.style.flexGrow = 1;
 
-            //IntegerField f = null;
-            //f.isDelayed = true;
-
-
             SetLabelSize(pf, size);
             SetDelayed(prop, pf);
             SetOnValueChanged(pf, context.target);

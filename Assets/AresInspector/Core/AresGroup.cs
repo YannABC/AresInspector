@@ -60,9 +60,21 @@ namespace Ares
         {
             if (members.Count == 0 && subGroups.Count == 0) return null;//nothing to draw
 
-            VisualElement root = new VisualElement();
-            root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
-            root.style.flexGrow = 1;
+            VisualElement root = null;
+
+            if (type == EAresGroupType.Foldout)
+            {
+                var fd = new Foldout();
+                fd.text = context.disPlayName;
+                root = fd;
+            }
+            else
+            {
+                root = new VisualElement();
+                root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
+                root.style.flexGrow = 1;
+            }
+
 
             foreach (AresMember member in members)
             {

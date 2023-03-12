@@ -7,6 +7,20 @@ namespace Ares
     public class AresContext
     {
         public object target { get; private set; }// MB or SO or serializable class
+        public string disPlayName
+        {
+            get
+            {
+                if (m_SerializedProperty != null)
+                {
+                    return m_SerializedProperty.displayName;
+                }
+                else
+                {
+                    return m_SerializedObject.targetObject.name;
+                }
+            }
+        }
 
         SerializedObject m_SerializedObject;
         SerializedProperty m_SerializedProperty;
