@@ -2,7 +2,6 @@
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
-using static PlasticGui.LaunchDiffParameters;
 
 namespace Ares
 {
@@ -27,6 +26,15 @@ namespace Ares
             SetLabelSize(pf, size);
             SetOnValueChanged(pf, context.target);
             return pf;
+        }
+
+        protected void SetOnValueChanged(PropertyField pf, object target)
+        {
+            if (member.onValueChanged == null) return;
+            pf.RegisterCallback((SerializedPropertyChangeEvent evt) =>
+            {
+                member.onValueChanged.Invoke(target, null);
+            });
         }
     }
 #endif

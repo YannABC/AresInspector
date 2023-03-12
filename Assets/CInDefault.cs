@@ -22,7 +22,7 @@ namespace AresABC
         public bool b;
 
         [ACLabel("aa", 0)]
-        [ADRange(33, 44)]
+        [ADSlider(33, 44)]
         [Header("Header with some space around it", order = 1)]
         [ADSpace(50)]
         [AresShowIf("b")]
@@ -43,7 +43,7 @@ namespace AresABC
 
         void OnIChanged()
         {
-            Debug.Log("i changed to " + j);
+            Debug.Log("i changed to " + i);
         }
 
         void OnJChanged()

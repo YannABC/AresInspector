@@ -69,21 +69,6 @@ namespace Ares
             });
         }
 
-        protected void SetOnValueChanged(VisualElement ve, object target)
-        {
-            if (ve == null) return;
-            if (member.onValueChanged == null) return;
-            ve.RegisterCallback((SerializedPropertyChangeEvent evt) =>
-            {
-                member.onValueChanged.Invoke(target, null);
-
-                //if (evt.target == this)
-                //{
-                //    callback(evt);
-                //}
-            });
-        }
-
         protected string GetLabel(SerializedProperty prop)
         {
             ACLabel acl = member.label;
