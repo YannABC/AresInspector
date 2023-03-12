@@ -17,16 +17,19 @@ namespace Ares
         public readonly int id;
         public readonly int parentId;
         public readonly EAresGroupType type;
+        public readonly bool showBox;
 
         public AresGroup(
             int id,                   //group id
             int parentId,             //parent group id
-            EAresGroupType type       //group type
+            EAresGroupType type,       //group type
+            bool showBox = false
             )
         {
             this.id = id;
             this.parentId = parentId;
             this.type = type;
+            this.showBox = showBox;
         }
     }
 
@@ -70,11 +73,17 @@ namespace Ares
             }
             else
             {
-                root = new VisualElement();
+                if (showBox)
+                {
+                    root = new Box();
+                }
+                else
+                {
+                    root = new VisualElement();
+                }
                 root.style.flexDirection = type == EAresGroupType.Horizontal ? FlexDirection.Row : FlexDirection.Column;
                 root.style.flexGrow = 1;
             }
-
 
             foreach (AresMember member in members)
             {
@@ -98,10 +107,6 @@ namespace Ares
                 if (l.order != r.order) return l.order - r.order;
                 return l.index - r.index;
             });
-            //foreach (AresMember m in members)
-            //{
-            //    m.Init();
-            //}
             foreach (AresGroup sub in subGroups)
             {
                 sub.SortMembers();
