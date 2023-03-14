@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codice.CM.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -157,6 +158,33 @@ public static class AresHelper
         {
             yield return methodInfo;
         }
+    }
+
+    public static object GetValue(object target, string name)
+    {
+        if (target == null) return null;
+        Type type = target.GetType();
+
+        FieldInfo fi = type.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+        if (fi != null)
+        {
+            return fi.GetValue(target);
+        }
+
+        PropertyInfo pi = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+        if (pi != null)
+        {
+            return pi.GetValue(target);
+        }
+
+        MethodInfo mi = type.GetMethod(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+        if (mi != null)
+        {
+            return mi.Invoke(target, null);
+        }
+
+        Debug.LogError(name + " not found in " + type.Name);
+        return null;
     }
 
     /// <summary>

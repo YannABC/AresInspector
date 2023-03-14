@@ -33,10 +33,15 @@ namespace AresABC
         public int i;
 
         [ADHelpBox(ADHelpBox.MessageType.Info, "bbbbbbb", "b")]
-        [ACLabelText("jjjj"), ACLabelWidth(40)]
+        [ACLabelText("jjjj")/*, ACLabelWidth(40)*/]
         [AresOnValueChanged("OnJChanged")]
         [ACDelayed]
+        //[ADDropDown]
         public int j;
+
+        [ACLabelWidth(40)]
+        [ADDropDown("GetLstChoices")]
+        public string df;
 
         [ADButton, ACFontSize(30)]
         [AresEnableIf("b")]
@@ -91,6 +96,19 @@ namespace AresABC
 
         //[SerializeField]
         //public IC obj;
+
+        string[] choices1 = new string[] { "x1", "x2", "x3" };
+        List<string> choices2 = new List<string>() { "x4", "x5", "x6" };
+        List<string> choices3 => choices2;
+        List<string> GetLstChoices() { return choices3; }
+        Dictionary<string, int> GetDicChoices()
+        {
+            Dictionary<string, int> ret = new Dictionary<string, int>();
+            ret.Add("aaaa", 1);
+            ret.Add("bbbb", 2);
+            ret.Add("cccc", 3);
+            return ret;
+        }
 
         public void Start()
         {
