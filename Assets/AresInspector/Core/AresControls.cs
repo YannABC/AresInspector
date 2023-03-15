@@ -16,71 +16,19 @@ public static class AresControls
         public string name;
 
         bool m_IsShowIf;
-        MethodInfo m_MethodInfo;
-        FieldInfo m_FieldInfo;
 
         public bool Init(bool isShowIf)
         {
             m_IsShowIf = isShowIf;
 
-            if (target == null)
-            {
-                m_MethodInfo = typeof(AresControls).GetMethod(name);
-            }
-            else
-            {
-                Type type = target.GetType();
-                m_MethodInfo = type.GetMethod(name,
-                    BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-                if (m_MethodInfo != null)
-                {
-                    if (m_MethodInfo.ReturnType != typeof(bool) || m_MethodInfo.GetParameters().Length > 0)
-                    {
-                        m_MethodInfo = null;
-                    }
-                }
+            Type type = target.GetType();
 
-                if (m_MethodInfo == null)
-                {
-                    m_FieldInfo = type.GetField(name);
-                    if (m_FieldInfo != null)
-                    {
-                        if (m_FieldInfo.FieldType != typeof(bool))
-                        {
-                            m_FieldInfo = null;
-                        }
-                    }
-
-                    if (m_FieldInfo == null)
-                    {
-                        m_MethodInfo = typeof(AresControls).GetMethod(name,
-                            BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-                    }
-                }
-            }
-
-            if (m_MethodInfo == null && m_FieldInfo == null)
-            {
-                Debug.LogError("cannot find suitable method or field " + name);
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return type.GetTypeMember(name) != null;
         }
 
         public void Tick()
         {
-            bool v;
-            if (m_MethodInfo != null)
-            {
-                v = (bool)m_MethodInfo.Invoke(target, null);
-            }
-            else
-            {
-                v = (bool)m_FieldInfo.GetValue(target);
-            }
+            bool v = (bool)AresHelper.ResolveValue(target, name);
 
             if (m_IsShowIf)
             {
@@ -132,9 +80,6 @@ public static class AresControls
         initer.ve = ve;
         s_Initers.Add(initer);
     }
-
-    static bool EditorOnly() { return !Application.isPlaying; }
-    static bool RuntimeOnly() { return Application.isPlaying; }
 
     static AresControls()
     {

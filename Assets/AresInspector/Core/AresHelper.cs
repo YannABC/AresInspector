@@ -5,25 +5,80 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 #if UNITY_EDITOR
 public static class AresHelper
 {
-    static Dictionary<Type, Dictionary<string, MethodInfo>> s_Methods = new Dictionary<Type, Dictionary<string, MethodInfo>>();
-
-    public static MethodInfo GetMethodInfo(this Type type, string key)
+    public static object ResolveValue(object target, string name)
     {
-        if (!s_Methods.TryGetValue(type, out Dictionary<string, MethodInfo> dic))
+        if (target == null) return null;
+        Type type = target.GetType();
+
+        object obj = type.GetTypeMember(name);
+        if (obj == null) return null;
+        if (obj is FieldInfo fi)
         {
-            dic = new Dictionary<string, MethodInfo>();
-            s_Methods.Add(type, dic);
+            return fi.GetValue(target);
         }
-        if (!dic.TryGetValue(key, out MethodInfo mi))
+        if (obj is PropertyInfo pi)
         {
-            mi = type.GetMethod(key);
-            dic.Add(key, mi);
+            return pi.GetValue(target);
         }
-        return mi;
+        if (obj is MethodInfo mi)
+        {
+            return mi.Invoke(target, null);
+        }
+        return null;
+    }
+
+    static Dictionary<Type, Dictionary<string, object>> s_Members = new Dictionary<Type, Dictionary<string, object>>();
+    public static object GetTypeMember(this Type type, string key)
+    {
+        if (!s_Members.TryGetValue(type, out Dictionary<string, object> dic))
+        {
+            dic = new Dictionary<string, object>();
+            s_Members.Add(type, dic);
+        }
+        if (!dic.TryGetValue(key, out object obj))
+        {
+            FieldInfo fi = type.GetField(key, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+            if (fi != null)
+            {
+                obj = fi;
+            }
+            else
+            {
+                PropertyInfo pi = type.GetProperty(key, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                if (pi != null)
+                {
+                    obj = pi;
+                }
+                else
+                {
+                    MethodInfo mi = type.GetMethod(key, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                    if (mi != null)
+                    {
+                        obj = pi;
+                    }
+                    else
+                    {
+                        mi = typeof(AresGlobals).GetMethod(key, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+                        if (mi != null)
+                        {
+                            obj = mi;
+                        }
+                        else
+                        {
+                            Debug.LogError(key + " field or property or method not found");
+                            obj = null;
+                        }
+                    }
+                }
+            }
+            dic.Add(key, obj);
+        }
+        return obj;
     }
 
     public static bool IsUnitySerialized(this FieldInfo fieldInfo)
@@ -158,33 +213,6 @@ public static class AresHelper
         {
             yield return methodInfo;
         }
-    }
-
-    public static object GetValue(object target, string name)
-    {
-        if (target == null) return null;
-        Type type = target.GetType();
-
-        FieldInfo fi = type.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-        if (fi != null)
-        {
-            return fi.GetValue(target);
-        }
-
-        PropertyInfo pi = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-        if (pi != null)
-        {
-            return pi.GetValue(target);
-        }
-
-        MethodInfo mi = type.GetMethod(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-        if (mi != null)
-        {
-            return mi.Invoke(target, null);
-        }
-
-        Debug.LogError(name + " not found in " + type.Name);
-        return null;
     }
 
     /// <summary>

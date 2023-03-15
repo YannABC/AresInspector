@@ -26,7 +26,7 @@ namespace Ares
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
 
-            object v = AresHelper.GetValue(context.target, name);
+            object v = AresHelper.ResolveValue(context.target, name);
             if (v == null)
             {
                 return new Label(name + " not found");

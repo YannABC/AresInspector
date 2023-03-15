@@ -40,8 +40,11 @@ namespace AresABC
         public int j;
 
         [ACLabelWidth(40)]
-        [ADDropDown("GetLstChoices")]
+        [ADDropDown("choices1")]
         public string df;
+
+        //[ACShowInInspector]
+        int _NoneSerializedInt;
 
         [ADButton, ACFontSize(30)]
         [AresEnableIf("b")]
