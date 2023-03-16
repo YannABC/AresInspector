@@ -216,7 +216,7 @@ public static class AresHelper
     }
 
     /// <summary>
-    ///		Get self and all base types
+    ///		Get self and all base types 
     /// </summary>
     public static List<Type> GetAncestors(this Type type)
     {
