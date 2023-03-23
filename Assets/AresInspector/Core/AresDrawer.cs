@@ -55,7 +55,7 @@ namespace Ares
         protected void SetBackgroundColor(VisualElement ve)
         {
             if (ve == null) return;
-            ACBackgroundColor ac = member.GetACBackgroundColor();
+            ACBgColor ac = member.GetACBackgroundColor();
             if (ac == null) return;
             ve.style.backgroundColor = ac.color;
         }

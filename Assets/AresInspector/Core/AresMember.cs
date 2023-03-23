@@ -28,7 +28,7 @@ namespace Ares
         ACLabelWidth m_LabelWidth;
         ACLabelColor m_LabelColor;
         ACFontSize m_FontSize;
-        ACBackgroundColor m_BackgrondColor;
+        ACBgColor m_BackgrondColor;
 
         public MethodInfo onValueChanged => m_OnValueChanged;
         MethodInfo m_OnValueChanged;
@@ -36,7 +36,7 @@ namespace Ares
         public ACLabelWidth GetACLabelWidth() { return m_LabelWidth; }
         public ACFontSize GetACFontSize() { return m_FontSize; }
         public ACLabelColor GetACLabelColor() { return m_LabelColor; }
-        public ACBackgroundColor GetACBackgroundColor() { return m_BackgrondColor; }
+        public ACBgColor GetACBackgroundColor() { return m_BackgrondColor; }
 
         public void Init()
         {
@@ -61,7 +61,7 @@ namespace Ares
                 m_LabelWidth = fieldInfo.GetCustomAttribute<ACLabelWidth>();
                 m_FontSize = fieldInfo.GetCustomAttribute<ACFontSize>();
                 m_LabelColor = fieldInfo.GetCustomAttribute<ACLabelColor>();
-                m_BackgrondColor = fieldInfo.GetCustomAttribute<ACBackgroundColor>();
+                m_BackgrondColor = fieldInfo.GetCustomAttribute<ACBgColor>();
 
                 AresOnValueChanged aovc = fieldInfo.GetCustomAttribute<AresOnValueChanged>();
                 if (aovc != null)
@@ -80,7 +80,7 @@ namespace Ares
                 m_EnableIf = methodInfo.GetCustomAttribute<AresEnableIf>();
                 m_FontSize = methodInfo.GetCustomAttribute<ACFontSize>();
                 m_LabelColor = methodInfo.GetCustomAttribute<ACLabelColor>();
-                m_BackgrondColor = methodInfo.GetCustomAttribute<ACBackgroundColor>();
+                m_BackgrondColor = methodInfo.GetCustomAttribute<ACBgColor>();
             }
         }
 

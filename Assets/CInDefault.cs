@@ -1,4 +1,4 @@
-using Ares;
+﻿using Ares;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace AresABC
         [AresEnableIf("EditorOnly")]
         [ACLabelText("bbb"), ACLabelWidth(50)]
         [ACLabelColor(1, 1, 0)]
-        [ACBackgroundColor(1, 0, 0)]
+        [ACBgColor(1, 0, 0)]
         public bool b;
 
         [ACLabelText("aa"), ACLabelWidth(50)]
@@ -49,7 +49,7 @@ namespace AresABC
         [ADButton, ACFontSize(30)]
         [AresEnableIf("b")]
         [ACLabelColor(1, 0, 0)]
-        [ACBackgroundColor(1, 1, 0)]
+        [ACBgColor(1, 1, 0)]
         void TestMethod()
         {
             Debug.Log("TestMethod 22 clicked");
