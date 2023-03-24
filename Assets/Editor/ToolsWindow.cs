@@ -22,21 +22,23 @@ namespace Tools
 
         void OnEnable()
         {
-            SetupTreeView();
+            if (m_TreeState == null)
+                m_TreeState = new TreeViewState();
+            //SetupTreeView();
             SetupSplitter();
         }
 
-        void SetupTreeView()
-        {
-            if (m_TreeState == null)
-                m_TreeState = new TreeViewState();
+        //void SetupTreeView()
+        //{
+        //    if (m_TreeState == null)
+        //        m_TreeState = new TreeViewState();
 
-            m_TreeView = new ToolsTreeView(m_TreeState);
-        }
+        //    m_TreeView = new ToolsTreeView(m_TreeState);
+        //}
 
         void DrawTreeView()
         {
-            m_TreeView.OnGUI(new Rect(0, 0, m_SplitterPos, position.height));
+            m_TreeView?.OnGUI(new Rect(0, 0, m_SplitterPos, position.height));
         }
 
         void SetupSplitter()
@@ -71,13 +73,16 @@ namespace Tools
             tree.style.bottom = 0;
 
             //右侧
-            IMGUIContainer right = new IMGUIContainer(DrawRight);
+            VisualElement right = new VisualElement();
             m_Splitter.Add(right);
             right.style.position = Position.Absolute;
             right.style.left = m_SplitterPos + 8;
             right.style.right = 0;
             right.style.top = 0;
-            right.style.bottom = 0;
+
+            //m_TreeView.SetRight(right);
+
+            m_TreeView = new ToolsTreeView(m_TreeState, right);
 
             left.RegisterCallback((GeometryChangedEvent evt) =>
             {
@@ -85,17 +90,6 @@ namespace Tools
                 search.style.width = m_SplitterPos - 8;
                 right.style.left = m_SplitterPos + 8;
             });
-        }
-
-        void DrawRight()
-        {
-            m_TreeView.DrawContent();
-        }
-
-        void OnGUI()
-        {
-            //Debug.Log("ONGUI");
-            //m_TreeView.OnGUI(new Rect(0, 0, m_SplitterWidth, position.height));
         }
 
         protected override void OnDisable()
@@ -108,11 +102,6 @@ namespace Tools
         [MenuItem("Tools/Open or Close Tools %t")]
         static void ShowWindow()
         {
-            //UnityEngine.Object[] array = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/InputManager.asset");
-
-            //MySo ms = ScriptableObject.CreateInstance<MySo>();
-            //AssetDatabase.CreateAsset(ms, "ProjectSettings/myso.asset");
-
             OpenOrClose("Tools");
         }
     }

@@ -1,9 +1,12 @@
+using Ares;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Tools
 {
@@ -19,10 +22,11 @@ namespace Tools
         public System.Type type;
 
         Editor m_ObjEditor;
+        Object m_Obj;
 
         bool isRelativeAssets => file.StartsWith("Assets/");
 
-        internal void OnOpen()
+        internal VisualElement OnOpen()
         {
             //Debug.Log("OnOpen " + displayName);
             if (!File.Exists(file))
@@ -30,42 +34,73 @@ namespace Tools
                 string dir = Path.GetDirectoryName(file);
                 Directory.CreateDirectory(dir);
 
-                Object obj = ScriptableObject.CreateInstance(type);
+                m_Obj = ScriptableObject.CreateInstance(type);
                 if (isRelativeAssets)
                 {
-                    AssetDatabase.CreateAsset(obj, file);
+                    AssetDatabase.CreateAsset(m_Obj, file);
                 }
                 else
                 {
                     InternalEditorUtility.SaveToSerializedFileAndForget(
-                        new Object[] { obj }, file, allowTextSerialization: true);
+                        new Object[] { m_Obj }, file, allowTextSerialization: true);
                 }
             }
 
             {
-                Object obj = isRelativeAssets ?
+                m_Obj = isRelativeAssets ?
                     AssetDatabase.LoadAssetAtPath(file, type) :
                     InternalEditorUtility.LoadSerializedFileAndForget(file)[0];
-                m_ObjEditor = Editor.CreateEditor(obj);
             }
+
+            AresGroup group = AresGroup.Get(m_Obj.GetType());
+            if (group != null)
+            {
+                VisualElement root = group.CreateGUI(new AresContext(new SerializedObject(m_Obj)));
+
+
+                //EditorApplication.update += () =>
+                //{
+                //    root.MarkDirtyRepaint();
+                //};
+                return root;
+            }
+            else
+            {
+                m_ObjEditor = Editor.CreateEditor(m_Obj, typeof(AresEditor));
+                return new IMGUIContainer(DrawEditor);
+            }
+        }
+
+        void DrawEditor()
+        {
+            m_ObjEditor?.OnInspectorGUI();
         }
 
         internal void OnClose()
         {
             //Debug.Log("OnClose " + displayName);
-            if (!isRelativeAssets)
+            if (isRelativeAssets)
+            {
+                EditorUtility.SetDirty(m_Obj);
+                AssetDatabase.SaveAssetIfDirty(m_Obj);
+            }
+            else
             {
                 InternalEditorUtility.SaveToSerializedFileAndForget(
-                    new Object[] { m_ObjEditor.target }, file, allowTextSerialization: true);
+                    new Object[] { m_Obj }, file, allowTextSerialization: true);
             }
-            Object.DestroyImmediate(m_ObjEditor);
-            m_ObjEditor = null;
+
+            if (m_ObjEditor != null)
+            {
+                Object.DestroyImmediate(m_ObjEditor);
+                m_ObjEditor = null;
+            }
         }
 
-        internal void OnDraw()
-        {
-            //Debug.Log("OnDraw " + displayName);
-            m_ObjEditor.OnInspectorGUI();
-        }
+        //internal void OnDraw()
+        //{
+        //    //Debug.Log("OnDraw " + displayName);
+        //    m_ObjEditor.OnInspectorGUI();
+        //}
     }
 }

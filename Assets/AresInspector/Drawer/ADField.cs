@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -24,6 +25,8 @@ namespace Ares
             string labelText = member.GetLabelText(prop);
             PropertyField pf = new PropertyField(prop, labelText);
             pf.style.flexGrow = 1;
+
+            pf.Bind(prop.serializedObject);//需要Bind，否则在TreeView中自己创建的，不显示IntegerField等
 
             SetDelayed(prop, pf);
             SetOnValueChanged(pf, context.target);
