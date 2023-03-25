@@ -3,13 +3,13 @@ using UnityEditor;
 using System.IO;
 using UnityEditorInternal;
 
-namespace Tools
+namespace Ares
 {
     /// <summary>
     /// EditorWindow 默认只在自身没关闭情况下，关闭unity时才会serialize自己, 关闭自身时不会serialize自己
-    /// SavableWindow 在关闭自身时会自动序列化public变量和SerializeField的变量
+    /// AresWindow 在关闭自身时会自动序列化public变量和SerializeField的变量
     /// </summary>
-    class SavableWindow<T> : EditorWindow where T : EditorWindow
+    public class AresWindow<T> : EditorWindow where T : EditorWindow
     {
         static string s_File = $"UserSettings/{typeof(T).Name}.asset";
 

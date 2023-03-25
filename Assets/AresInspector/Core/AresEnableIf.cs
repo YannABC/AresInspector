@@ -1,5 +1,8 @@
-﻿namespace Ares
+﻿using System.Diagnostics;
+
+namespace Ares
 {
+    [Conditional("UNITY_EDITOR")]
     public class AresEnableIf : System.Attribute
     {
         public readonly string condition;

@@ -1,4 +1,3 @@
-using Ares;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -7,7 +6,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Tools
+namespace Ares
 {
     /// <summary>
     /// file 可以在如下目录
@@ -15,7 +14,7 @@ namespace Tools
     /// 2. UserSettings/        用户数据，不受版本控制
     /// 3. ProjectSettings/     项目数据，受版本控制
     /// </summary>
-    class ToolsTreeItem : TreeViewItem
+    public class AresTreeItem : TreeViewItem
     {
         public string file;
         public System.Type type;
@@ -27,7 +26,7 @@ namespace Tools
 
         internal VisualElement OnOpen()
         {
-            //Debug.Log("OnOpen6 " + displayName);
+            //Debug.Log("OnOpen8 " + displayName);
             if (!File.Exists(file))
             {
                 string dir = Path.GetDirectoryName(file);
@@ -57,6 +56,7 @@ namespace Tools
                 //This is because the asset may not have been loaded back into memory yet.
                 VisualElement root = new VisualElement();
 
+                int leftCount = 3;
                 EditorApplication.CallbackFunction a = null;
                 a = () =>
                 {
@@ -67,14 +67,19 @@ namespace Tools
                     {
                         //Debug.Log($"delay add {type.Name} success");
                         root.Add(CreateGUI(m_Obj));
-                        EditorApplication.delayCall -= a;
+                        EditorApplication.update -= a;
                     }
                     else
                     {
-                        //Debug.Log($"delay add {type.Name} still null");
+                        leftCount--;
+                        if (leftCount <= 0)
+                        {
+                            Debug.Log($"cannot load {file}");
+                            EditorApplication.update -= a;
+                        }
                     }
                 };
-                EditorApplication.delayCall += a;
+                EditorApplication.update += a;
                 //Debug.Log("delay add " + type.Name);
                 return root;
             }
@@ -127,11 +132,5 @@ namespace Tools
                 m_ObjEditor = null;
             }
         }
-
-        //internal void OnDraw()
-        //{
-        //    //Debug.Log("OnDraw " + displayName);
-        //    m_ObjEditor.OnInspectorGUI();
-        //}
     }
 }

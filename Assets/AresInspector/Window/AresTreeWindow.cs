@@ -6,9 +6,9 @@ using System.IO;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
-namespace Tools
+namespace Ares
 {
-    class ToolsWindow : SavableWindow<ToolsWindow>
+    public abstract class AresTreeWindow<T> : AresWindow<T> where T : EditorWindow
     {
         [SerializeField]
         float m_SplitterPos = 150;//分隔符宽度
@@ -16,7 +16,7 @@ namespace Tools
         [SerializeField]
         TreeViewState m_TreeState;
 
-        ToolsTreeView m_TreeView;
+        AresTreeView m_TreeView;
 
         TwoPaneSplitView m_Splitter;
 
@@ -24,25 +24,7 @@ namespace Tools
         {
             if (m_TreeState == null)
                 m_TreeState = new TreeViewState();
-            //SetupTreeView();
-            SetupSplitter();
-        }
 
-        //void SetupTreeView()
-        //{
-        //    if (m_TreeState == null)
-        //        m_TreeState = new TreeViewState();
-
-        //    m_TreeView = new ToolsTreeView(m_TreeState);
-        //}
-
-        void DrawTreeView()
-        {
-            m_TreeView?.OnGUI(new Rect(0, 0, m_SplitterPos, position.height));
-        }
-
-        void SetupSplitter()
-        {
             m_Splitter = new TwoPaneSplitView(0, m_SplitterPos, TwoPaneSplitViewOrientation.Horizontal);
             rootVisualElement.Add(m_Splitter);
 
@@ -80,9 +62,7 @@ namespace Tools
             right.style.right = 0;
             right.style.top = 0;
 
-            //m_TreeView.SetRight(right);
-
-            m_TreeView = new ToolsTreeView(m_TreeState, right);
+            m_TreeView = new AresTreeView(m_TreeState, right, GetITreetems);
 
             left.RegisterCallback((GeometryChangedEvent evt) =>
             {
@@ -92,17 +72,20 @@ namespace Tools
             });
         }
 
+        void DrawTreeView()
+        {
+            m_TreeView?.OnGUI(new Rect(0, 0, m_SplitterPos, position.height));
+        }
+
+        protected virtual List<AresTreeItem> GetITreetems()
+        {
+            return null;
+        }
+
         protected override void OnDisable()
         {
             m_TreeView.OnDisable();
             base.OnDisable();
-        }
-
-        // Add menu named "My Window" to the Window menu
-        [MenuItem("Tools/Open or Close Tools %t")]
-        static void ShowWindow()
-        {
-            OpenOrClose("Tools");
         }
     }
 }
