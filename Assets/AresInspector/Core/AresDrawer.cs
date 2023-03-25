@@ -79,8 +79,12 @@ namespace Ares
         protected void SetLabelWidth(VisualElement ve)
         {
             if (ve == null) return;
+            int width = 120;
             ACLabelWidth ac = member.GetACLabelWidth();
-            if (ac == null) return;
+            if (ac != null)
+            {
+                width = ac.width;
+            }
             //unity BaseFile  m_LabelBaseMinWidth = 120 写死了
             //设置了也会被自动设成120
             //只能监听改变的事件，每次重新设置一次
@@ -89,10 +93,10 @@ namespace Ares
                 var lbl = ve.Q<Label>();
                 if (lbl != null)
                 {
-                    if (ac.width > 0)
+                    if (width > 0)
                     {
-                        lbl.style.minWidth = ac.width;
-                        lbl.style.width = ac.width;
+                        lbl.style.minWidth = width;
+                        lbl.style.width = width;
                     }
                     else
                     {

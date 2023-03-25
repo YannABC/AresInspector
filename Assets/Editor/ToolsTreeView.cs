@@ -102,15 +102,6 @@ namespace Tools
             return EditorGUI.actionKey;// control on windows,  cmd on mac
         }
 
-        //internal void DrawContent()
-        //{
-        //    if (m_SelectedItems == null) return;
-        //    foreach (TreeViewItem item in m_SelectedItems)
-        //    {
-        //        (item as ToolsTreeItem).OnDraw();
-        //    }
-        //}
-
         internal void OnDisable()
         {
             ClearSelectedItems();
@@ -130,7 +121,6 @@ namespace Tools
                     m_Container.Add(ve);
                 }
             }
-            //m_Container.MarkDirtyRepaint();
 
             m_SelectChanged = true;
         }
@@ -146,10 +136,5 @@ namespace Tools
                 m_SelectedItems = null;
             }
         }
-
-        //internal void SetRight(VisualElement right)
-        //{
-        //    m_Container = right;
-        //}
     }
 }

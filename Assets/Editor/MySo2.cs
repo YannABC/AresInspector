@@ -13,7 +13,7 @@ public class MySo2 : ScriptableObject, IAresObjectH
         public int id2;
     }
 
-    //[AresField(groupId = 1)]
+    //[AresField(groupId =   1)]
     public int i2;
     //[AresField(groupId = 1)]
     public int j2;
