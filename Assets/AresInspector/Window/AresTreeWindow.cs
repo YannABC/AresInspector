@@ -5,7 +5,6 @@ using UnityEditor;
 using System.IO;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
-using UnityEditor.PackageManager.UI;
 
 #if UNITY_EDITOR
 namespace Ares
@@ -22,7 +21,9 @@ namespace Ares
         IMGUIContainer m_IMGUITree;
 
         TwoPaneSplitView m_Splitter;
-        protected VisualElement m_Right;
+        protected ScrollView m_ScrollView;
+        protected VisualElement m_Header;
+        protected VisualElement m_Footer;
 
         void OnEnable()
         {
@@ -54,8 +55,22 @@ namespace Ares
             left.Add(m_IMGUITree);
 
             //右侧
-            m_Right = new ScrollView();
-            m_Splitter.Add(m_Right);
+            VisualElement right = new VisualElement();
+            m_Splitter.Add(right);
+
+            m_Header = new VisualElement();
+            m_Header.name = "header";
+            right.style.flexGrow = 0;
+            right.Add(m_Header);
+
+            m_ScrollView = new ScrollView();
+            m_ScrollView.style.flexGrow = 1;
+            right.Add(m_ScrollView);
+
+            m_Footer = new VisualElement();
+            m_Footer.name = "footer";
+            right.style.flexGrow = 0;
+            right.Add(m_Footer);
 
             m_TreeView = new AresTreeView(m_TreeState, this);
 
@@ -78,14 +93,34 @@ namespace Ares
 
         public virtual void OnSelectionChanged(IList<TreeViewItem> items)
         {
-            m_Right.Clear();
+            m_Header.Clear();
+            m_Footer.Clear();
+            m_ScrollView.Clear();
+            if (items.Count == 1)
+            {
+                AresTreeItem ati = items[0] as AresTreeItem;
+                VisualElement ve = CreateHeaderGUI(ati);
+                if (ve != null)
+                {
+                    m_Header.Add(ve);
+                }
+            }
             foreach (TreeViewItem item in items)
             {
                 AresTreeItem ati = item as AresTreeItem;
                 VisualElement ve = CreateTreeItemGUI(ati);
                 if (ve != null)
                 {
-                    m_Right.Add(ve);
+                    m_ScrollView.Add(ve);
+                }
+            }
+            if (items.Count == 1)
+            {
+                AresTreeItem ati = items[0] as AresTreeItem;
+                VisualElement ve = CreateFooterGUI(ati);
+                if (ve != null)
+                {
+                    m_Footer.Add(ve);
                 }
             }
         }
@@ -93,6 +128,14 @@ namespace Ares
         protected virtual VisualElement CreateTreeItemGUI(AresTreeItem ati)
         {
             return ati.OnOpen();
+        }
+        protected virtual VisualElement CreateHeaderGUI(AresTreeItem ati)
+        {
+            return null;
+        }
+        protected virtual VisualElement CreateFooterGUI(AresTreeItem ati)
+        {
+            return null;
         }
 
         protected override void OnDisable()

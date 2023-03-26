@@ -71,6 +71,72 @@ namespace Ares.Examples
             return base.CreateTreeItemGUI(ati);
         }
 
+        protected override VisualElement CreateFooterGUI(AresTreeItem ati)
+        {
+            if (string.IsNullOrEmpty(ati.file)) return null;
+            VisualElement root = new VisualElement();
+            root.style.flexDirection = FlexDirection.Row;
+
+            Button btnAsset;
+            if (ati.file.StartsWith("Assets/"))
+            {
+                btnAsset = new Button(() =>
+                {
+                    Object obj = AssetDatabase.LoadAssetAtPath(ati.file, ati.type);
+                    Selection.activeObject = obj;
+                });
+            }
+            else
+            {
+                btnAsset = new Button(() =>
+                {
+                    string dir = Path.GetDirectoryName(ati.file);
+                    Application.OpenURL(dir);
+                });
+            }
+            btnAsset.text = "Goto Asset";
+            root.Add(btnAsset);
+
+            Button btnScript = new Button(() =>
+            {
+                Debug.Log("goto scprit");
+                string path = FindClassFile(ati.type.Name);
+                Application.OpenURL(path);
+            });
+            btnScript.text = "Goto Script";
+            root.Add(btnScript);
+
+            Label lbl = new Label(ati.file);
+            lbl.style.unityTextAlign = TextAnchor.MiddleLeft;
+            root.Add(lbl);
+
+            return root;
+        }
+
+        protected string FindClassFile(string name)
+        {
+            DirectoryInfo direction = new DirectoryInfo(Application.dataPath);
+            FileInfo[] files = direction.GetFiles("*.cs", SearchOption.AllDirectories);
+
+            string fullPath = "";
+            string targetFileName = name + ".cs";
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (targetFileName == files[i].Name)
+                {
+                    fullPath = files[i].FullName;
+                    break;
+                }
+            }
+            return fullPath;
+        }
+
+        //protected override VisualElement CreateHeaderGUI(AresTreeItem ati)
+        //{
+        //    Label lbl = new Label("header");
+        //    return lbl;
+        //}
+
         [MenuItem("Ares/Examples %t")]
         static void ShowWindow()
         {
