@@ -6,6 +6,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+#if UNITY_EDITOR
 namespace Ares
 {
     /// <summary>
@@ -18,6 +19,7 @@ namespace Ares
     {
         public string file;
         public System.Type type;
+        public object data;
 
         Editor m_ObjEditor;
         Object m_Obj;
@@ -26,7 +28,9 @@ namespace Ares
 
         internal VisualElement OnOpen()
         {
-            //Debug.Log("OnOpen8 " + displayName);
+            //Debug.Log("OnOpen " + displayName);
+            if (string.IsNullOrEmpty(file)) return null;
+
             if (!File.Exists(file))
             {
                 string dir = Path.GetDirectoryName(file);
@@ -134,3 +138,4 @@ namespace Ares
         }
     }
 }
+#endif

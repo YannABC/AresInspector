@@ -1,51 +1,62 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.IMGUI.Controls;
 using UnityEditor;
 using System.IO;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 
+#if UNITY_EDITOR
 namespace Ares
 {
-    public class AresExamples : AresTreeWindow<AresExamples>
+    public class AresExamples : AresTreeWindow
     {
-        protected override List<AresTreeItem> GetITreetems()
+        public override List<AresTreeItem> GetTreeItems()
         {
             List<AresTreeItem> items = new List<AresTreeItem>();
 
-            AresTreeItem item = new AresTreeItem()
+            AresTreeItem item1000 = new AresTreeItem()
             {
-                id = 1,
+                id = 1000,
                 depth = 0,
-                displayName = "myso",
-                file = "UserSettings/myso.asset",
-                //file = "Assets/Editor/_Temp/myso.asset",
-                type = typeof(MySo)
+                displayName = "Layout",
             };
-            items.Add(item);
+            items.Add(item1000);
 
-            AresTreeItem item3 = new AresTreeItem()
+            AresTreeItem item1001 = new AresTreeItem()
             {
-                id = 3,
+                id = 1001,
                 depth = 1,
-                displayName = "myso3",
-                file = "Assets/Editor/_Temp/myso2.asset",
-                //file = "Assets/Editor/_Temp/myso2.asset",
-                type = typeof(MySo2)
+                displayName = "Layout Horizontal",
+                file = "Assets/AresInspector/Examples/_Temp/LayoutH.asset",
+                type = typeof(LayoutH)
             };
-            items.Add(item3);
+            items.Add(item1001);
 
-            AresTreeItem item2 = new AresTreeItem()
+            AresTreeItem item1002 = new AresTreeItem()
             {
-                id = 2,
-                depth = 0,
-                displayName = "myso2",
-                file = "Assets/Editor/_Temp/myso2.asset",
-                //file = "Assets/Editor/_Temp/myso2.asset",
-                type = typeof(MySo2)
+                id = 1002,
+                depth = 1,
+                displayName = "Layout Vertical",
+                file = "Assets/AresInspector/Examples/_Temp/LayoutV.asset",
+                type = typeof(LayoutV)
             };
-            items.Add(item2);
+            items.Add(item1002);
+
+            AresTreeItem item2000 = new AresTreeItem()
+            {
+                id = 2000,
+                depth = 0,
+                displayName = "Drawer",
+            };
+            items.Add(item2000);
+
+            AresTreeItem item2001 = new AresTreeItem()
+            {
+                id = 2001,
+                depth = 1,
+                displayName = "Button",
+                file = "Assets/AresInspector/Examples/_Temp/DrawerButton.asset",
+                type = typeof(DrawerButton)
+            };
+            items.Add(item2001);
 
             return items;
         }
@@ -53,7 +64,8 @@ namespace Ares
         [MenuItem("Ares/Examples %t")]
         static void ShowWindow()
         {
-            OpenOrClose("Ares Examples");
+            OpenOrClose("Ares Examples", "UserSettings/AresExamples/asset", typeof(AresExamples));
         }
     }
 }
+#endif

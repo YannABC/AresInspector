@@ -3,37 +3,40 @@ using UnityEditor;
 using System.IO;
 using UnityEditorInternal;
 
+#if UNITY_EDITOR
 namespace Ares
 {
     /// <summary>
     /// EditorWindow 默认只在自身没关闭情况下，关闭unity时才会serialize自己, 关闭自身时不会serialize自己
     /// AresWindow 在关闭自身时会自动序列化public变量和SerializeField的变量
     /// </summary>
-    public class AresWindow<T> : EditorWindow where T : EditorWindow
+    public class AresWindow : EditorWindow
     {
-        static string s_File = $"UserSettings/{typeof(T).Name}.asset";
+        //static string s_File = $"UserSettings/{typeof(T).Name}.asset";
 
-        protected static T OpenOrClose(string title)
+        string m_File;
+
+        protected static AresWindow OpenOrClose(string title, string file, System.Type type)
         {
-            T inst = GetWindow();
+            AresWindow inst = GetAresWindow(type);
             if (!inst)
             {
-                string dir = Path.GetDirectoryName(s_File);
+                string dir = Path.GetDirectoryName(file);
                 Directory.CreateDirectory(dir);
 
-                T t;
-                if (File.Exists(s_File))
+                AresWindow t;
+                if (File.Exists(file))
                 {
                     //t = AssetDatabase.LoadAssetAtPath<T>(_File);
-                    t = InternalEditorUtility.LoadSerializedFileAndForget(s_File)[0] as T;
+                    t = InternalEditorUtility.LoadSerializedFileAndForget(file)[0] as AresWindow;
                 }
                 else
                 {
-                    t = ScriptableObject.CreateInstance<T>();
+                    t = ScriptableObject.CreateInstance(type) as AresWindow;
                     t.hideFlags = HideFlags.None;
                     t.titleContent = new GUIContent(title);
                 }
-
+                t.m_File = file;
                 t.Show();
 
                 return t;
@@ -45,17 +48,18 @@ namespace Ares
             }
         }
 
-        static T GetWindow()
+        static AresWindow GetAresWindow(System.Type type)
         {
-            UnityEngine.Object[] array = Resources.FindObjectsOfTypeAll(typeof(T));
+            UnityEngine.Object[] array = Resources.FindObjectsOfTypeAll(type);
             EditorWindow editorWindow = ((array.Length != 0) ? ((EditorWindow)array[0]) : null);
-            return editorWindow as T;
+            return editorWindow as AresWindow;
         }
 
         protected virtual void OnDisable()
         {
             //AssetDatabase.CreateAsset(t, _File);
-            InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { this }, s_File, true);
+            InternalEditorUtility.SaveToSerializedFileAndForget(new Object[] { this }, m_File, true);
         }
     }
 }
+#endif

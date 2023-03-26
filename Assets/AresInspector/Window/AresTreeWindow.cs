@@ -5,10 +5,12 @@ using UnityEditor;
 using System.IO;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using UnityEditor.PackageManager.UI;
 
+#if UNITY_EDITOR
 namespace Ares
 {
-    public abstract class AresTreeWindow<T> : AresWindow<T> where T : EditorWindow
+    public abstract class AresTreeWindow : AresWindow
     {
         [SerializeField]
         float m_SplitterPos = 150;//分隔符宽度
@@ -19,6 +21,7 @@ namespace Ares
         AresTreeView m_TreeView;
 
         TwoPaneSplitView m_Splitter;
+        protected VisualElement m_Right;
 
         void OnEnable()
         {
@@ -55,31 +58,46 @@ namespace Ares
             tree.style.bottom = 0;
 
             //右侧
-            VisualElement right = new VisualElement();
-            m_Splitter.Add(right);
-            right.style.position = Position.Absolute;
-            right.style.left = m_SplitterPos + 8;
-            right.style.right = 0;
-            right.style.top = 0;
+            m_Right = new VisualElement();
+            m_Splitter.Add(m_Right);
+            m_Right.style.position = Position.Absolute;
+            m_Right.style.left = m_SplitterPos + 8;
+            m_Right.style.right = 0;
+            m_Right.style.top = 0;
 
-            m_TreeView = new AresTreeView(m_TreeState, right, GetITreetems);
+            m_TreeView = new AresTreeView(m_TreeState, this);
 
             left.RegisterCallback((GeometryChangedEvent evt) =>
             {
                 m_SplitterPos = left.style.width.value.value;
                 search.style.width = m_SplitterPos - 8;
-                right.style.left = m_SplitterPos + 8;
+                m_Right.style.left = m_SplitterPos + 8;
             });
         }
+
 
         void DrawTreeView()
         {
             m_TreeView?.OnGUI(new Rect(0, 0, m_SplitterPos, position.height));
         }
 
-        protected virtual List<AresTreeItem> GetITreetems()
+        public virtual List<AresTreeItem> GetTreeItems()
         {
             return null;
+        }
+
+        public virtual void OnSelectionChanged(IList<TreeViewItem> items)
+        {
+            m_Right.Clear();
+            foreach (TreeViewItem item in items)
+            {
+                AresTreeItem ati = item as AresTreeItem;
+                VisualElement ve = ati.OnOpen();
+                if (ve != null)
+                {
+                    m_Right.Add(ve);
+                }
+            }
         }
 
         protected override void OnDisable()
@@ -89,3 +107,4 @@ namespace Ares
         }
     }
 }
+#endif

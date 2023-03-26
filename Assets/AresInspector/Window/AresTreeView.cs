@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+#if UNITY_EDITOR
 namespace Ares
 {
     /// <summary>
@@ -13,34 +15,29 @@ namespace Ares
     {
         IList<TreeViewItem> m_SelectedItems = null;
         bool m_SelectChanged = false;
-        System.Func<List<AresTreeItem>> m_GetItems;
-        VisualElement m_Container;
 
-        public AresTreeView(TreeViewState treeViewState, VisualElement container, System.Func<List<AresTreeItem>> getItems)
+        AresTreeWindow m_Window;
+
+        public AresTreeView(TreeViewState treeViewState, AresTreeWindow window)
             : base(treeViewState)
         {
-            m_Container = container;
-            m_GetItems = getItems;
+            m_Window = window;
             Reload();
 
             SelectionChanged(GetSelection());
         }
 
-
         protected override TreeViewItem BuildRoot()
         {
-            List<AresTreeItem> items = m_GetItems.Invoke();
+            List<AresTreeItem> items = m_Window.GetTreeItems();
 
             List<TreeViewItem> allItems = new List<TreeViewItem>();
 
             TreeViewItem root = new TreeViewItem { id = 0, depth = -1, displayName = "Root" };
-            //allItems.Add(root);
             allItems.AddRange(items);
 
-            // Utility method that initializes the TreeViewItem.children and .parent for all items.
             SetupParentsAndChildrenFromDepths(root, allItems);
 
-            // Return root of the tree
             return root;
         }
 
@@ -73,15 +70,8 @@ namespace Ares
             ClearSelectedItems();
 
             m_SelectedItems = FindRows(selectedIds);
-            m_Container.Clear();
-            foreach (TreeViewItem item in m_SelectedItems)
-            {
-                VisualElement ve = (item as AresTreeItem).OnOpen();
-                if (ve != null)
-                {
-                    m_Container.Add(ve);
-                }
-            }
+
+            m_Window.OnSelectionChanged(m_SelectedItems);
 
             m_SelectChanged = true;
         }
@@ -99,3 +89,4 @@ namespace Ares
         }
     }
 }
+#endif
