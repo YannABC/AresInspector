@@ -5,6 +5,9 @@ using UnityEngine.UIElements;
 
 namespace Ares
 {
+    /// <summary>
+    /// Field 默认 drawer, 不需要手动添加
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
     public partial class ADField : AresDrawer
     {
@@ -17,7 +20,7 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADField
     {
-        protected override VisualElement CreateFieldGUI(AresContext context)
+        protected override VisualElement CreateCustomGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
             string labelText = member.GetLabelText(prop);

@@ -28,12 +28,12 @@ namespace Ares
                 //int width = member.GetLabelWidth();
 
                 //不能自己画Label，自己画的不能drag
-                root = CreateFieldGUI(context);
+                root = CreateCustomGUI(context);
                 SetLabelWidth(root);
             }
             else
             {
-                root = CreateMethodGUI(context);
+                root = CreateCustomGUI(context);
             }
 
             SetLabelColor(root);
@@ -42,12 +42,7 @@ namespace Ares
             return root;
         }
 
-        protected virtual VisualElement CreateFieldGUI(AresContext context)
-        {
-            return null;
-        }
-
-        protected virtual VisualElement CreateMethodGUI(AresContext context)
+        protected virtual VisualElement CreateCustomGUI(AresContext context)
         {
             return null;
         }

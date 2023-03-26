@@ -22,7 +22,7 @@ namespace Ares
 #if UNITY_EDITOR
     public partial class ADSlider
     {
-        protected override VisualElement CreateFieldGUI(AresContext context)
+        protected override VisualElement CreateCustomGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
             string labelText = member.GetLabelText(prop);

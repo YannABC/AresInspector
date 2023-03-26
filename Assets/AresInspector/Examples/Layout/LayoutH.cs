@@ -3,8 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LayoutH : ScriptableObject, IAresObjectH
+namespace Ares.Examples
 {
-    public int i;
-    public int j;
+    public class LayoutH : ScriptableObject, IAresObjectH
+    {
+        public int i;
+        public int j;
+
+        [ADButton]
+        void Button()
+        {
+            Debug.Log("clicked");
+        }
+    }
 }

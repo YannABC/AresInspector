@@ -26,6 +26,12 @@ namespace Ares
 
         bool isRelativeAssets => file.StartsWith("Assets/");
 
+        public AresTreeItem(int id, int depth, string displayName)
+            : base(id, depth, displayName)
+        {
+
+        }
+
         internal VisualElement OnOpen()
         {
             //Debug.Log("OnOpen " + displayName);

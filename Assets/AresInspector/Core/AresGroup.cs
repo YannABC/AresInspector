@@ -76,6 +76,10 @@ namespace Ares
                 if (showBox)
                 {
                     root = new Box();
+                    root.style.marginLeft = 1;
+                    root.style.marginRight = 1;
+                    root.style.marginBottom = 1;
+                    root.style.marginLeft = 1;
                 }
                 else
                 {
