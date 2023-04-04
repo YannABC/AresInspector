@@ -59,7 +59,7 @@ public static class AresHelper
                     MethodInfo mi = type.GetMethod(key, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
                     if (mi != null)
                     {
-                        obj = pi;
+                        obj = mi;
                     }
                     else
                     {

@@ -7,6 +7,7 @@ namespace Ares
     {
         public enum MessageType
         {
+            None,
             Info,
             Warning,
             Error
@@ -22,8 +23,6 @@ namespace Ares
             this.info = info;
             this.condition = condition;
         }
-
-
     }
 
 #if UNITY_EDITOR
@@ -34,6 +33,7 @@ namespace Ares
             HelpBoxMessageType t = HelpBoxMessageType.Info;
             switch (type)
             {
+                case MessageType.None: t = HelpBoxMessageType.None; break;
                 case MessageType.Info: t = HelpBoxMessageType.Info; break;
                 case MessageType.Warning: t = HelpBoxMessageType.Warning; break;
                 case MessageType.Error: t = HelpBoxMessageType.Error; break;

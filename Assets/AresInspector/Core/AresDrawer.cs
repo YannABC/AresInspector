@@ -1,5 +1,4 @@
 ﻿using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Ares
@@ -60,13 +59,23 @@ namespace Ares
             if (ve == null) return;
             ACLabelColor ac = member.GetACLabelColor();
             if (ac == null) return;
-            ve.RegisterCallback((AttachToPanelEvent e) =>
+
+            //ve.RegisterCallback((AttachToPanelEvent e)
+            //触发后，子元素也不一定已经初始化
+            //所以用DoUntil
+            AresControls.DoUntil(() =>
             {
-                //Label , Button etc is TextElement
+                //if (ve.panel == null) return true;
+
                 TextElement te = ve.Q<TextElement>();
                 if (te != null)
                 {
                     te.style.color = ac.color;
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             });
         }

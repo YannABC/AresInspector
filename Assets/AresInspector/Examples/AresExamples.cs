@@ -9,57 +9,46 @@ namespace Ares.Examples
 {
     public class AresExamples : AresTreeWindow
     {
+        List<AresTreeItem> _Items;
         public override List<AresTreeItem> GetTreeItems()
         {
-            List<AresTreeItem> items = new List<AresTreeItem>();
+            _Items = new List<AresTreeItem>();
 
-            items.Add(new AresTreeItem(1, 0, "Overview"));
+            AddItem(1, 0, "Overview", null);
 
             #region Layout
             {
                 int id = 1000;
-                items.Add(new AresTreeItem(id++, 0, "Layout"));
-
-                items.Add(new AresTreeItem(id++, 1, "Layout Horizontal")
-                {
-                    file = "Assets/AresInspector/Examples/_Temp/LayoutH.asset",
-                    type = typeof(LayoutH)
-                });
-
-                items.Add(new AresTreeItem(id++, 1, "Layout Vertical")
-                {
-                    file = "Assets/AresInspector/Examples/_Temp/LayoutV.asset",
-                    type = typeof(LayoutV)
-                });
-
-                items.Add(new AresTreeItem(id++, 1, "Layout Nest")
-                {
-                    file = "Assets/AresInspector/Examples/_Temp/LayoutNest.asset",
-                    type = typeof(LayoutNest)
-                });
-
-                items.Add(new AresTreeItem(id++, 1, "Layout Adjust Order")
-                {
-                    file = "Assets/AresInspector/Examples/_Temp/LayoutAdjustOrder.asset",
-                    type = typeof(LayoutAdjustOrder)
-                });
+                AddItem(id++, 0, "Layout", null);
+                AddItem(id++, 1, "Layout Horizontal", typeof(LayoutH));
+                AddItem(id++, 1, "Layout Vertical", typeof(LayoutV));
+                AddItem(id++, 1, "Layout Nest", typeof(LayoutNest));
+                AddItem(id++, 1, "Layout Adjust Order", typeof(LayoutAdjustOrder));
             }
             #endregion
 
             #region Drawer
             {
                 int id = 2000;
-                items.Add(new AresTreeItem(id++, 0, "Drawer"));
-
-                items.Add(new AresTreeItem(id++, 1, "Button")
-                {
-                    file = "Assets/AresInspector/Examples/_Temp/DrawerButton.asset",
-                    type = typeof(DrawerButton)
-                });
+                AddItem(id++, 0, "Drawer", null);
+                AddItem(id++, 1, "Button", typeof(DrawerButton));
+                AddItem(id++, 1, "DropDown", typeof(DrawerDropDown));
+                AddItem(id++, 1, "HelpBox", typeof(DrawerHelpBox));
             }
             #endregion
 
-            return items;
+            return _Items;
+        }
+
+        void AddItem(int id, int depth, string displayName, System.Type type)
+        {
+            AresTreeItem item = new AresTreeItem(id, depth, displayName);
+            if (type != null)
+            {
+                item.type = type;
+                item.file = $"Assets/AresInspector/Examples/_Temp/{type.Name}.asset";
+            }
+            _Items.Add(item);
         }
 
         protected override VisualElement CreateTreeItemGUI(AresTreeItem ati)

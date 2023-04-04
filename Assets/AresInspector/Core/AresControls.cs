@@ -86,6 +86,21 @@ public static class AresControls
         EditorApplication.update += Tick;
     }
 
+    public static void DoUntil(System.Func<bool> cbk)
+    {
+        if (cbk()) return;
+
+        EditorApplication.CallbackFunction a = null;
+        a = () =>
+        {
+            if (cbk())
+            {
+                EditorApplication.update -= a;
+            }
+        };
+        EditorApplication.update += a;
+    }
+
     static void Tick()
     {
         for (int i = s_Controls.Count - 1; i >= 0; i--)
