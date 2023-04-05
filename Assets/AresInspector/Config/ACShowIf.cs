@@ -5,10 +5,10 @@ namespace Ares
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     [Conditional("UNITY_EDITOR")]
-    public class AresShowIf : System.Attribute
+    public class ACShowIf : System.Attribute
     {
         public readonly string condition;
-        public AresShowIf(string condition)
+        public ACShowIf(string condition)
         {
             this.condition = condition;
         }

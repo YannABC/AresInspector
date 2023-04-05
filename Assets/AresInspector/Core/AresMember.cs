@@ -20,8 +20,8 @@ namespace Ares
         public MethodInfo methodInfo;
 
         protected List<AresDrawer> m_Drawers;
-        AresShowIf m_ShowIf;
-        AresEnableIf m_EnableIf;
+        ACShowIf m_ShowIf;
+        ACEnableIf m_EnableIf;
         ACLabelText m_LabelText;
         ACLabelWidth m_LabelWidth;
         ACLabelColor m_LabelColor;
@@ -53,15 +53,15 @@ namespace Ares
 
             if (IsFieldMember())
             {
-                m_ShowIf = fieldInfo.GetCustomAttribute<AresShowIf>();
-                m_EnableIf = fieldInfo.GetCustomAttribute<AresEnableIf>();
+                m_ShowIf = fieldInfo.GetCustomAttribute<ACShowIf>();
+                m_EnableIf = fieldInfo.GetCustomAttribute<ACEnableIf>();
                 m_LabelText = fieldInfo.GetCustomAttribute<ACLabelText>();
                 m_LabelWidth = fieldInfo.GetCustomAttribute<ACLabelWidth>();
                 m_FontSize = fieldInfo.GetCustomAttribute<ACFontSize>();
                 m_LabelColor = fieldInfo.GetCustomAttribute<ACLabelColor>();
                 m_BackgrondColor = fieldInfo.GetCustomAttribute<ACBgColor>();
 
-                AresOnValueChanged aovc = fieldInfo.GetCustomAttribute<AresOnValueChanged>();
+                ACValueChanged aovc = fieldInfo.GetCustomAttribute<ACValueChanged>();
                 if (aovc != null)
                 {
                     m_OnValueChanged = ancestor.GetMethod(aovc.method,
@@ -74,8 +74,9 @@ namespace Ares
             }
             else
             {
-                m_ShowIf = methodInfo.GetCustomAttribute<AresShowIf>();
-                m_EnableIf = methodInfo.GetCustomAttribute<AresEnableIf>();
+                m_ShowIf = methodInfo.GetCustomAttribute<ACShowIf>();
+                m_EnableIf = methodInfo.GetCustomAttribute<ACEnableIf>();
+                m_LabelText = methodInfo.GetCustomAttribute<ACLabelText>();
                 m_FontSize = methodInfo.GetCustomAttribute<ACFontSize>();
                 m_LabelColor = methodInfo.GetCustomAttribute<ACLabelColor>();
                 m_BackgrondColor = methodInfo.GetCustomAttribute<ACBgColor>();
@@ -145,10 +146,6 @@ namespace Ares
             }
         }
 
-
-
-
-
         public bool HasAttribute(System.Type attr)
         {
             return GetAttribute(attr) != null;
@@ -199,20 +196,13 @@ namespace Ares
 
         public string GetLabelText()
         {
-            if (IsFieldMember())
+            if (m_LabelText != null)
             {
-                return null;
+                return string.IsNullOrEmpty(m_LabelText.text) ? methodInfo.Name : m_LabelText.text;
             }
             else
             {
-                if (m_LabelText != null)
-                {
-                    return string.IsNullOrEmpty(m_LabelText.text) ? methodInfo.Name : m_LabelText.text;
-                }
-                else
-                {
-                    return methodInfo.Name;
-                }
+                return methodInfo.Name;
             }
         }
 #endif

@@ -77,6 +77,11 @@ namespace Ares
             left.RegisterCallback((GeometryChangedEvent evt) =>
             {
                 m_SplitterPos = left.style.width.value.value;
+                //if (m_SplitterPos < 10)
+                //{
+                //    m_SplitterPos = 10;
+                //    //left.style.width = m_SplitterPos;
+                //}
             });
         }
 

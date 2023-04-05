@@ -66,9 +66,7 @@ namespace Ares
                 //This is because the asset may not have been loaded back into memory yet.
                 VisualElement root = new VisualElement();
 
-                int leftCount = 3;
-                EditorApplication.CallbackFunction a = null;
-                a = () =>
+                AresHelper.DoUntil(() =>
                 {
                     m_Obj = isRelativeAssets ?
                     AssetDatabase.LoadAssetAtPath(file, type) :
@@ -77,19 +75,35 @@ namespace Ares
                     {
                         //Debug.Log($"delay add {type.Name} success");
                         root.Add(CreateGUI(m_Obj));
-                        EditorApplication.update -= a;
+                        return true;
                     }
-                    else
-                    {
-                        leftCount--;
-                        if (leftCount <= 0)
-                        {
-                            Debug.Log($"cannot load {file}");
-                            EditorApplication.update -= a;
-                        }
-                    }
-                };
-                EditorApplication.update += a;
+                    return false;
+                }, 3);
+
+                //int leftCount = 3;
+                //EditorApplication.CallbackFunction a = null;
+                //a = () =>
+                //{
+                //    m_Obj = isRelativeAssets ?
+                //    AssetDatabase.LoadAssetAtPath(file, type) :
+                //    InternalEditorUtility.LoadSerializedFileAndForget(file)[0];
+                //    if (m_Obj != null)
+                //    {
+                //        //Debug.Log($"delay add {type.Name} success");
+                //        root.Add(CreateGUI(m_Obj));
+                //        EditorApplication.update -= a;
+                //    }
+                //    else
+                //    {
+                //        leftCount--;
+                //        if (leftCount <= 0)
+                //        {
+                //            Debug.Log($"cannot load {file}");
+                //            EditorApplication.update -= a;
+                //        }
+                //    }
+                //};
+                //EditorApplication.update += a;
                 //Debug.Log("delay add " + type.Name);
                 return root;
             }

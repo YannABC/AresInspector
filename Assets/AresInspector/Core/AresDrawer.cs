@@ -63,7 +63,7 @@ namespace Ares
             //ve.RegisterCallback((AttachToPanelEvent e)
             //触发后，子元素也不一定已经初始化
             //所以用DoUntil
-            AresControls.DoUntil(() =>
+            AresHelper.DoUntil(() =>
             {
                 //if (ve.panel == null) return true;
 

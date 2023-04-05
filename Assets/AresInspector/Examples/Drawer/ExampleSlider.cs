@@ -7,7 +7,7 @@ namespace Ares.Examples
     public class ExampleSlider : ScriptableObject, IAresObjectV
     {
         [ADSlider(33, 44)]
-        [AresOnValueChanged("OnIChanged")]
+        [ACValueChanged("OnIChanged")]
         public int i;
 
         void OnIChanged()

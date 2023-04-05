@@ -5,10 +5,10 @@ namespace Ares
 {
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
     [Conditional("UNITY_EDITOR")]
-    public class AresOnValueChanged : System.Attribute
+    public class ACValueChanged : System.Attribute
     {
         public readonly string method;
-        public AresOnValueChanged(string method)
+        public ACValueChanged(string method)
         {
             this.method = method;
         }

@@ -16,26 +16,44 @@ namespace Ares.Examples
 
             AddItem(1, 0, "Overview", null);
 
-            #region Layout
-            {
-                int id = 1000;
-                AddItem(id++, 0, "Layout", null);
-                AddItem(id++, 1, "Layout Horizontal", typeof(ExampleLayoutHorizontal));
-                AddItem(id++, 1, "Layout Vertical", typeof(ExampleLayoutVertical));
-                AddItem(id++, 1, "Layout Nest", typeof(ExampleLayoutNest));
-                AddItem(id++, 1, "Layout Adjust Order", typeof(ExampleAdjustOrder));
-            }
-            #endregion
-
             #region Drawer
             {
-                int id = 2000;
+                int id = 1000;
                 AddItem(id++, 0, "Drawer", null);
                 AddItem(id++, 1, "Button", typeof(ExampleButton));
                 AddItem(id++, 1, "DropDown", typeof(ExampleDropDown));
                 AddItem(id++, 1, "HelpBox", typeof(ExampleHelpBox));
                 AddItem(id++, 1, "Slider", typeof(ExampleSlider));
                 AddItem(id++, 1, "Space", typeof(ExampleSpace));
+            }
+            #endregion
+
+            #region Config
+            {
+                int id = 2000;
+                AddItem(id++, 0, "Config", null);
+                AddItem(id++, 1, "Background Color", typeof(ExampleBgColor));
+                AddItem(id++, 1, "Label Color", typeof(ExampleLabelColor));
+                AddItem(id++, 1, "Label Text", typeof(ExampleLabelText));
+                AddItem(id++, 1, "Label Width", typeof(ExampleLabelWidth));
+                AddItem(id++, 1, "Delayed", typeof(ExampleDelayed));
+                AddItem(id++, 1, "Enable If", typeof(ExampleEnableIf));
+                AddItem(id++, 1, "Show If", typeof(ExampleShowIf));
+                AddItem(id++, 1, "Button Font Size", typeof(ExampleFontSize));
+                AddItem(id++, 1, "Inline", typeof(ExampleInline));
+                AddItem(id++, 1, "Layout", typeof(ExampleLayout));
+                AddItem(id++, 1, "On Value Changed", typeof(ExampleValueChanged));
+            }
+            #endregion
+
+            #region Layout
+            {
+                int id = 3000;
+                AddItem(id++, 0, "Layout", null);
+                AddItem(id++, 1, "Layout Horizontal", typeof(ExampleLayoutHorizontal));
+                AddItem(id++, 1, "Layout Vertical", typeof(ExampleLayoutVertical));
+                AddItem(id++, 1, "Layout Nest", typeof(ExampleLayoutNest));
+                AddItem(id++, 1, "Layout Adjust Order", typeof(ExampleAdjustOrder));
             }
             #endregion
 

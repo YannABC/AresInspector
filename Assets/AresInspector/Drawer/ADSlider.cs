@@ -51,6 +51,8 @@ namespace Ares
             slider.bindingPath = prop.propertyPath;
             slider.Bind(prop.serializedObject);
 
+            SetDelayed(slider);
+
             if (member.onValueChanged != null)
             {
                 slider.RegisterValueChangedCallback((ChangeEvent<T> evt) =>
@@ -58,6 +60,21 @@ namespace Ares
                     member.onValueChanged.Invoke(target, null);
                 });
             }
+        }
+
+        void SetDelayed<T>(BaseSlider<T> slider) where T : IComparable<T>
+        {
+            if (!member.HasAttribute<ACDelayed>()) return;
+            AresHelper.DoUntil(() =>
+            {
+                TextField tf = slider.Q<TextField>();
+                if (tf != null)
+                {
+                    tf.isDelayed = true;
+                    return true;
+                }
+                return false;
+            });
         }
     }
 #endif
