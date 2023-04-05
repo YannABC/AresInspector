@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Ares.Examples
 {
-    public class DrawerDropDown : ScriptableObject, IAresObjectV
+    public class ExampleDropDown : ScriptableObject, IAresObjectV
     {
         #region string
         [ADDropDown("m_Choices1_string")]

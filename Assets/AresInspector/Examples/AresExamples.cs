@@ -20,10 +20,10 @@ namespace Ares.Examples
             {
                 int id = 1000;
                 AddItem(id++, 0, "Layout", null);
-                AddItem(id++, 1, "Layout Horizontal", typeof(LayoutH));
-                AddItem(id++, 1, "Layout Vertical", typeof(LayoutV));
-                AddItem(id++, 1, "Layout Nest", typeof(LayoutNest));
-                AddItem(id++, 1, "Layout Adjust Order", typeof(LayoutAdjustOrder));
+                AddItem(id++, 1, "Layout Horizontal", typeof(ExampleLayoutHorizontal));
+                AddItem(id++, 1, "Layout Vertical", typeof(ExampleLayoutVertical));
+                AddItem(id++, 1, "Layout Nest", typeof(ExampleLayoutNest));
+                AddItem(id++, 1, "Layout Adjust Order", typeof(ExampleAdjustOrder));
             }
             #endregion
 
@@ -31,9 +31,11 @@ namespace Ares.Examples
             {
                 int id = 2000;
                 AddItem(id++, 0, "Drawer", null);
-                AddItem(id++, 1, "Button", typeof(DrawerButton));
-                AddItem(id++, 1, "DropDown", typeof(DrawerDropDown));
-                AddItem(id++, 1, "HelpBox", typeof(DrawerHelpBox));
+                AddItem(id++, 1, "Button", typeof(ExampleButton));
+                AddItem(id++, 1, "DropDown", typeof(ExampleDropDown));
+                AddItem(id++, 1, "HelpBox", typeof(ExampleHelpBox));
+                AddItem(id++, 1, "Slider", typeof(ExampleSlider));
+                AddItem(id++, 1, "Space", typeof(ExampleSpace));
             }
             #endregion
 

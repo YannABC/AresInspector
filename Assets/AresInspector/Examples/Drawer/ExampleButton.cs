@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Ares.Examples
 {
-    public class DrawerButton : ScriptableObject, IAresObjectV
+    public class ExampleButton : ScriptableObject, IAresObjectV
     {
         [ADButton]
         void Normal()

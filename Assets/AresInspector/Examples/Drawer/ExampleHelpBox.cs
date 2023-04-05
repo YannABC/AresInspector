@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Ares.Examples
 {
-    public class DrawerHelpBox : ScriptableObject, IAresObjectV
+    public class ExampleHelpBox : ScriptableObject, IAresObjectV
     {
         public bool on = true;
 

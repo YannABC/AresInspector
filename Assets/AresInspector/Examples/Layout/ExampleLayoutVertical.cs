@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Ares.Examples
 {
-    public class LayoutV : ScriptableObject, IAresObjectV
+    public class ExampleLayoutVertical : ScriptableObject, IAresObjectV
     {
         public int i;
         public int j;

@@ -30,24 +30,26 @@ namespace Ares
             if (prop.propertyType == SerializedPropertyType.Float)
             {
                 Slider slider = new Slider(labelText, min, max);
-                SetupSlider(slider, prop.propertyPath, context.target);
+                SetupSlider(slider, prop, context.target);
                 return slider;
             }
             else if (prop.propertyType == SerializedPropertyType.Integer)
             {
                 SliderInt slider = new SliderInt(labelText, (int)min, (int)max);
-                SetupSlider(slider, prop.propertyPath, context.target);
+                SetupSlider(slider, prop, context.target);
                 return slider;
             }
 
             return new Label(L10n.Tr("Use Range with float or int."));
         }
 
-        protected void SetupSlider<T>(BaseSlider<T> slider, string bindingPath, object target) where T : IComparable<T>
+        protected void SetupSlider<T>(BaseSlider<T> slider, SerializedProperty prop, object target) where T : IComparable<T>
         {
             slider.style.flexGrow = 1;
-            slider.bindingPath = bindingPath;
             slider.showInputField = true;
+
+            slider.bindingPath = prop.propertyPath;
+            slider.Bind(prop.serializedObject);
 
             if (member.onValueChanged != null)
             {
