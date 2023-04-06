@@ -43,7 +43,8 @@ namespace Ares.Examples
                 AddItem(id++, 1, "Inline", typeof(ExampleInline));
                 AddItem(id++, 1, "Layout", typeof(ExampleLayout));
                 AddItem(id++, 1, "On Value Changed", typeof(ExampleValueChanged));
-                AddItem(id++, 1, "AssetsOnly", typeof(ExampleAssetsOnly));
+                AddItem(id++, 1, "Assets Only", typeof(ExampleAssetsOnly));
+                AddItem(id++, 1, "Read Only", typeof(ExampleReadOnly));
             }
             #endregion
 

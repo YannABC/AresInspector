@@ -29,6 +29,7 @@ namespace Ares
 
             pf.Bind(prop.serializedObject);//需要Bind，否则在TreeView中自己创建的，不显示IntegerField等
 
+            SetReadOnly(pf);
             SetAssetsOnly(pf);
             SetDelayed(prop, pf);
             SetOnValueChanged(pf, context.target);
@@ -44,6 +45,12 @@ namespace Ares
                     member.onValueChanged.Invoke(target, null);
                 });
             }
+        }
+
+        void SetReadOnly(PropertyField pf)
+        {
+            if (!member.HasAttribute<ACReadOnly>()) return;
+            pf.SetEnabled(false);
         }
 
         void SetAssetsOnly(PropertyField pf)
