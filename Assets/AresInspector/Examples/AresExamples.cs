@@ -25,6 +25,7 @@ namespace Ares.Examples
                 AddItem(id++, 1, "HelpBox", typeof(ExampleHelpBox));
                 AddItem(id++, 1, "Slider", typeof(ExampleSlider));
                 AddItem(id++, 1, "Space", typeof(ExampleSpace));
+                AddItem(id++, 1, "Title & SubTitle", typeof(ExampleTitle));
             }
             #endregion
 
