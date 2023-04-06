@@ -109,7 +109,7 @@ namespace Ares
             if (type.IsEnum) return true;
             if (type.IsValueType) return true;
             Type typeUnityObject = typeof(UnityEngine.Object);
-            if (type.IsAssignableFrom(typeUnityObject)) return true;
+            if (typeUnityObject.IsAssignableFrom(type)) return true;
             if (type.IsSerializable) return true;
 
             Type[] typesNative =
@@ -119,7 +119,7 @@ namespace Ares
              typeof(float),
              typeof(int),
              typeof(string)
-         };
+            };
             if (typesNative.Contains(type) || (type.IsArray && typesNative.Contains(type.GetElementType())))
             {
                 return true;

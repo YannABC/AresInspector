@@ -29,6 +29,7 @@ namespace Ares
 
             pf.Bind(prop.serializedObject);//需要Bind，否则在TreeView中自己创建的，不显示IntegerField等
 
+            SetAssetsOnly(pf);
             SetDelayed(prop, pf);
             SetOnValueChanged(pf, context.target);
             return pf;
@@ -43,6 +44,22 @@ namespace Ares
                     member.onValueChanged.Invoke(target, null);
                 });
             }
+        }
+
+        void SetAssetsOnly(PropertyField pf)
+        {
+            if (!member.HasAttribute<ACAssetsOnly>()) return;
+
+            AresHelper.DoUntil(() =>
+            {
+                var f = pf.Q<ObjectField>();
+                if (f != null)
+                {
+                    f.allowSceneObjects = false;
+                    return true;
+                }
+                return false;
+            });
         }
 
         void SetDelayed(SerializedProperty property, PropertyField pf)

@@ -43,6 +43,7 @@ namespace Ares.Examples
                 AddItem(id++, 1, "Inline", typeof(ExampleInline));
                 AddItem(id++, 1, "Layout", typeof(ExampleLayout));
                 AddItem(id++, 1, "On Value Changed", typeof(ExampleValueChanged));
+                AddItem(id++, 1, "AssetsOnly", typeof(ExampleAssetsOnly));
             }
             #endregion
 
@@ -149,7 +150,7 @@ namespace Ares.Examples
         [MenuItem("Ares/Examples %t")]
         static void ShowWindow()
         {
-            OpenOrClose("Ares Examples", "UserSettings/AresExamples/asset", typeof(AresExamples));
+            OpenOrClose("Ares Examples", "UserSettings/AresExamples.asset", typeof(AresExamples));
         }
 
         const string OverView = @"AresInspector 是 类似odin的编辑器，使用Attribute的方式来写编辑器。
