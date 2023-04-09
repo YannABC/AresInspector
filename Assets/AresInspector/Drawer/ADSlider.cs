@@ -25,7 +25,7 @@ namespace Ares
         protected override VisualElement CreateCustomGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
-            string labelText = member.GetLabelText(prop);
+            string labelText = member.GetLabelText(prop.displayName);
 
             if (prop.propertyType == SerializedPropertyType.Float)
             {

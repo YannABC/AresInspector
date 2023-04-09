@@ -1,12 +1,14 @@
 ﻿using System;
 using UnityEditor;
+using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Ares
 {
     /// <summary>
-    /// Field 默认 drawer, 不需要手动添加
+    /// Field 默认 drawer, 一般不需要手动添加
+    /// 只有调节同一个field之间的顺序时才需要，默认先装饰物，最后才是ADField
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
     public partial class ADField : AresDrawer
@@ -23,7 +25,12 @@ namespace Ares
         protected override VisualElement CreateCustomGUI(AresContext context)
         {
             SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
-            string labelText = member.GetLabelText(prop);
+            if (prop == null)
+            {
+                Debug.LogWarning($"{member.fieldInfo.Name} is not serialized.");
+                return null;
+            }
+            string labelText = member.GetLabelText(prop.displayName);
             PropertyField pf = new PropertyField(prop, labelText);
             pf.style.flexGrow = 1;
 
@@ -56,7 +63,6 @@ namespace Ares
         void SetAssetsOnly(PropertyField pf)
         {
             if (!member.HasAttribute<ACAssetsOnly>()) return;
-
             AresHelper.DoUntil(() =>
             {
                 var f = pf.Q<ObjectField>();

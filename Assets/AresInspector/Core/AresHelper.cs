@@ -238,7 +238,9 @@ namespace Ares
             EditorApplication.CallbackFunction a = null;
             a = () =>
             {
-                if (cbk())
+                bool r = false;
+                try { r = cbk(); } catch (Exception e) { }
+                if (r)
                 {
                     EditorApplication.update -= a;
                 }

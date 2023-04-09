@@ -1,0 +1,108 @@
+﻿using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
+using System.Reflection;
+using UnityEngine.UI;
+
+namespace Ares
+{
+    /// <summary>
+    /// 没有序列化，又想显示在编辑器中时使用
+    /// 如私有field
+    /// 如公有和私有property
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+    public partial class ADUnserializedField : AresDrawer
+    {
+        public ADUnserializedField() : base(false)
+        {
+
+        }
+    }
+
+#if UNITY_EDITOR
+    public partial class ADUnserializedField
+    {
+        protected override VisualElement CreateCustomGUI(AresContext context)
+        {
+            //return null;
+            FieldInfo fieldInfo = member.fieldInfo;
+
+            string labelText = member.GetLabelText(ObjectNames.NicifyVariableName(fieldInfo.Name));
+
+            VisualElement ve;
+            if (fieldInfo.FieldType == typeof(int))
+            {
+                var field = new IntegerField(labelText);
+                field.SetValueWithoutNotify((int)fieldInfo.GetValue(context.target));
+                field.RegisterValueChangedCallback((evt) =>
+                {
+                    fieldInfo.SetValue(context.target, (int)evt.newValue);
+                });
+                AresHelper.DoUntil(() =>
+                {
+                    field.SetValueWithoutNotify((int)fieldInfo.GetValue(context.target));
+                    return false;
+                }, int.MaxValue);
+                ve = field;
+            }
+            else if (fieldInfo.FieldType == typeof(float))
+            {
+                var field = new FloatField(labelText);
+                field.SetValueWithoutNotify((float)fieldInfo.GetValue(context.target));
+                field.RegisterValueChangedCallback((evt) =>
+                {
+                    fieldInfo.SetValue(context.target, (float)evt.newValue);
+                });
+                AresHelper.DoUntil(() =>
+                {
+                    field.SetValueWithoutNotify((float)fieldInfo.GetValue(context.target));
+                    return false;
+                }, int.MaxValue);
+                ve = field;
+            }
+            else
+            {
+                ve = null;
+            }
+
+            if (ve != null)
+            {
+                SetReadOnly(ve);
+            }
+            else
+            {
+                ve = new Label("unknown type " + fieldInfo.FieldType);
+            }
+
+            return ve;
+
+            //var container = new VisualElement();
+            //var label = new Label(ObjectNames.NicifyVariableName(fieldInfo.Name));
+            //container.Add(label);
+
+            //if (fieldInfo.FieldType == typeof(int))
+            //{
+            //    var intValue = (int)fieldInfo.GetValue(context.target);
+            //    var slider = new Slider(0, 100, SliderDirection.Horizontal, 0.01f);
+            //    slider.SetValueWithoutNotify(intValue);
+            //    slider.RegisterValueChangedCallback((evt) =>
+            //    {
+            //        fieldInfo.SetValue(context.target, (int)evt.newValue);
+            //    });
+            //    container.Add(slider);
+            //}
+
+            //return container;
+        }
+
+        void SetReadOnly(VisualElement ve)
+        {
+            if (!member.HasAttribute<ACReadOnly>()) return;
+            ve.SetEnabled(false);
+        }
+    }
+#endif
+}

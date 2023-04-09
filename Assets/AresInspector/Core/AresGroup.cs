@@ -144,7 +144,17 @@ namespace Ares
                 }
 
                 //查找当前基类里所有可以序列化且unity可见的字段, 添加到对应的group中
-                IEnumerable<FieldInfo> fields = ancestor.GetDeclareFields((f) => f.IsUnitySerialized() && f.GetCustomAttribute<HideInInspector>() == null);
+                IEnumerable<FieldInfo> fields = ancestor.GetDeclareFields((f) =>
+                {
+                    if (f.IsUnitySerialized() && f.GetCustomAttribute<HideInInspector>() == null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return f.GetCustomAttribute(typeof(AresDrawer), true) != null;
+                    }
+                });
 
                 foreach (FieldInfo fi in fields)
                 {

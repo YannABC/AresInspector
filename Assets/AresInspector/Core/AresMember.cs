@@ -17,6 +17,7 @@ namespace Ares
         public AresGroup group;// the group  that contains the member
 
         public FieldInfo fieldInfo;
+        public PropertyInfo propertyInfo;
         public MethodInfo methodInfo;
 
         protected List<AresDrawer> m_Drawers;
@@ -173,18 +174,18 @@ namespace Ares
             return GetAttribute(typeof(T)) as T;
         }
 
-        public string GetLabelText(SerializedProperty prop)
+        public string GetLabelText(string defaultName)
         {
             if (IsFieldMember())
             {
                 string labelName;
                 if (m_LabelText != null)
                 {
-                    labelName = m_LabelText.text ?? prop.displayName;
+                    labelName = m_LabelText.text ?? defaultName;
                 }
                 else
                 {
-                    labelName = prop.displayName;
+                    labelName = defaultName;
                 }
                 return labelName;
             }
