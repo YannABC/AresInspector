@@ -4,14 +4,12 @@ using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using System.Reflection;
-using UnityEngine.UI;
 
 namespace Ares
 {
     /// <summary>
     /// 没有序列化，又想显示在编辑器中时使用
     /// 如私有field
-    /// 如公有和私有property
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
     public partial class ADUnserializedField : AresDrawer
@@ -27,7 +25,6 @@ namespace Ares
     {
         protected override VisualElement CreateCustomGUI(AresContext context)
         {
-            //return null;
             FieldInfo fieldInfo = member.fieldInfo;
 
             string labelText = member.GetLabelText(ObjectNames.NicifyVariableName(fieldInfo.Name));
@@ -63,6 +60,36 @@ namespace Ares
                 }, int.MaxValue);
                 ve = field;
             }
+            else if (fieldInfo.FieldType == typeof(long))
+            {
+                var field = new LongField(labelText);
+                field.SetValueWithoutNotify((long)fieldInfo.GetValue(context.target));
+                field.RegisterValueChangedCallback((evt) =>
+                {
+                    fieldInfo.SetValue(context.target, evt.newValue);
+                });
+                AresHelper.DoUntil(() =>
+                {
+                    field.SetValueWithoutNotify((long)fieldInfo.GetValue(context.target));
+                    return false;
+                }, int.MaxValue);
+                ve = field;
+            }
+            else if (fieldInfo.FieldType == typeof(bool))
+            {
+                var field = new Toggle(labelText);
+                field.SetValueWithoutNotify((bool)fieldInfo.GetValue(context.target));
+                field.RegisterValueChangedCallback((evt) =>
+                {
+                    fieldInfo.SetValue(context.target, evt.newValue);
+                });
+                AresHelper.DoUntil(() =>
+                {
+                    field.SetValueWithoutNotify((bool)fieldInfo.GetValue(context.target));
+                    return false;
+                }, int.MaxValue);
+                ve = field;
+            }
             else
             {
                 ve = null;
@@ -78,24 +105,6 @@ namespace Ares
             }
 
             return ve;
-
-            //var container = new VisualElement();
-            //var label = new Label(ObjectNames.NicifyVariableName(fieldInfo.Name));
-            //container.Add(label);
-
-            //if (fieldInfo.FieldType == typeof(int))
-            //{
-            //    var intValue = (int)fieldInfo.GetValue(context.target);
-            //    var slider = new Slider(0, 100, SliderDirection.Horizontal, 0.01f);
-            //    slider.SetValueWithoutNotify(intValue);
-            //    slider.RegisterValueChangedCallback((evt) =>
-            //    {
-            //        fieldInfo.SetValue(context.target, (int)evt.newValue);
-            //    });
-            //    container.Add(slider);
-            //}
-
-            //return container;
         }
 
         void SetReadOnly(VisualElement ve)

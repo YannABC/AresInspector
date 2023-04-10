@@ -20,9 +20,9 @@ namespace Ares
         public virtual VisualElement CreateGUI(AresContext context)
         {
             VisualElement root;
-            if (member.IsFieldMember())
+            if (member.IsFieldMember() || member.IsPropertyMember())
             {
-                SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
+                //SerializedProperty prop = context.FindProperty(member.fieldInfo.Name);
                 //string labelName = member.GetLabelText(prop);
                 //int width = member.GetLabelWidth();
 

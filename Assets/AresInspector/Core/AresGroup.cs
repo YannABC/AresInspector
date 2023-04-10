@@ -183,6 +183,39 @@ namespace Ares
                     }
                 }
 
+                //查找当前基类里所有想显示的Property, 添加到对应的group中
+                IEnumerable<PropertyInfo> props = ancestor.GetDeclareProperties((f) =>
+                {
+                    return f.GetCustomAttribute<AresDrawer>() != null;
+                });
+
+                foreach (PropertyInfo pi in props)
+                {
+                    IEnumerable<ACLayout> als = pi.GetCustomAttributes<ACLayout>();
+                    if (als.Any())
+                    {
+                        foreach (ACLayout al in als)
+                        {
+                            AresMember af = new AresMember();
+                            af.ancestor = ancestor;
+                            af.propertyInfo = pi;
+                            af.groupId = al.groupId;
+                            af.order = al.order;
+                            AddMemberToGroup(af, self);
+                        }
+                    }
+                    else
+                    {
+                        //默认一个
+                        AresMember af = new AresMember();
+                        af.ancestor = ancestor;
+                        af.propertyInfo = pi;
+                        af.groupId = 0;
+                        af.order = 0;
+                        AddMemberToGroup(af, self);
+                    }
+                }
+
                 //查找所有带AresDrawer标签的函数, 添加到对应的group中
                 IEnumerable<MethodInfo> methods = ancestor.GetDeclareMethods(f => f.GetCustomAttributes<AresDrawer>().Any());
 

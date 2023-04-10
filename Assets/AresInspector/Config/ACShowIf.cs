@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Ares
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     [Conditional("UNITY_EDITOR")]
     public class ACShowIf : System.Attribute
     {

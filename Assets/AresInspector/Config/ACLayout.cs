@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Diagnostics;
 
 namespace Ares
 {
+    [System.AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     [Conditional("UNITY_EDITOR")]
     public class ACLayout : System.Attribute
     {

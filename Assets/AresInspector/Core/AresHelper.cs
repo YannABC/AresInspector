@@ -203,6 +203,18 @@ namespace Ares
             }
         }
 
+        public static IEnumerable<PropertyInfo> GetDeclareProperties(this Type type, Func<PropertyInfo, bool> predicate)
+        {
+            IEnumerable<PropertyInfo> propertyInfos = type
+                .GetProperties(BindingFlags.Instance /*| BindingFlags.Static*/ | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .Where(predicate);
+
+            foreach (PropertyInfo fieldInfo in propertyInfos)
+            {
+                yield return fieldInfo;
+            }
+        }
+
         public static IEnumerable<MethodInfo> GetDeclareMethods(this Type type, Func<MethodInfo, bool> predicate)
         {
             IEnumerable<MethodInfo> methodInfos = type
@@ -239,7 +251,7 @@ namespace Ares
             a = () =>
             {
                 bool r = false;
-                try { r = cbk(); } catch (Exception e) { }
+                try { r = cbk(); } catch (Exception) { }
                 if (r)
                 {
                     EditorApplication.update -= a;

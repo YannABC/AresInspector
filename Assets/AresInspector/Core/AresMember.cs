@@ -58,7 +58,6 @@ namespace Ares
                 m_EnableIf = fieldInfo.GetCustomAttribute<ACEnableIf>();
                 m_LabelText = fieldInfo.GetCustomAttribute<ACLabelText>();
                 m_LabelWidth = fieldInfo.GetCustomAttribute<ACLabelWidth>();
-                m_FontSize = fieldInfo.GetCustomAttribute<ACFontSize>();
                 m_LabelColor = fieldInfo.GetCustomAttribute<ACLabelColor>();
                 m_BackgrondColor = fieldInfo.GetCustomAttribute<ACBgColor>();
 
@@ -72,6 +71,14 @@ namespace Ares
                         UnityEngine.Debug.LogError(aovc.method + " method not found");
                     }
                 }
+            }
+            else if (IsPropertyMember())
+            {
+                m_EnableIf = propertyInfo.GetCustomAttribute<ACEnableIf>();
+                m_LabelText = propertyInfo.GetCustomAttribute<ACLabelText>();
+                m_LabelWidth = propertyInfo.GetCustomAttribute<ACLabelWidth>();
+                m_LabelColor = propertyInfo.GetCustomAttribute<ACLabelColor>();
+                m_BackgrondColor = propertyInfo.GetCustomAttribute<ACBgColor>();
             }
             else
             {
@@ -122,6 +129,8 @@ namespace Ares
         }
 
         public bool IsFieldMember() { return fieldInfo != null; }
+        public bool IsPropertyMember() { return propertyInfo != null; }
+        public bool IsMethodMember() { return methodInfo != null; }
 
         void OnDrawnCoun0()
         {
@@ -129,7 +138,7 @@ namespace Ares
             {
                 m_Drawers.Add(new ADField());
             }
-            else
+            else if (IsMethodMember())
             {
                 m_Drawers.Add(new ADButton());
             }
@@ -140,6 +149,10 @@ namespace Ares
             if (IsFieldMember())
             {
                 return fieldInfo.GetCustomAttributes<AresDrawer>();
+            }
+            else if (IsPropertyMember())
+            {
+                return propertyInfo.GetCustomAttributes<AresDrawer>();
             }
             else
             {
@@ -163,6 +176,10 @@ namespace Ares
             {
                 return fieldInfo.GetCustomAttribute(attr);
             }
+            else if (IsPropertyMember())
+            {
+                return propertyInfo.GetCustomAttribute(attr);
+            }
             else
             {
                 return methodInfo.GetCustomAttribute(attr);
@@ -176,7 +193,7 @@ namespace Ares
 
         public string GetLabelText(string defaultName)
         {
-            if (IsFieldMember())
+            if (IsFieldMember() || IsPropertyMember())
             {
                 string labelName;
                 if (m_LabelText != null)
@@ -195,7 +212,7 @@ namespace Ares
             }
         }
 
-        public string GetLabelText()
+        public string GetButtonText()
         {
             if (m_LabelText != null)
             {

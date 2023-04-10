@@ -28,7 +28,7 @@ namespace Ares
             });
 
             btn.style.flexGrow = 1;
-            btn.text = member.GetLabelText();
+            btn.text = member.GetButtonText();
             SetBtnSize(btn);
 
             return btn;

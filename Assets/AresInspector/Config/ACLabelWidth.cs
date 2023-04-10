@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Ares
 {
-    [System.AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
+    [System.AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = true)]
     [Conditional("UNITY_EDITOR")]
     public class ACLabelWidth : System.Attribute
     {
