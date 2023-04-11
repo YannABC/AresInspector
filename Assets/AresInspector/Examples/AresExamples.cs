@@ -28,6 +28,7 @@ namespace Ares.Examples
                 AddItem(id++, 1, "Title & SubTitle", typeof(ExampleTitle));
                 AddItem(id++, 1, "Unserialized Field", typeof(ExampleUnserializedField));
                 AddItem(id++, 1, "Property", typeof(ExampleProperty));
+                AddItem(id++, 1, "Enum", typeof(ExampleEnum));
             }
             #endregion
 
