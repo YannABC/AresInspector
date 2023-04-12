@@ -19,18 +19,19 @@ namespace Ares.Examples
         [Flags]
         public enum FlagsEnum
         {
-            None,
             Walk = 1,
             Attack = 2,
             Stun = 4,
             Die = 8,
         }
 
-        public NormalEnum normalEnum;
+        public NormalEnum defaultEnum;
+        public FlagsEnum defaultFlagsEnum;
 
         [ADToggleEnum]
         public NormalEnum toggleEnum;
 
-        public FlagsEnum flagsEnum;
+        [ADFlagsEnum(false)]
+        public FlagsEnum toggleFlagsEnum;
     }
 }

@@ -1,25 +1,24 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 namespace Ares
 {
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
-    public partial class ADToggleEnum : AresDrawer
+    public partial class ADFlagsEnum : AresDrawer
     {
-        public ADToggleEnum() : base(false)
+        public readonly bool hasAllButton;
+        public ADFlagsEnum(bool hasAllButton = false) : base(false)
         {
-
+            this.hasAllButton = hasAllButton;
         }
     }
 
 #if UNITY_EDITOR
-    public partial class ADToggleEnum
+    public partial class ADFlagsEnum
     {
         public override VisualElement CreateGUI(AresContext context)
         {
@@ -47,35 +46,32 @@ namespace Ares
             toolbar.style.marginRight = 0;
             ve.Add(toolbar);
 
-            string cur = fieldInfo.GetValue(context.target).ToString();
+            int cur = (int)fieldInfo.GetValue(context.target);
+            int all = 0;
             //Debug.Log("cur:" + cur);
 
             Type enumType = fieldInfo.FieldType;
             Array enumValues = Enum.GetValues(enumType);
             foreach (var value in enumValues)
             {
+                int v = (int)value;
+                all |= v;
+
                 ToolbarToggle button = new ToolbarToggle();
                 button.RegisterValueChangedCallback((evt) =>
                 {
                     if (evt.newValue)
                     {
-                        foreach (var c in toolbar.Children())
-                        {
-                            ToolbarToggle tt = c as ToolbarToggle;
-                            tt.SetValueWithoutNotify(tt == button);
-                        }
-                        //how to support undo?
-                        //Undo.RecordObject(prop.serializedObject.targetObject, "set enum");
-                        fieldInfo.SetValue(context.target, value);
-                        //prop.serializedObject.Update();
-                        //prop.intValue = (int)value;
-                        prop.serializedObject.ApplyModifiedProperties();
-                        //Undo.FlushUndoRecordObjects();
+                        cur |= v;
+                        button.value = true;
                     }
                     else
                     {
-                        button.value = true;
+                        cur &= ~v;
+                        button.value = false;
                     }
+                    fieldInfo.SetValue(context.target, cur);
+                    prop.serializedObject.ApplyModifiedProperties();
 
                 });
                 button.text = value.ToString();
@@ -83,8 +79,38 @@ namespace Ares
                 button.style.borderLeftWidth = 0;
                 toolbar.Add(button);
 
-                button.SetValueWithoutNotify(cur == value.ToString());
+                button.SetValueWithoutNotify((cur & v) != 0);
             }
+            //All
+            if (hasAllButton)
+            {
+                Button button = new Button();
+                button.clicked += () =>
+                {
+                    if (cur == all)
+                    {
+                        cur = 0;
+                    }
+                    else
+                    {
+                        cur = all;
+                    }
+
+                    foreach (var c in toolbar.Children())
+                    {
+                        ToolbarToggle tt = c as ToolbarToggle;
+                        tt.SetValueWithoutNotify(cur != 0);
+                    }
+                    fieldInfo.SetValue(context.target, cur);
+                    prop.serializedObject.ApplyModifiedProperties();
+                };
+                button.text = "All";
+                button.style.flexGrow = 0;
+                //button.style.borderLeftWidth = 0;
+                button.style.width = 30;
+                toolbar.Add(button);
+            }
+
             return ve;
         }
 
