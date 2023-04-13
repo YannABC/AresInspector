@@ -32,6 +32,9 @@ namespace Ares.Examples
         public NormalEnum toggleEnum;
 
         [ADFlagsEnum(false)]
-        public FlagsEnum toggleFlagsEnum;
+        public FlagsEnum toggleFlagsEnum1;
+
+        [ADFlagsEnum(true)]
+        public FlagsEnum toggleFlagsEnum2;
     }
 }

@@ -29,6 +29,7 @@ namespace Ares.Examples
                 AddItem(id++, 1, "Unserialized Field", typeof(ExampleUnserializedField));
                 AddItem(id++, 1, "Property", typeof(ExampleProperty));
                 AddItem(id++, 1, "Enum", typeof(ExampleEnum));
+                AddItem(id++, 1, "MinMaxSlider", typeof(ExampleMinMaxSlider));
             }
             #endregion
 

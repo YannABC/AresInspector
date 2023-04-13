@@ -12,7 +12,7 @@ namespace Ares
     /// </summary>
     public class AresWindow : EditorWindow
     {
-        //static string s_File = $"UserSettings/{typeof(T).Name}.asset";
+        //static string  s_File = $"UserSettings/{typeof(T).Name}.asset";
 
         string m_File;
 
