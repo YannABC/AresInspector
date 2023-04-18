@@ -9,6 +9,9 @@ namespace Ares.Examples
         [ACLabelText("I alias")]
         public int i;
 
+        [ACLabelText("")]
+        public string hideLabel = "hide label";
+
         [ADButton]
         [ACLabelText("Button1 alias")]
         public void Button1()

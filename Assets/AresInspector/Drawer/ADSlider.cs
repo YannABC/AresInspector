@@ -46,6 +46,7 @@ namespace Ares
         protected void SetupSlider<T>(BaseSlider<T> slider, SerializedProperty prop, object target) where T : IComparable<T>
         {
             slider.style.flexGrow = 1;
+            slider.style.flexShrink = 1;
             slider.showInputField = true;
 
             slider.bindingPath = prop.propertyPath;

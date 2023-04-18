@@ -19,18 +19,22 @@ namespace Ares
         protected static AresWindow OpenOrClose(string title, string file, System.Type type)
         {
             AresWindow inst = GetAresWindow(type);
-            if (!inst)
+            if (inst == null)
             {
                 string dir = Path.GetDirectoryName(file);
                 Directory.CreateDirectory(dir);
 
-                AresWindow t;
+                AresWindow t = null;
                 if (File.Exists(file))
                 {
                     //t = AssetDatabase.LoadAssetAtPath<T>(_File);
-                    t = InternalEditorUtility.LoadSerializedFileAndForget(file)[0] as AresWindow;
+                    Object[] objs = InternalEditorUtility.LoadSerializedFileAndForget(file);
+                    if (objs != null && objs.Length > 0)
+                    {
+                        t = objs[0] as AresWindow;
+                    }
                 }
-                else
+                if (t == null)
                 {
                     t = ScriptableObject.CreateInstance(type) as AresWindow;
                     t.hideFlags = HideFlags.None;
