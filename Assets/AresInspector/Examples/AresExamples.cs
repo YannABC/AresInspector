@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System.IO;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
@@ -161,7 +161,7 @@ namespace Ares.Examples
             OpenOrClose("Ares Examples", "UserSettings/AresExamples.asset", typeof(AresExamples));
         }
 
-        const string OverView = @"AresInspector 是 类似odin的编辑器，使用Attribute的方式来写编辑器。
+        const string OverView = @"AresInspector 是 类似odin的Unity编辑器脚本，使用Attribute的方式来制作编辑器。
 和odin不同的是，AresInspector更加轻量，使用了纯UIToolkit(VisualEment),没有使用IMGUI。
 包含<color=blue>Layout</color>,<color=blue>Drawer</color>和<color=blue>Config</color>.";
     }
